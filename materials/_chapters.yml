@@ -1,0 +1,10 @@
+book:
+  chapters:
+    - part: "Software"
+      chapters:
+        - materials/software/01-package_managers.md
+        - materials/software/02-containers.md
+    - part: "Pipelines"
+      chapters:
+        - materials/pipelines/01-nfcore.md
+        - materials/pipelines/02-nextflow_hpc.md
