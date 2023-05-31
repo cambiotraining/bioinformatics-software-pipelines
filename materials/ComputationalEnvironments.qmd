@@ -1,0 +1,340 @@
+---
+title: "MPhil in Computational Biology 2023"
+subtitle: "How to successfuly set up my bioinformatics analysis"
+title-block-banner: true
+section-titles: true
+author: "Raquel Manzano (rm889@cam.ac.uk)"
+format: html
+editor: visual
+theme: materia
+toc: true
+toc-depth: 3
+toc-location: left
+toc-title: Contents
+execute:
+  echo: false
+  eval: false
+---
+
+# Introduction
+
+Up to this point, you may have come across pre-existing data and environments in your coursework and practicals. These resources can be highly useful, as they are tailored to help you understand specific concepts and provide valuable examples for you to play with.
+
+However, as you can imagine, this will not be the case when you need to start a project from scratch (e.g. if you need a new tools for your analysis or if you need to look for data to test your hypothesis). But fear not. In this practical the goal is to give you the basics to understand why computational environments, software dependencies and reproducibility are important and how to successfully set it up independently.
+
+Let's get to it!
+
+## What is a computational environment?
+
+A computational environment is a combination of hardware and software that provides a platform for running computational tasks. It typically includes a computer system with processing units (e.g., CPU, GPU) and memory, as well as software tools and libraries for programming, data analysis, and visualization. A very straight forward example would be your own laptop. These environments also include the specific configurations and settings used to optimize the performance and functionality of the system.
+
+A computational environment can be designed and customized for specific types of computational tasks, programming languages, frameworks, or platforms. It plays a critical role in enabling scientific research, data analysis, and other computational activities. I.e. it will be essential for you as computational biologist to understand how to work in this framework. If you use a shared system such as a cluster, an administrator will take care of much of the hassle for you and common packages might be pre-installed in the system.
+
+However, it is not uncommon to have to install software in the system when you are working on a new analysis. Lucky for us, there are package managers that can help us to install and manage new software. In addition, one can even use what we call *virtual environments*. A virtual environment is an isolated environment created within a computer's operating system that allows you to install and use software packages without affecting the rest of the system.
+
+Virtual environments can be created using various tools such as conda, virtualenv, and pyenv. Once created, you can activate a virtual environment and install packages within it, just like you would with a regular environment. When you are done working with a virtual environment, you can deactivate it or remove it entirely without affecting the rest of your system.
+
+## How can I use these environments for my research?
+
+A researcher can work with these environments following these steps:
+
+1.  Planning: The first step is to identify the computational environment that best fits your research needs. E.g. can I run this from my own laptop? How much RAM will I need? Do I have enough space to store my data? Do I have permissions to install new software? These can be some of the very first questions you ran into when you start. Answering them involve considering factors such as the programming languages and tools you plan to use, the types of data you will be analyzing, and the hardware resources you have available.
+
+2.  Setting up the environment: Once you have identified the appropriate computational environment, you will need to set it up on your local machine or on a remote server (e.g. cluster). This typically involves installing the necessary software and libraries and configuring the system to meet your specific needs. Luckily, there are software and environment managers that facilitate this step. One of the most popular is a package and environment manager system called **conda**, which we already mentioned above. *We will actually take a deeper look at conda in the next section.*
+
+3.  Developing: With the environment set up, you can begin developing your code using the programming languages and tools available in the environment. You can then run your code on the system, using the resources available in the environment.
+
+4.  Sharing: Finally, you can share your work with others by publishing your code and results in a public repository, presenting your findings at conferences or workshops, or publishing your work in a scientific journal. If you also share they way you created your environment you used, reproducibility will be assured for everyone!
+
+Working with computational environments from a research perspective can be complex, but it can also be incredibly powerful and can enable researchers to perform complex analyses and simulations that would otherwise be impossible.
+
+# Package managers
+
+## Conda
+
+*Package, dependency and environment management for any language---Python, R, Ruby, Lua, Scala, Java, JavaScript, C/ C++, Fortran, and more.*
+
+Conda is an open-source package and environment management system that is used primarily in scientific computing and data science. It is able to create and manage virtual environments called "conda environments". Conda environments can be used to isolate projects from each other, which helps to ensure that software runs consistently across different environments.
+
+Conda has become a popular tool in the scientific computing and data science communities because it enables reproducible and consistent analyses across different systems and platforms. In general, it can be used in industry and academia for a variety of applications, including machine learning, data analysis, and scientific computing.
+
+## Working from the terminal
+
+The terminal is a command-line interface that allows you to interact with your computer using text-based commands. It provides a way to navigate your computer's file system, run programs, and perform various other tasks.
+
+The terminal provides a *shell*, which is a program that provides the command-line interface. There are many different shells available, including Bash and Zsh, each with their own features and syntax.
+
+The terminal is typically accessed through a terminal emulator, which is a program that provides a windowed interface for the terminal shell. On Linux and macOS, the default terminal emulator is usually a program called "Terminal" or "Terminal.app", respectively. On Windows, the default terminal emulator is called "Command Prompt" or "Windows Terminal" depending on the version of Windows you are using.
+
+While the terminal can seem intimidating at first, it is a powerful tool that can greatly improve your productivity and workflow once you become comfortable with it.
+
+Here are some basic steps to get started:
+
+-   Open a terminal emulator: You can open a terminal emulator on your computer by searching for "Terminal" or "Command Prompt" in the application launcher, or by pressing **`Ctrl+Alt+T`** on Linux or **`Command+Space`** and typing "Terminal" on macOS.
+
+-   Navigate to a directory: Once you have a terminal emulator open, you can use the **`cd`** command to change your current working directory to another directory on your system. For example, to navigate to your home directory, you can type:
+
+    ``` bash
+    cd ~
+    ```
+
+-   To list your files you can use the `ls` command.
+
+-   You can run commands or scripts from the terminal by typing their name and any necessary arguments. For example:
+
+    ``` bash
+    echo 'print("Hello CompBio :)")' > my_script.py
+    python my_script.py
+    ```
+
+Troubleshooting tip: Do you see this error message?
+
+    python: command not found
+
+You are missing python in your environment! A package manager like conda can help with that very easily.
+
+We will use the terminal for the exercises below.
+
+Does this sound good so far? Why don't we give it a try and see it in action.
+
+### Exercise 1
+
+Install conda following follow the installation instructions from the [conda user guide](https://conda.io/projects/conda/en/latest/user-guide/install/index.html#regular-installation) and create a new empty conda environment using `conda create -n myenv` command.
+
+### Exercise 2
+
+Once you have conda install it is time to add some packages. First, activate your new environment running `conda activate myenv`. Then, to install packages in conda you can use **`conda install`** command followed by the name of the package you want to install. In some instances, you might need to add a *channel* to your command. Channels are essentially collections of packages hosted in repositories. By default conda searches in the `anaconda` channel but there are many other channels available. Some popular channels include **`bioconda`** and **`conda-forge`**.
+
+You can specify which channel to use when installing packages by adding the channel name before the package name. For example, to install the **`tidyverse`** package from the **`r`** channel, you can use the following command:
+
+``` bash
+conda install -c r r-tidyverse
+```
+
+For our analysis, can you install [SRA toolkit](https://hpc.nih.gov/apps/sratoolkit.html), [samtools](http://www.htslib.org/doc/samtools.html#DESCRIPTION) and [fastqc](https://www.bioinformatics.babraham.ac.uk/projects/fastqc/) in your environment?
+
+## Pipelines
+
+Description here
+
+### Exercise 3
+
+Now, let's use the terminal.
+
+``` bash
+conda install -c bioconda -c conda-forge sra-tools=3.0.0
+```
+
+Are you getting errors? Let's try docker!
+
+You can run on windows:
+
+``` bash
+conda install -c conda-forge docker
+```
+
+otherwise you can follow instructions [here](https://docs.docker.com/engine/install/).
+
+Once is installed. open docker to get the daemon running. Then go back to your terminal and run:
+
+``` bash
+docker pull ncbi/sra-tools
+```
+
+``` bash
+docker ps
+```
+
+![](images/image-213981443.png)
+
+To runa pipeline let's ru
+
+``` bash
+docker run -v /your/local/path:/docker/path ncbi/sra-tools prefetch SRR15509636 --output-directory /docker/path
+```
+
+Takes a few minutes to run
+
+OR just:
+
+``` bash
+docker run -v /your/local/path:/docker/path ncbi/sra-tools:latest fastq-dump SRR15509636 -X 10000 --outdir /home
+```
+
+Then run fastQC and take a look.
+
+Run STAR
+
+-   Make index file
+
+-   Perform alignment
+
+Take a look with samtools
+
+Problems with conda and samtools... docker!
+
+-   sra tools
+
+-   samtools
+
+-   fastqc
+
+-   salmon
+
+Data:
+
+A data example:
+
+https://www.ncbi.nlm.nih.gov/bioproject/PRJNA755963
+
+Workflow:
+
+1.  Get data
+
+2.  Run QC
+
+3.  Align
+
+4.  Quantify
+
+5.  Question
+
+\
+See [docs](https://docs.conda.io/en/latest/).
+
+-   pros and cons
+
+-   mamba
+
+### Exercise
+
+Let's use conda to create an enviroment where we will download and work with data
+
+``` bash
+#!/bin/bash
+
+# Set working directory
+cd /path/to/output/directory/
+
+# Search for SRA accession number
+sra_acc="SRR000001"
+
+# Download SRA file
+prefetch $sra_acc
+
+# Convert SRA to fastq format
+fastq-dump --split-files $sra_acc
+
+# Clean up SRA file
+rm $HOME/ncbi/public/sra/$sra_acc.sra
+```
+
+Now that we have the data let's run some QC:
+
+-   install fastqc in your environment
+
+-   run fastqc for a piece of the bam
+
+## Containers
+
+Containers are a technology that can be used to create and manage computational environments. A container is a lightweight, standalone executable package that contains everything needed to run a piece of software, including the operating system, libraries, and application code. Containers are isolated from the host system, meaning that they can run the same software in different environments without conflicts or interference.
+
+Containers are related to computational environments in that they provide a way to package and distribute computational environments as self-contained units. By using containers, researchers can ensure that their code runs consistently across different systems and platforms, without having to worry about dependencies or conflicts with other software on the host system.
+
+In addition, containers can be used to create reproducible computational environments, which is a key consideration for many research projects. By packaging the environment and code in a container, researchers can ensure that others can replicate their experiments exactly, even if they are using different hardware or software.
+
+Overall, containers are a powerful technology for managing computational environments, and they are increasingly popular in the research community as a way to ensure reproducibility and consistency in scientific computing.
+
+## docker
+
+Docker is a popular containerization platform that allows developers to create and manage lightweight, portable, and self-contained environments called containers. A container is a lightweight, standalone executable package that contains everything needed to run a piece of software, including the operating system, libraries, and application code.
+
+Docker provides a way to package and distribute software as containers, which can be run on any system that supports Docker, regardless of the underlying hardware or software environment. Containers are isolated from the host system, meaning that they can run the same software in different environments without conflicts or interference.
+
+Docker provides a number of benefits for developers and system administrators, including:
+
+1.  Portability: Docker containers are portable across different platforms and operating systems, which makes it easy to develop and deploy software in different environments.
+
+2.  Consistency: Docker ensures that software runs consistently across different systems and platforms, which helps to eliminate issues caused by dependencies or conflicts with other software on the host system.
+
+3.  Scalability: Docker can be used to manage and scale complex applications and services, making it an ideal platform for building and deploying cloud-native applications.
+
+4.  Efficiency: Docker containers are lightweight and efficient, which means that they can be started and stopped quickly, and they consume fewer system resources than traditional virtual machines.
+
+Overall, Docker has become a popular platform for building and deploying software, particularly in cloud-native environments, and it has contributed to the growth of containerization as a key technology in modern software development and deployment.
+
+-   create your own docker image for your r script
+
+``` dockerfile
+# Use a Linux-based base image
+FROM ubuntu:latest
+
+# Install R and required packages
+RUN apt-get update && apt-get install -y r-base
+RUN Rscript -e "install.packages('ggplot2', repos = 'http://cran.rstudio.com/')"
+
+# Copy R script to container
+COPY myscript.R /usr/local/bin/
+
+# Set working directory
+WORKDIR /usr/local/bin
+
+# Run R script
+CMD ["Rscript", "myscript.R"]
+```
+
+In this example, we are using an Ubuntu base image, installing R and the **`ggplot2`** package, copying the **`myscript.R`** file to the container, setting the working directory to **`/usr/local/bin`**, and running the **`Rscript`** command with the **`CMD`** directive.
+
+## singularity
+
+Docker and Singularity are two popular containerization technologies used in scientific computing and research. While both technologies are designed to create and manage isolated environments, there are some key differences between Docker containers and Singularity containers:
+
+1.  Permissions: Docker containers run as root by default, which means that they have full access to the host system. While this can be advantageous in some cases, it can also pose security risks, particularly in multi-user environments. Singularity, on the other hand, runs containers as non-root users by default, which can improve security and prevent unauthorized access to the host system.
+
+2.  Image building: Docker images are built using a layered architecture, which can make them easier to manage and update. However, this layered approach can also result in larger image sizes, which can be problematic in some situations. Singularity, on the other hand, builds images using a flat architecture, which can result in smaller image sizes and faster build times.
+
+3.  Portability: Docker containers are designed to be portable across different platforms and operating systems, which makes them a popular choice for building and distributing software. However, this portability comes with some limitations, particularly when it comes to running containers on high-performance computing (HPC) clusters. Singularity, on the other hand, is specifically designed for use in HPC environments and can run on a wide variety of platforms and systems without root access.
+
+4.  
+
+5.  User permissions: Docker containers require root access to build and run, which can be problematic in multi-user environments. Singularity, on the other hand, can be built and run by non-root users, which can improve security and prevent conflicts between different users.
+
+Overall, while Docker and Singularity share many similarities, they are designed with different use cases in mind. Docker is well-suited for building and distributing software across different platforms and operating systems, while Singularity is specifically designed for use in HPC environments and can provide improved security and performance in those settings.
+
+### Can you use your docker as singularity?
+
+Yes, it is possible to create a Dockerfile that can also be used to build a Singularity container image. Singularity is designed to be compatible with Docker images, which means that Singularity can build and run Docker images with only minor modifications.
+
+To create a Dockerfile that can also be used to build a Singularity image, you should follow these guidelines:
+
+1.  Use a Linux-based operating system in your Dockerfile, since Singularity only supports Linux-based containers.
+
+2.  Avoid using platform-specific dependencies or libraries that are not available in Singularity, as this can cause issues when building a Singularity image.
+
+3.  Include any necessary dependencies or libraries in your Dockerfile, as Singularity may not have access to the same system libraries or packages as the host system.
+
+4.  Use a compatible base image that is supported by both Docker and Singularity, such as a Ubuntu or CentOS image.
+
+5.  When building the Singularity image, use the "docker://" prefix to indicate that you want to use a Docker image as the source for your Singularity image. For example, you can build a Singularity image from a Docker image like this:
+
+    ``` bash
+    singularity build myimage.sif docker://myusername/mydockerimage
+    ```
+
+\
+By following these guidelines, you can create a Dockerfile that can be used to build a Docker image and a Singularity image with only minor modifications.
+
+## Resources
+
+\- singularity depot - dockerhub - anaconda
+
+## Loading en environment in Rstudio
+
+To load your conda environment in Rstudio you can run the following in R console:
+
+``` r
+setwd('/work/my_project')
+renv::init()
+Sys.setenv(RENV_PATHS_CACHE = '/work/my_project/renv/cache')
+renv::use_python(type = 'conda', name = 'py_env')
+```
