@@ -114,19 +114,69 @@ And usually this changes your terminal to have the word `(phylo)` at the start o
 TODO: Add explanation about `environment.yml` files. 
 
 
+## Pip
+
+Show syntax to install from `pip` and from `pip/github`.
+
+
+## Disadvantages and pitfalls
+
+- Dependencies aren't always respected
+- Watch out for versions (sometimes things downgrade)
+- Order of channels matters - always `conda-forge` followed by `bioconda`.
+
 
 ## Exercises
 
 :::{.callout-exercise}
 
-- Using a text editor, create an environment file called `envs/qc.yml`. This file should specify: 
+Go to the `rnaseq` directory, where you will find some FASTQ files in the `reads` folder. 
+The objective in this exercise is to setup a software environment to run a standard quality control software on these sequencing reads. 
+
+- Use a text editor to create a Conda/Mamba environment file called `envs/qc.yml`. This file should specify: 
   - Environment name: `qc`
-  - Channels: `defaults`, `conda-forge`, `bioconda`
-  - Packages: FastQC and MultiQC (the latest versions available from [anaconda.org](https://anaconda.org/)).
+  - Channels: `conda-forge`, `bioconda`
+  - Packages: FastQC v0.12.1 and MultiQC v1.21 (check available packages at [anaconda.org](https://anaconda.org/)).
 - Using `mamba` build the environment from your created file.
 - Activate your new environment and run the QC script provided: `bash scripts/01-qc.sh` (you can look inside the script to see what it is doing).
-- Check if you obtained the output files in `results/`.
+- Check if you obtained the final output file in `results/qc/multiqc_report.html`.
 
+:::{.callout-answer}
+
+We can see how to specify an environment file manually on the [Conda documentation page](https://conda.io/projects/conda/en/latest/user-guide/tasks/manage-environments.html#create-env-file-manually).
+Following those instructions, we have created the following file and saved it as `envs/qc.yml`: 
+
+```yml
+name: qc
+channels:
+  - conda-forge
+  - bioconda
+dependencies:
+  - fastqc==0.12.1
+  - multiqc==1.21
+```
+
+We then created our environment with the command: 
+
+```bash
+mamba env create -f envs/qc.yml
+```
+
+We then activate our environment:
+
+```bash
+mamba activate qc
+```
+
+And finally ran the script provided: 
+
+```bash
+bash scripts/01-qc.sh
+```
+
+We can see the script ran successfully by looking at the output directory `results`.
+
+:::
 :::
 
 
@@ -139,6 +189,6 @@ TODO: example of environment with conflicts
 
 :::{.callout-exercise}
 
-TODO: example of pip-installable package (if we can find example of something not available through conda)
+TODO: example of pip-installable package
 
 :::

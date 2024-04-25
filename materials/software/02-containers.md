@@ -72,7 +72,7 @@ Once we have this image available, we are ready to run the software, which will 
 
 :::{.callout-exercise}
 
-To illustrate the use of Singularity, we will use the `seqkit` software to extract some basic statistics from the sequencing files in the `data/drosophila` directory. 
+To illustrate the use of Singularity, we will use the `seqkit` software to extract some basic statistics from the sequencing files in the `rnaseq/reads` directory. 
 If you haven't done so already, first download the container image with the commands shown above. 
 
 The way to run a command within a singularity container is: 
@@ -81,25 +81,28 @@ The way to run a command within a singularity container is:
 singularity run PATH-TO-IMAGE YOUR COMMANDS HERE
 ```
 
-- Write a command to run `seqkit stats data/reads/*.fastq.gz` using the singularity image we downloaded earlier.
+- Write a command to run `seqkit stats reads/*.fastq.gz` using the singularity image we downloaded earlier.
 
 
 :::{.callout-answer}
 The Singularity command is: 
 
 ```bash
-singularity run images/seqkit-2.8.0.sif seqkit stats data/reads/*.fastq.gz
+singularity run --pwd . images/seqkit-2.8.0.sif seqkit stats reads/*.fastq.gz
 ```
 
 If we run this, it produces an output like this: 
 
 ```
-file                             format  type  num_seqs  sum_len  min_len  avg_len  max_len
-data/reads/SRR307023_1.fastq.gz  FASTQ   DNA      5,000  505,000      101      101      101
-data/reads/SRR307023_2.fastq.gz  FASTQ   DNA      5,000  505,000      101      101      101
-data/reads/SRR307024_1.fastq.gz  FASTQ   DNA      5,000  505,000      101      101      101
-
-... etc ...
+file                                     format  type   num_seqs      sum_len  min_len  avg_len  max_len
+reads/SRR7657872_1.downsampled.fastq.gz  FASTQ   DNA   1,465,993  219,898,950      150      150      150
+reads/SRR7657872_2.downsampled.fastq.gz  FASTQ   DNA   1,465,993  219,898,950      150      150      150
+reads/SRR7657874_1.downsampled.fastq.gz  FASTQ   DNA   1,379,595  206,939,250      150      150      150
+reads/SRR7657874_2.downsampled.fastq.gz  FASTQ   DNA   1,379,595  206,939,250      150      150      150
+reads/SRR7657876_1.downsampled.fastq.gz  FASTQ   DNA   1,555,049  233,257,350      150      150      150
+reads/SRR7657876_2.downsampled.fastq.gz  FASTQ   DNA   1,555,049  233,257,350      150      150      150
+reads/SRR7657877_1.downsampled.fastq.gz  FASTQ   DNA   1,663,432  249,514,800      150      150      150
+reads/SRR7657877_2.downsampled.fastq.gz  FASTQ   DNA   1,663,432  249,514,800      150      150      150
 ```
 
 :::
