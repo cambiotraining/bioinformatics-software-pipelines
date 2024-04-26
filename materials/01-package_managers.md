@@ -63,18 +63,20 @@ This can lead to several issues:
 
 ![Illustration of Conda/Mamba environments. Each environment is isolated from the others (effectively in its own folder), so different versions of the packages can be installed for distinct projects or parts of a long analysis pipeline.](images/conda_environments.png)
 
-**Environments allow you to create isolated, self-contained environments for each project**, addressing these issues:
+**Mamba allows you to create self-contained software environments for each project**, addressing these issues:
 
-- Isolation: you can create a separate environment for each project. This ensures that the dependencies for one project don't affect another.
-- Software versions: you can specify the exact versions of libraries and packages required for each project within its environment. This eliminates version conflicts and ensures reproducibility.
-- Ease of collaboration: sharing your code and environment file makes it easy for collaborators to replicate your environment and run your project without worrying about conflicts.
-- Simplified maintenance: if you need to update a library for one project, it won't impact others. You can manage environments separately, making maintenance more straightforward.
+- **Isolation:** you can create a separate environment for each project. This ensures that the dependencies for one project don't affect another.
+- **Software versions:** you can specify the exact versions of libraries and packages required for each project within its environment. This eliminates version conflicts and ensures reproducibility.
+- **Ease of collaboration:** sharing your code and environment file makes it easy for collaborators to replicate your environment and run your project without worrying about conflicts.
+- **Simplified maintenance:** if you need to update a library for one project, it won't impact others. You can manage environments separately, making maintenance more straightforward.
 
 Another advantage of using Mamba is that the **software is installed locally** (by default in your home directory), without the need for admin (`sudo`) permissions. 
 
+### Installating software with Mamba
+
 You can search for available packages from the [anaconda.org](https://anaconda.org/) website. 
 Packages are organised into "channels", which represent communities that develop and maintain the installation "recipes" for each software. 
-The most popular channels for bioinformatics and data analysis are "_bioconda_" and "_conda-forge_". 
+The most popular channels for bioinformatics and data analysis are "**bioconda**" and "**conda-forge**". 
 
 There are three main commands to use with Mamba:
 
@@ -89,9 +91,9 @@ If we wanted to install packages for phylogenetic analysis, we could do:
 ```bash
 # create an environment named "phylo"
 mamba create -n phylo
- 
+
 # install some software in that environment
-mamba install -n phylo  iqtree mafft
+mamba install -n phylo iqtree==2.3.3 mafft==7.525
 ```
 
 If we run the command: 
@@ -110,9 +112,36 @@ mamba activate phylo
 And usually this changes your terminal to have the word `(phylo)` at the start of your prompt. 
 
 
-## Environment Files
+### Environment files
 
-TODO: Add explanation about `environment.yml` files. 
+Although we can create and manage environments as shown above, it may sometimes be useful to specify an environment in a file. 
+This is particularly useful if you want to document how your environment was created and if you want to recreate it somewhere else. 
+
+Environments can be defined using a specification file in [YAML format](https://en.wikipedia.org/wiki/YAML) (a simple text format often used for configuration files). 
+For example, our phylogenetics environment above could be specified as follows:
+
+```yml
+name: phylo
+channels:
+  - conda-forge
+  - bioconda
+dependencies:
+  - iqtree==2.3.3
+  - mafft==7.525
+```
+
+Let's say we saved this file with the name `phylogenetic_environment.yml`. 
+Then, we could create the environment using the command: 
+
+```bash
+mamba env create -f phylogenetic_environment.yml
+```
+
+If you later decide to update the environment, either by adding a new software or by updating the software versions, you can run the command: 
+
+```bash
+mamba env update -f phylogenetic_environment.yml
+```
 
 
 ## Pip
@@ -125,6 +154,14 @@ Show syntax to install from `pip` and from `pip/github`.
 - Dependencies aren't always respected
 - Watch out for versions (sometimes things downgrade)
 - Order of channels matters - always `conda-forge` followed by `bioconda`.
+
+<!-- 
+```bash
+mamba create -n metagen
+mamba install -n metagen fastqc==0.12.1 multiqc==1.21 cutadapt==4.8 trimmomatic==0.39 bowtie2==2.5.3 samtools==1.20 metaphlan==4.1.0 mash==2.3 spades==3.15.5 bbmap==39.06 flash==1.2.11 maxbin2==2.2.7 prokka==1.14.6 gtdbtk==2.4.0 abricate==1.0.1 checkm-genome==1.2.2
+
+mamba install -n metagen metaphlan mash SPAdes bbmap flash maxbin2 prokka gtdbtk abricate checkm-genome
+``` -->
 
 
 ## Exercises
