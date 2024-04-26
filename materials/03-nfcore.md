@@ -30,7 +30,7 @@ These are some of the key advantages of using a standardised workflow for our an
 
 - **Fewer errors** - because the workflow automates the process of managing input/output files, there are less chances for errors or bugs in the code to occur.
 - **Consistency and reproducibility** - analysis ran by different people should result in the same output, regardless of their computational setup.
-- **Software installation** - all software dependencies are automatically installed for the user using solutions such as _Conda_, _Docker_ and _Singularity_ (more about these in a later section of the course).
+- **Software installation** - all software dependencies are automatically installed for the user using solutions such as Conda, _Docker_ and _Singularity_ (more about these in a later section of the course).
 - **Scalability** - workflows can run on a local desktop or scale up to run on _high performance compute clusters_.
 - **Checkpoint and resume** - if a workflow fails in one of the tasks, it can be resumed at a later time.
 
@@ -52,7 +52,7 @@ All nf-core workflows come with some default profiles that we can choose from:
 
 - `singularity` uses _Singularity_ images for software management. This is the recommended (including on HPC systems).
 - `docker` uses _Docker_ images for software management. 
-- `mamba` uses _Mamba_ for software management. This is not recommended as it is known to be slow and buggy. 
+- `mamba` uses Mamba for software management. This is not recommended as it is known to be slow and buggy. 
 
 More details about these in the [nf-core documentation](https://nf-co.re/docs/usage/configuration). 
 

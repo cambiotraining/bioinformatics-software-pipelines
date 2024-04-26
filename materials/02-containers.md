@@ -8,7 +8,7 @@ Software containerization is a way to package software and its dependencies in a
 A software container can be thought of as a small virtual machine, with everything needed to run that software stored inside that file. 
 Software containers ensure reproducibility, allowing the same analysis to run on different systems. 
 They can run on a local computer or on a high-performance computing cluster, producing the same result.
-The software within a container is isolated from other software, addressing the issue of incompatible dependencies between tools (similarly to _Mamba_ environments).
+The software within a container is isolated from other software, addressing the issue of incompatible dependencies between tools (similarly to Mamba environments).
 
 For these reasons, software containerisation solutions, such as [_Docker_](https://www.docker.com/) and [_Singularity_](https://docs.sylabs.io/guides/latest/user-guide/), are widely used in bioinformatics.
 While these two container software solutions share many similarities, we will focus our attention on _Singularity_, as it is more widely used in HPC cluster systems (but it can also be used on a regular computer). 

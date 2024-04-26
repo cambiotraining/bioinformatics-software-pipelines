@@ -2,16 +2,17 @@
 title: "Package Managers"
 ---
 
-This section could cover common package managers: 
+:::{.callout-tip}
+#### Learning objectives
 
-- Pip for Python packages
-- CRAN and Bioconductor for R packages
-- `apt` for Ubuntu-based distributions
-- Conda/Mamba as a more general solution
+- Describe the role of a package manager and list examples of package managers for different applications.
+- Recognise the challenges in managing complex software environments and the role of the Conda/Mamba package manager in solving these.
+- Create and use reproducible software environments using Mamba. 
+- Recognise some of limitations of Mamba as a package manager and how to avoid common pitfalls. 
 
-Most of the time should be spent on _Conda_, but good to introduce the others as common package managers people might encounter. 
+:::
 
-----
+## What is a package manager?
 
 Most operating systems have **package managers** available, which allow the user to manage (install, remove, upgrade) their software easily. 
 The package manager takes care of automatically downloading and installing the software we want, as well as any dependencies it requires.
@@ -35,17 +36,17 @@ For example:
 In many cases package managers can also install software directly from code repositories such as GitHub, adding further flexibility to how we manage our scientific software. 
 
 
-### _Conda_/_Mamba_ Package Manager
+## Conda/Mamba
 
-A popular package manager in data science, scientific computing and bioinformatics is **_Mamba_**, which is a successor to another package manager called _Conda_.
+A popular package manager in data science, scientific computing and bioinformatics is **Mamba**, which is a successor to another package manager called Conda.
 
-_Conda_ was originally developed by [Anaconda](https://anaconda.org/) as a way to simplify the creation, distribution, and management of software environments containing different packages and dependencies. 
+Conda was originally developed by [Anaconda](https://anaconda.org/) as a way to simplify the creation, distribution, and management of software environments containing different packages and dependencies. 
 It is known for its cross-platform compatibility and relative ease of use (compared to compiling software and having the user manually install all software dependencies). 
-_Mamba_ is a more recent and high-performance alternative to _Conda_. 
-While it maintains compatibility with _Conda_'s package and environment management capabilities, _Mamba_ is designed for **faster dependency resolution and installation**, making it a better choice nowadays. 
-Therefore, the rest of this section focuses on _Mamba_ specifically.
+Mamba is a more recent and high-performance alternative to Conda. 
+While it maintains compatibility with Conda's package and environment management capabilities, Mamba is designed for **faster dependency resolution and installation**, making it a better choice nowadays. 
+Therefore, the rest of this section focuses on Mamba specifically.
 
-One of the strengths of using _Mamba_ to manage your software is that you can have different versions of your software installed alongside each other, organised in **environments**. 
+One of the strengths of using Mamba to manage your software is that you can have different versions of your software installed alongside each other, organised in **environments**. 
 Organising software packages into environments is extremely useful, as it allows to have a _reproducible_ set of software versions that you can use and reuse in your projects. 
 
 For example, imagine you are working on two projects with different software requirements:
@@ -60,7 +61,7 @@ This can lead to several issues:
 - **Dependency chaos:** as your projects grow, you might install numerous packages, and they could interfere with each other, causing unexpected errors or instability.
 - **Difficulty collaborating:** sharing your code with colleagues or collaborators becomes complex because they may have different versions of packages installed, leading to compatibility issues.
 
-![Illustration of _Conda_/_Mamba_ environments. Each environment is isolated from the others (effectively in its own folder), so different versions of the packages can be installed for distinct projects or parts of a long analysis pipeline.](images/conda_environments.svg)
+![Illustration of Conda/Mamba environments. Each environment is isolated from the others (effectively in its own folder), so different versions of the packages can be installed for distinct projects or parts of a long analysis pipeline.](images/conda_environments.png)
 
 **Environments allow you to create isolated, self-contained environments for each project**, addressing these issues:
 
@@ -69,13 +70,13 @@ This can lead to several issues:
 - Ease of collaboration: sharing your code and environment file makes it easy for collaborators to replicate your environment and run your project without worrying about conflicts.
 - Simplified maintenance: if you need to update a library for one project, it won't impact others. You can manage environments separately, making maintenance more straightforward.
 
-Another advantage of using _Mamba_ is that the **software is installed locally** (by default in your home directory), without the need for admin (`sudo`) permissions. 
+Another advantage of using Mamba is that the **software is installed locally** (by default in your home directory), without the need for admin (`sudo`) permissions. 
 
 You can search for available packages from the [anaconda.org](https://anaconda.org/) website. 
 Packages are organised into "channels", which represent communities that develop and maintain the installation "recipes" for each software. 
 The most popular channels for bioinformatics and data analysis are "_bioconda_" and "_conda-forge_". 
 
-There are three main commands to use with _Mamba_:
+There are three main commands to use with Mamba:
 
 - `mamba create -n ENVIRONMENT-NAME`: this command creates a new software environment, which can be named as you want. Usually people name their environments to either match the name of the main package they are installating there (e.g. an environment called `pangolin` if it's to install the _Pangolin_ software). Or, if you are installing several packages in the same environment, then you can name it as a topic (e.g. an environment called `rnaseq` if it contains several packages for RNA-seq data analysis).
 - `mamba install -n ENVIRONMENT-NAME  NAME-OF-PACKAGE`: this command installs the desired package in the specified environment. 
