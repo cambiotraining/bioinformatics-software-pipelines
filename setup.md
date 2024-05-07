@@ -19,13 +19,14 @@ If you want to setup your own computer to run the analysis demonstrated on this 
 
 ## Data
 
-The data used in these materials is provided as a zip file. 
-Download and unzip the folder to your Desktop to follow along with the materials.
+You can download the data used in these materials as a zip file from dropbox. 
 
 <!-- Note for Training Developers: add the link to 'href' -->
-<a href="">
-  <button class="btn"><i class="fa fa-download"></i> Download</button>
+<a href="https://www.dropbox.com/scl/fo/hof2gmftr8iq1744jkwnd/AOE_vgyKxphI63OAA5dCzqM?rlkey=k929x9ipitvuexrf72u7hbth9&st=muryirlr&dl=0" target="_blank">
+  <button class="btn"><i class="fab fa-dropbox"></i> Download</button>
 </a>
+
+
 
 ## Setup
 

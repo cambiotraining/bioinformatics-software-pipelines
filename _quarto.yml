@@ -35,6 +35,10 @@ book:
   favicon: "_extensions/cambiotraining/courseformat/img/university-of-cambridge-favicon.ico"
   bread-crumbs: false
   page-navigation: true
+  body-header: | 
+    <div class="callout-caution">
+    These materials are still under development
+    </div>
   page-footer: 
     center: |
       Licensed [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/) 
@@ -43,6 +47,9 @@ book:
   navbar:
     pinned: true
     logo: "_extensions/cambiotraining/courseformat/img/university_crest_reversed.png"
+    left: 
+      - text: Slides
+        href: https://docs.google.com/presentation/d/17xzb0caD0Rf9h6eYmP1cj45ZMTnVKQEPh8vhSNkqHJo/edit?usp=sharing
     right:
       - icon: github
         href: https://github.com/cambiotraining/bioinformatics-software-pipelines
