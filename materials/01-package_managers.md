@@ -155,13 +155,60 @@ Show syntax to install from `pip` and from `pip/github`.
 - Watch out for versions (sometimes things downgrade)
 - Order of channels matters - always `conda-forge` followed by `bioconda`.
 
-<!-- 
-```bash
-mamba create -n metagen
-mamba install -n metagen fastqc==0.12.1 multiqc==1.21 cutadapt==4.8 trimmomatic==0.39 bowtie2==2.5.3 samtools==1.20 metaphlan==4.1.0 mash==2.3 spades==3.15.5 bbmap==39.06 flash==1.2.11 maxbin2==2.2.7 prokka==1.14.6 gtdbtk==2.4.0 abricate==1.0.1 checkm-genome==1.2.2
+One thing to be very careful about is how Conda/Mamba manages the dependency graph of packages to install. 
+If you don't specify the version of the software you want, in theory Mamba will pick the latest version available on the channel. 
+However, this is conditional on the other packages that are installed alongside it, as some versions may be incompatible with each other, it may downgrade some packages without you realising. 
 
-mamba install -n metagen metaphlan mash SPAdes bbmap flash maxbin2 prokka gtdbtk abricate checkm-genome
-``` -->
+Take this example, where we create a new environment called `metagen` with some software for metagenomic analysis: 
+
+```bash
+mamba create -n metagen multiqc bowtie2 metaphlan
+```
+
+At the time of writing, the [latest version of metaphlan on anaconda.org](https://anaconda.org/bioconda/metaphlan) is 4.1.0, however as we run this command we can see that Mamba is installing version 4.0.6. 
+
+Let's be more explicit and specify we want the latest versions available of all three packages (at the time of writing): 
+
+```bash
+mamba create -n metagen multiqc==1.21 bowtie2==2.5.3 metaphlan==4.1.0
+```
+
+By running this command, we get an error message informing us that Mamba could not find a fully compatible environment for all these three software versions: 
+
+```
+Could not solve for environment specs
+The following packages are incompatible
+
+... followed by a ridiculously long message explanining the sofware incompatibilities ...
+```
+
+How would we solve this problem? 
+One possibility is to **install each software in a separate environment**. 
+The disadvantage is that you will need to run several `mamba activate` commands at every step of your analysis. 
+
+Another possibility is to **find a compatible combination of package versions** that is sufficient for your needs.
+For example, let's say that `metaphlan` was the most critical software for which we needed to run the latest version. 
+We could find what versions of the other two packages are compatible with it, by forcing its version, but not the version of the other two: 
+
+```bash
+mamba create -n metagen multiqc bowtie2 metaphlan==4.1.0
+```
+
+Running this command, we can see that we would get `bowtie2==2.5.1` and `multiqc==1.21`. 
+So, bowtie would be a slightly older version than currently available. 
+But if we were happy with this choice, then we could proceed. 
+For reproducibility, we could save all this information in a YAML file specifying our environment: 
+
+```yaml
+name: metagen
+channels:
+  - conda-forge
+  - bioconda
+dependencies:
+  - bowtie==2.5.1
+  - multiqc==1.21
+  - metaphlan==4.1.0
+```
 
 
 ## Exercises
