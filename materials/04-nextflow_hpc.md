@@ -6,6 +6,7 @@ How to configure Nextflow to run on a HPC.
 
 - Config file - e.g. setting SLURM options to use
 - Use `tmux`/`screen` to get a persistent terminal on a remote server
+- If running many samples consider using `sintr` - many samples might overload the memory and get the nextflow run killed.
 
 
 ## HPC configuration
@@ -18,7 +19,7 @@ process {
   executor = 'slurm'
   
   // generic option
-  clusterOptions = '--account LEYSER-SL2-CPU --partition cclake'
+  clusterOptions = '--account LEYSER-SL2-CPU --partition icelake'
 
   // Settings below are for CSD3 nodes detailed at
   //   https://docs.hpc.cam.ac.uk/hpc/index.html
@@ -100,7 +101,7 @@ singularity {
 
 :::{.callout-exercise}
 
-- Create a configuration file for our "HPC".
+- Copy the configuration file for our "HPC" and modified according to exercise (add some FIX-ME?).
 - Singularity cache in custom directory.
 - Re-run the pipeline and see if it is submitting jobs to the scheduler as expected. 
 
