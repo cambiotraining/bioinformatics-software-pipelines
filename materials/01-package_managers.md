@@ -72,7 +72,7 @@ This can lead to several issues:
 
 Another advantage of using Mamba is that the **software is installed locally** (by default in your home directory), without the need for admin (`sudo`) permissions. 
 
-### Installating software with Mamba
+### Installing software with Mamba
 
 You can search for available packages from the [anaconda.org](https://anaconda.org/) website. 
 Packages are organised into "channels", which represent communities that develop and maintain the installation "recipes" for each software. 
@@ -80,7 +80,7 @@ The most popular channels for bioinformatics and data analysis are "**bioconda**
 
 There are three main commands to use with Mamba:
 
-- `mamba create -n ENVIRONMENT-NAME`: this command creates a new software environment, which can be named as you want. Usually people name their environments to either match the name of the main package they are installating there (e.g. an environment called `pangolin` if it's to install the _Pangolin_ software). Or, if you are installing several packages in the same environment, then you can name it as a topic (e.g. an environment called `rnaseq` if it contains several packages for RNA-seq data analysis).
+- `mamba create -n ENVIRONMENT-NAME`: this command creates a new software environment, which can be named as you want. Usually people name their environments to either match the name of the main package they are installing there (e.g. an environment called `pangolin` if it's to install the _Pangolin_ software). Or, if you are installing several packages in the same environment, then you can name it as a topic (e.g. an environment called `rnaseq` if it contains several packages for RNA-seq data analysis).
 - `mamba install -n ENVIRONMENT-NAME  NAME-OF-PACKAGE`: this command installs the desired package in the specified environment. 
 - `mamba activate ENVIRONMENT-NAME`: this command "activates" the environment, which means the software installed there becomes available from the terminal. 
 
@@ -109,7 +109,7 @@ If we want to use the software we installed in that environment, then we can act
 mamba activate phylo
 ```
 
-And usually this changes your terminal to have the word `(phylo)` at the start of your prompt. 
+And usually this changes your terminal to have the word `(phylo)` at the start of your prompt instead of `(base)`. 
 
 
 ### Environment files
@@ -146,7 +146,55 @@ mamba env update -f phylogenetic_environment.yml
 
 ## Pip
 
-Show syntax to install from `pip` and from `pip/github`.
+THe Python installer normally includes `pip`, i.e. when you install Python, `pip` is also installed by default. On linux, you mgiht need to install an additional package called `python3-pip`. To make sure pip is up-to-date and running you can run this command:
+
+```bash
+python -m pip install --upgrade pip 
+python -m pip --version
+```
+
+Output should look like:
+
+`pip 23.3.1 from .../.venv/lib/python3.9/site-packages (python 3.9)`
+
+`venv` is the Python package manager (similar to mamba you can create and manage environments with this software). For more information on pip/env please check the (Python docs)[https://packaging.python.org/en/latest/guides/installing-using-pip-and-virtual-environments/]
+
+### Installing with pip
+
+Installing a package with pip follows a similar syntax to mamba:
+
+```bash
+python -m pip install sampleproject
+```
+
+You can also install packages from GitHub if available:
+
+```bash
+python -m pip install git+https://github.com/pypa/sampleproject.git@main
+```
+
+Another option is to install a package from a distribution file which is normally a `tar.gz` file:
+
+```bash
+python -m pip install sampleproject-1.0.tar.gz
+```
+
+Finally, similar to mamba and YAML files, `pip` accepts `requirements.txt` files to specify a list of packages to be installed for a project.
+
+```bash
+python -m pip install -r requirements.txt
+```
+
+#### Upgrading and uninstalling packages with pip
+
+Upgrading or removing a packages using pip is also relatively straight forward:
+
+```bash
+# Upgrading
+python -m pip install --upgrade sampleproject
+# Uninstalling
+python -m pip uninstall sampleproject
+```
 
 
 ## Disadvantages and pitfalls
@@ -209,6 +257,17 @@ dependencies:
   - multiqc==1.21
   - metaphlan==4.1.0
 ```
+
+::: {.callout-note}
+#### Note on mixing package managers
+There might be times when some packages/libraries are not available in a package manager. For example, it can be common to use conda/mamba but find a python library that is only available through `pip`. Unfortunately, this may cause issues in your environment as pip may change your conda-installed packages, which might break the conda environment. There are a few steps one can follow to avoid this pitfalls:
+
+1. Start from a new and clean environment. If the new environment break you can safely remove it and start over. You can create a new environment from pre-existing ones if necessary. We will see more of this later.
+2. Install `pip` in your conda environment. This is important as the pip you have in your base environment is different from your new environment (will avoid conflicts).
+3. Install any conda packages your need to get the environment ready and leave the pip install for last. Avoid switching between package managers. Start with one and finish with the other one so reversing or fixing conflicts is easier.
+
+You can find a (checklist)[https://www.anaconda.com/blog/using-pip-in-a-conda-environment] in the anaconda webpage for good practice.
+:::
 
 
 ## Exercises
