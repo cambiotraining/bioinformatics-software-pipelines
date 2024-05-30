@@ -1,16 +1,18 @@
 ---
-pagetitle: "Bioinfo Pro"
+pagetitle: "Software & Pipelines"
 ---
 
 # Automated Workflows
 
-General introduction to Workflow Management systems (Nextflow, Snakemake, others?) and then specifically focus on nf-core pipelines. 
+::: callout-tip
+#### Learning objectives
 
-- what are workflows management systems and why would I want to use them? [~DONE to be reviewed]
-- what are some of the main documented workflows available? [Snakemake and nextflow? I don't know others maybe more info on snakemake required]
-- how to use nf-core pipelines? 
-- how to configure nextflow to use software package managers?
+- What are workflows management systems and why would I want to use them?
+- What are some of the main documented workflows available?
+- How to use nf-core pipelines? 
+- How to configure nextflow to use software package managers?
 
+:::
 
 ## Overview
 
@@ -20,25 +22,13 @@ As analyses become more complex, pipelines may include the use of many different
 Furthermore, as we want to chain multiple tools together, the inputs of one tool may be the output of another, which can become challenging to manage. 
 
 Although it is possible to code such workflows using _shell_ scripts, these often don't scale well across different users and compute setups. 
-To overcome these limitations, dedicated [_workflow/pipeline management software_](https://en.wikipedia.org/wiki/Workflow_management_system) packages have been developed to help standardise pipelines and make it easier for the user to process their data. 
+To overcome these limitations, dedicated [_workflow/pipeline management software_](https://en.wikipedia.org/wiki/Bioinformatics_workflow_management_system) packages have been developed to help standardise pipelines and make it easier for the user to process their data. 
+These dedicated packages are designed to streamline and automate the process of coordinating complex sequences of tasks and data processing (for instance an RNA-seq analysis).
+In this way, researchers can focus on their scientific questions instead of the nitty-gritty of data processing.
 
-Two of the most popular _workflow software_ packages are [_Snakemake_](https://snakemake.readthedocs.io/en/stable/) and [_Nextflow_](https://www.nextflow.io/). 
-We will not cover how to develop workflows with these packages, but rather how to use existing workflows developed by the community.
+![A) Workflow illustration, showing ready-for-running tasks highlighted in green, indicating all necessary input files are available. The initial red task produces a temporary file, potentially removable once the blue tasks complete. Workflow management systems ensure tasks are run in an optimal and automated manner. For example, in B) there is suboptimal scheduling of tasks, as only one blue task is scheduled the temporary file cannot be removed. Conversely, in C) we have optimal scheduling, since the three blue tasks are scheduled first enabling deletion of the temporary file after their completion. Diagram taken from [Mölder et al. 2021](https://doi.org/10.12688/f1000research.29032.2).](https://f1000research.s3.amazonaws.com/manuscripts/56004/3c3b99f9-b002-4f62-b11c-18cca6cf9ed4_figure4.gif)
 
-## Nextflow and Snakemake
-[Workflow management solutions](https://en.wikipedia.org/wiki/Workflow_management_system), such as [Nextflow](https://en.wikipedia.org/wiki/Nextflow), are designed to streamline and automate the process of coordinating complex sequences of tasks and data processing (for instance an RNA-seq analysis). Nextflow helps automate the process of analyzing large datasets, so researchers can focus on their scientific questions instead of the nitty-gritty of data processing. Nextflow works on different computer systems, from personal laptops to large cloud-based platforms, making it very versatile. Another relevant aspect is [nf-core](https://nf-co.re/), a community project linked to Nextflow, where scientists contribute ready-to-use, high-quality analysis pipelines. This means you don’t have to start from scratch if someone else has already created a workflow for a similar analysis. It’s all about making data analysis more accessible, standardized, and reproducible across the globe​​​​.
-
-Alternatively to Nextflow, we also have [Snakemake](https://snakemake.readthedocs.io/en/stable/). Snakemake is another workflow management system to create reproducible and scalable research. The main difference with Nextflow is that Snakemake syntax is based on [Python](https://www.python.org/) language and Nextflow is based on [groovy](https://groovy-lang.org/) language. the choice between one of the other is really depending on the user, some people prefer Snakemake because they are familiar with Python and some other people prefer Nextflow because of its active community. In this course we will focus on Nextflow due to the well-standarised and ready-to-use pipeline available through nf-core.
-
-
-### Nextflow community: nf-core
-
-`nf-core` is a community effort to collect and maintain curated nextflow pipelines. These pipelines follow certain standards and best practices to facilitate its use in a wider community. They also provide templates and tools for developers to validate and ensure standards, these nf-core companion tool is called [`nf-tools`](https://nf-co.re/tools).
-
-
-### Why Use a Standardised Workflow? {.unlisted .unnumbered}
-
-These are some of the key advantages of using a standardised workflow for our analysis:
+Here are some of the key advantages of using a standardised workflow for our analysis:
 
 - **Fewer errors** - because the workflow automates the process of managing input/output files, there are less chances for errors or bugs in the code to occur.
 - **Consistency and reproducibility** - analysis ran by different people should result in the same output, regardless of their computational setup.
@@ -47,21 +37,23 @@ These are some of the key advantages of using a standardised workflow for our an
 - **Checkpoint and resume** - if a workflow fails in one of the tasks, it can be resumed at a later time.
 
 
-## Nextflow installation
-Begin by installing Nextflow ([https://www.nextflow.io/](https://www.nextflow.io/)). Ensure Java 11 or higher is installed on your system, then use the command `curl -fsSL get.nextflow.io | bash` to install Nextflow. Note: `curl` command is designed for unix-like operating systems (linux and macOS). To install Nextflow on windows please follow the steps from nextflow documentation [here](https://www.nextflow.io/blog/2021/setup-nextflow-on-windows.html) or use a unix-like terminal in your Windows.
+## Nextflow and Snakemake
 
-You can familiarize yourself with Nextflow further through tutorials and documentation available at training.nextflow.io, including a practical introduction to [simple RNA-Seq workflow](https://training.nextflow.io/basic_training/rnaseq_pipeline/).
+Two of the most popular _workflow software_ packages are [_Snakemake_](https://snakemake.readthedocs.io/en/stable/) and [_Nextflow_](https://www.nextflow.io/). 
+We will not cover how to develop workflows with these packages, but rather **how to use existing workflows developed by the community**.[^1]
+Both Snakemake and Nextflow offer similar functionality and can work on different computer systems, from personal laptops to large cloud-based platforms, making them very versatile.
+One of the main noticeable difference to those developing pipelines with these tools is that Snakemake syntax is based on [Python](https://www.python.org/), whereas Nextflow is based on [groovy](https://groovy-lang.org/).
+The choice between one of the other is really down to individual preference. 
 
-## Nextflow structure
+<!-- footnote -->
+[^1]: To learn how to build your own pipelines, there are many tutorials available on [training.nextflow.io](https://training.nextflow.io/), including [how to build a simple RNA-Seq workflow](https://training.nextflow.io/basic_training/rnaseq_pipeline/). _Snakemake_ also provides an [excellent tutorial](https://snakemake.readthedocs.io/en/stable/tutorial/tutorial.html) covering both basic and advanced features to build custom pipelines.
 
-### Work and cache
-When a Nextflow pipeline runs it follows a specific structure. Within the folder you are working a `work` directory will be created when you execute the pipeline for the first time. The `work` directory stores a variety of files used during the pipeline run. Each task from the pipeline (e.g. a bash command can be considered a task) will have a unique directory name within `work`. When a task is created, Nextflow stages the task input files, script, and other helper files into the task directory. The task writes any output files to this directory during its execution, and Nextflow uses these output files for downstream tasks and/or publishing. Publishing is when the output of a task is being 'published' to the specified output directory. 
+Another important aspect of these projects are the workflows and modules provided by the community: 
 
-The reason for this structure is explained by understanding the `cache`. One of the core features of Nextflow is the ability to cache task executions and re-use them in subsequent runs to minimize duplicate work. Resumability is useful both for recovering from errors and for iteratively developing a pipeline. It is similar to checkpointing, a common practice used by HPC applications.
+- [nf-core](https://nf-co.re/): a community project where scientists contribute ready-to-use, high-quality analysis pipelines. This means you don’t have to start from scratch if someone else has already created a workflow for a similar analysis. It’s all about making data analysis more accessible, standardized, and reproducible across the globe​​​​.
+- [Snakemake workflow catalog](https://snakemake.github.io/snakemake-workflow-catalog/): a searcheable catalog of workflows developed by the community, with instructions and details on how to use them. Although there is some standardisation of these pipelines, they are not as well curated as the ones from nf-core. 
 
-You can enable resumability in Nextflow with the `-resume` flag when launching a pipeline with `nextflow run`. All task executions are automatically saved to the task cache in the `work` directory. 
-
-More information about this in the [Nextflow docs](https://www.nextflow.io/docs/latest/cache-and-resume.html)
+These materials will focus on Nextflow, due to the standarised and ready-to-use pipelines available through nf-core.
 
 
 ## Nextflow command line interface:
@@ -79,6 +71,7 @@ The command `nextflow run` has some useful options:
 - `-work-dir`: defines the directory where intermediate result files (cache) are stored.
 
 We detail each of these below. 
+
 
 ### Configuration profile
 
@@ -108,20 +101,27 @@ profiles {
 ```
 
 Let's say we saved this file as `nextflow.config`.
-We can then use this profile by running our pipeline with the options `-profile singularity -c my_config`. You can also specify more than one profile in your command as `nextflow run -profile singularity -c myconfig1 -c myconfig2`.
+We can then use this profile by running our pipeline with the options `-profile singularity -c nextflow.config`. 
+You can also specify more than one configuration file in your command as `-c myconfig1 -c myconfig2`.
 
 
 ## Cache directory
 
-The `-work-dir` option can be used to define where Nextflow stores intermediate files as it runs the pipeline. 
-The storage of these intermediate files allows the pipeline to resume the pipeline from a previous state, in case it ran with errors and failed half-way through. 
+When a Nextflow pipeline runs it creates (by default) a `work` directory when you execute the pipeline for the first time. 
+The `work` directory stores a variety of intermediate files used during the pipeline run, called a **cache**. 
+The storage of these intermediate files is very important, as it allows the pipeline to resume from a previous state, in case it ran with errors and failed half-way through (more on this below).
 
-The default directory is called `work` as mentioned before and you will see it being created in the directory where you run the pipeline from, if you run it with default options. 
-This default directory is fine, but you may sometimes want to define a different directory.
+Each task from the pipeline (e.g. a bash command can be considered a task) will have a unique directory name within `work`. 
+When a task is created, Nextflow stages the task input files, script, and other helper files into the task directory. 
+The task writes any output files to this directory during its execution, and Nextflow uses these output files for downstream tasks and/or publishing. 
+Publishing is when the output of a task is being saved to the output directory specified by the user. 
+
+The `-work-dir` option can be used to change the name of the cache directory from the default `work`. 
+This default directory name is fine (and most people just use that), but you may sometimes want to define a different one.
 For example, if you coincidentally already have a directory called "work" in your project, or if you want to use a separate storage partition to save the intermediate files.
 
 Regardless, it is important to remember that your final results are not stored in the work directory. 
-They are saved to the output directory of your pipeline. 
+They are saved to the output directory you define when you run the pipeline. 
 Therefore, after successfully finishing your pipeline you can safely **remove the work directory**. 
 This is important to save disk space and you should make sure to do it regularly. 
 
@@ -129,12 +129,12 @@ This is important to save disk space and you should make sure to do it regularly
 ## Checkpoint-and-resume
 
 Because Nextflow is keeping track of all the intermediate files it generates, it can re-run the pipeline from a previous step, if it failed half-way through. 
-This is an extremely useful feature of workflow management systems and it can save a lot of compute time, in case a pipeline failed (for whichever reason). 
+This is an extremely useful feature of workflow management systems and it can save a lot of compute time, in case a pipeline failed. 
 
 All you have to do is use the option `-resume` when launching the pipeline and it will always resume where it left off. 
-Note that, if you remove the work cache directory (as detailed above), then the pipeline will have to start from the beginning, as it doesn't have any intermediate files saved to resume from. 
+Note that, if you remove the work cache directory detailed above, then the pipeline will have to start from the beginning, as it doesn't have any intermediate files saved to resume from. 
 
-[Note from Raquel: Sorry this bit might be redundant now because of what I added above. Do you mind revising?]
+More information about this feature can be found in the [Nextflow documentation](https://www.nextflow.io/docs/latest/cache-and-resume.html).
 
 
 ## Samplesheet
@@ -164,6 +164,26 @@ We can copy-paste the file paths and use the "find and replace" feature to repla
 This way we save a lot of time of typing but also reduce the risk of having typos in our file paths. 
 
 
+## Demo nf-core pipeline
+
+TODO: add description
+
+![](https://raw.githubusercontent.com/nf-core/demo/dev//docs/images/nf-core-demo-subway.png)
+
+```bash
+nextflow run -profile "singularity" -revision "dev" nf-core/demo \
+  --input "samplesheet.csv" \
+  --outdir "results/qc" \
+  --fasta "resources/genome/something.fa.gz"
+```
+
+In this case we used the following options: 
+
+- `-profile singularity` indicates we want to use Singularity to manage the software. Nextflow will automatically download containers for each step of the pipeline. 
+- `-revision dev` means we are running the development version of the pipeline. It's a good idea to define the specific version of the pipeline you run, so you can reproduce the results in the future, in case the pipeline changes. This demo pipeline only has a development version, but usually versions are numbered (some examples will be shown in the exercises).
+- `--input` is the samplesheet CSV for this pipeline. 
+- `--outdir` is the name of the output directory for our results. 
+- `--fasta` is the reference genome to be used by the pipeline.
 
 
 ## Exercises
@@ -172,5 +192,13 @@ This way we save a lot of time of typing but also reduce the risk of having typo
 
 - Create samplesheet
 - Run pipeline using a default profile
+
+:::
+
+## Summary
+
+::: callout-tip
+#### Key points
+
 
 :::

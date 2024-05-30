@@ -30,7 +30,12 @@ You can download the data used in these materials as a zip file from dropbox.
 
 ## Setup
 
-TODO
+### Nextflow
+
+Ensure Java 11 or higher is installed on your system, then use the command `curl -fsSL get.nextflow.io | bash` to install Nextflow. 
+Note: `curl` command is designed for unix-like operating systems (linux and macOS). 
+To install Nextflow on windows please follow the steps from nextflow documentation [here](https://www.nextflow.io/blog/2021/setup-nextflow-on-windows.html) or use a unix-like terminal in your Windows.
+
 
 <!-- 
 ### Quarto

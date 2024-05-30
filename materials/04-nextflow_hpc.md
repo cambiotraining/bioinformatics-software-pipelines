@@ -1,6 +1,8 @@
 ---
-title: "Nextflow on HPC"
+pagetitle: "Software & Pipelines"
 ---
+
+# Nextflow on HPC
 
 How to configure Nextflow to run on a HPC.
 

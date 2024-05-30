@@ -1,6 +1,8 @@
 ---
-title: "Package Managers"
+pagetitle: "Software & Pipelines"
 ---
+
+# Package Managers
 
 :::{.callout-tip}
 #### Learning objectives
