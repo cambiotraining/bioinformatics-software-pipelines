@@ -201,10 +201,6 @@ python -m pip uninstall sampleproject
 
 ## Disadvantages and pitfalls
 
-- Dependencies aren't always respected
-- Watch out for versions (sometimes things downgrade)
-- Order of channels matters - always `conda-forge` followed by `bioconda`.
-
 One thing to be very careful about is how Conda/Mamba manages the dependency graph of packages to install. 
 If you don't specify the version of the software you want, in theory Mamba will pick the latest version available on the channel. 
 However, this is conditional on the other packages that are installed alongside it, as some versions may be incompatible with each other, it may downgrade some packages without you realising. 
@@ -261,7 +257,8 @@ dependencies:
 ```
 
 ::: {.callout-note}
-#### Note on mixing package managers
+#### Mixing package managers
+
 There might be times when some packages/libraries are not available in a package manager. For example, it can be common to use conda/mamba but find a python library that is only available through `pip`. Unfortunately, this may cause issues in your environment as pip may change your conda-installed packages, which might break the conda environment. There are a few steps one can follow to avoid this pitfalls:
 
 1. Start from a new and clean environment. If the new environment break you can safely remove it and start over. You can create a new environment from pre-existing ones if necessary. We will see more of this later.
@@ -337,4 +334,27 @@ TODO: example of environment with conflicts
 
 TODO: example of pip-installable package
 
+:::
+
+
+## Summary
+
+::: callout-tip
+#### Key points
+
+- A package manager automates the process of installing, upgrading, configuring, and managing software packages, including their dependencies.
+- Examples of package managers are `pip` (Python), `apt` (Debian/Ubuntu) and `conda`/`mamba` (generic).
+- Dependency conflicts, which often arise in complex bioinformatic workflows, can be resolved by managing software in isolated environments. 
+- Conda/Mamba simplify these tasks by managing dependencies, creating isolated environments, and ensuring reproducible setups across different systems.
+- Key Mamba commands include:
+  - `mamba create --name ENVIRONMENT-NAME` to create a new environment.
+  - `mamba install -n ENVIRONMENT-NAME  NAME-OF-PACKAGE` to install a package inside that environment.
+  - `mamba activate ENVIRONMENT-NAME` to make the software from that environment available.
+  - `mamba env create -f ENVIRONMENT-YAML-SPECIFICATION` to create an environment from a YAML file (recommended for reproducibility).
+  - `mamba env update -f ENVIRONMENT-YAML-SPECIFICATION` to update an environment from a YAML file (recommended for reproducibility).
+- Recognise some of limitations of Mamba as a package manager and how to avoid common pitfalls. 
+- There are some disadvantages/limitations of Mamba as a package manager: 
+  - Dependencies aren't always respected.
+  - Software versions are sometimes downgraded without explicit warning.
+  - It can be slow at resolving very complex environments. 
 :::

@@ -4,11 +4,22 @@ pagetitle: "Software & Pipelines"
 
 # Container Virtualisation
 
-## Software Containers
+::: callout-tip
+#### Learning objectives
+
+- Describe how software containerisation helps in managing complex software environments. 
+- Use online repositories to find existing images for commonly used software in bioinformatics.
+- Use Singularity to run commands within a container. 
+- Configure Singularity to work on different filesystems.
+
+:::
+
+## Overview
 
 Software containerisation is a way to package software and its dependencies in a single file. 
 A software container can be thought of as a small virtual machine, with everything needed to run that software stored inside that file. 
-Software containers are self-contained, meaning that they are isolated from the host system. This ensures reproducibility, addressing the issue of incompatible dependencies between tools (similarly to Mamba environments). 
+Software containers are self-contained, meaning that they are isolated from the host system. 
+This ensures reproducibility, addressing the issue of incompatible dependencies between tools (similarly to Mamba environments). 
 They can run on a local computer or on a high-performance computing cluster, producing the same result.
 The same analysis can be run on different systems ensuring consistency and reproducibility.
 
@@ -33,25 +44,21 @@ Singularity is specifically designed for use in HPC environments and can run on 
 :::
 
 
-### Singularity installation
+## Singularity images
 
-Typically, Singularity is pre-installed on HPC servers by the system administrators, and **we recommend that you use the version installed by your system admins**. 
-
-Although it is possible to install it yourself (e.g. with Mamba), it will require further configuration to interact with the filesystem and a deeper understanding of how Singularity works.
-
-
-### Singularity images
-
-We have been discussing containers, which are self-contained environments equipped with everything necessary to conduct our analysis. Containers are constructed from `images` —these are executable files that generate the container. To help understand this, consider `images` like a sheet of music and `containers` as the actual music you hear. The sheet music is portable and can be performed on various instruments, yet the melody remains consistent regardless of where it's played.
+Containers are constructed from `images` - these are executable files that generate the container. 
+To help understand this, consider `images` like a sheet of music and `containers` as the actual music you hear. 
+The sheet music is portable and can be performed on various instruments, yet the melody remains consistent regardless of where it's played.
 
 Although you can build your own Singularity images, for many popular software there are already pre-built images available from public repositories. 
 Some popular ones are: 
 
-- [Galaxy Project](https://galaxyproject.org/): an open-source platform for data analysis available to researchers and the community. They provide the [galaxy depot](https://depot.galaxyproject.org/singularity/) from where you can navigate to their singularity containers and choose the one that you need for your analysis.
-- [Sylabs](https://cloud.sylabs.io/): a Singularity Container Services from the Singularity developers.
+- [Galaxy Project](https://galaxyproject.org/): an open-source platform for data analysis available to researchers and the community. They provide the [galaxy depot](https://depot.galaxyproject.org/singularity/) from where you can navigate to their singularity images and choose the one that you need for your analysis.
+- [Sylabs](https://cloud.sylabs.io/): Singularity Container Services from the Singularity developers.
+- [dockerhub](https://hub.docker.com/search): a more generic repository of Docker images, which can also be used with Singularity.
 
 For example, let's consider the [SeqKit program](https://bioinf.shenwei.me/seqkit/), which is a toolkit for manipulating FASTA/Q files. 
-If we search on either of those websites, we will see this software is available on both. 
+If we search on those websites, we will see this software is available on all of them. 
 In this case, the version on Sylabs ([here](https://cloud.sylabs.io/library/bhargava-morampalli/containers/seqkit)) is older than the one on the Galaxy server (at the time of writing we have 2.8.0 available). 
 
 Therefore, let's consider the file on the Galaxy server.
@@ -71,12 +78,51 @@ Here, we are saving the image file as `seqkit-2.8.0.sif` (`.sif` is the standard
 Once we have this image available, we are ready to run the software, which will see in practice with the exercise below. 
 
 
+## Executing commands
+
+To execute a command inside the image container, we can use the `singularity run` command. 
+For example, let's run the command `seqkit --help` to look at the help documentation of the SeqKit software:
+
+```bash
+singularity run images/seqkit-2.8.0.sif seqkit --help
+```
+
+And this should print the help of the program. 
+Note that SeqKit is not installed on your system, rather the command is avaible inside the container, as it was pre-installed in its image file. 
+
+
+## Filesystem binding
+
+One important thing to note is that, by default, not your entire filesystem is visible to the container. 
+You have your home directory mounted on the image by default, but nothing else. 
+
+If you want to operate on files that are on a different file partition, you need to _bind_ them to the container.
+This is done using the `--bind` option, which requires a **full path** to the directory you want to make available on the image. 
+
+For example, say a user called `robin` was working on a directory called `/scratch/robin/awesomeproject`. 
+Because this directory is not in the default home (`/home/robin`), it will not be available on the container by default. 
+The user could make it available as the default directory by running: 
+
+```bash
+singularity run --bind /scratch/robin/awesomeproject images/seqkit-2.8.0.sif seqkit --help
+```
+
+See more information about this in the [Singularity documentation](https://docs.sylabs.io/guides/3.0/user-guide/bind_paths_and_mounts.html).
+
+:::callout-note
+#### Singularity on HPC systems
+
+Typically, Singularity is pre-installed on HPC servers by the system administrators, and **we recommend that you use the version installed by your system admins**. 
+This is because they will have often already set specific bindings to the filesystem, meaning you don't need to do this yourself. 
+:::
+
+
 ### Exercises
 
 :::{.callout-exercise}
 
 To illustrate the use of Singularity, we will use the `seqkit` software to extract some basic statistics from the sequencing files in the `rnaseq/reads` directory. 
-If you haven't done so already, first download the container image with the commands shown above. 
+If you haven't done so already, first download the container with the commands shown above. 
 
 The way to check a command within a singularity container is: 
 
@@ -84,14 +130,14 @@ The way to check a command within a singularity container is:
 singularity run images/seqkit-2.8.0.sif seqkit --help
 ```
 
-- Write a command to run `seqkit stats reads/*.fastq.gz` using the singularity image we downloaded earlier.
+- Write a command to run the command `seqkit stats reads/*.fastq.gz` using the singularity container we downloaded earlier.
 
 
 :::{.callout-answer}
 The Singularity command is: 
 
 ```bash
-singularity run --pwd . images/seqkit-2.8.0.sif seqkit stats reads/*.fastq.gz
+singularity run images/seqkit-2.8.0.sif seqkit stats reads/*.fastq.gz
 ```
 
 If we run this, it produces an output like this: 
@@ -108,14 +154,18 @@ reads/SRR7657877_1.downsampled.fastq.gz  FASTQ   DNA   1,663,432  249,514,800   
 reads/SRR7657877_2.downsampled.fastq.gz  FASTQ   DNA   1,663,432  249,514,800      150      150      150
 ```
 
-[OPTIONAL - TO BE DISCUSSED]
-If we were using our own version of singularity we would need to **mount** or **bind** your host path to your container paths as follows:
-
-```bash
-singularity run --bind /my/host/path:/my/container/path --pwd . images/seqkit-2.8.0.sif seqkit stats reads/*.fastq.gz
-```
-
-See More information about this in the [Singularity documentation](https://docs.sylabs.io/guides/3.0/user-guide/bind_paths_and_mounts.html)
-
 :::
+:::
+
+
+## Summary
+
+::: callout-tip
+#### Key points
+
+- Software containerisation solutions such as Docker and Singularity achieve isolation and consistency in running software. This is because they encapsulate applications with their dependencies in a file (known as an image), ensuring consistent performance across different environments.
+- The computer science and bioinformatics community has built many images for commonly used software, including the [galaxy depot](https://depot.galaxyproject.org/singularity/), [Sylabs](https://cloud.sylabs.io/) and [dockerhub](https://hub.docker.com/search).
+- To download an image from the online repositories we can use the command `singularity pull <URL TO IMAGE>`
+- To run a command using an existing image, we use the command: `singularity run <PATH TO IMAGE> <YOUR COMMAND>`
+- We can mount specific directories in our filesystem to the Singularity container using the `--bind` option with a _full path_ to the directory we want to make available.
 :::
