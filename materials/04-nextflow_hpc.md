@@ -4,11 +4,18 @@ pagetitle: "Software & Pipelines"
 
 # Nextflow on HPC
 
+::: callout-tip
+#### Learning objectives
+
+TODO
+
 How to configure Nextflow to run on a HPC.
 
 - Config file - e.g. setting SLURM options to use
 - Use `tmux`/`screen` to get a persistent terminal on a remote server
 - If running many samples consider using `sintr` - many samples might overload the memory and get the nextflow run killed.
+:::
+
 
 
 ## HPC configuration
@@ -99,7 +106,7 @@ singularity {
 }
 ```
 
-
+## Exercises
 
 :::{.callout-exercise}
 
@@ -107,4 +114,15 @@ singularity {
 - Singularity cache in custom directory.
 - Re-run the pipeline and see if it is submitting jobs to the scheduler as expected. 
 
+:::
+
+
+## Summary
+
+::: callout-tip
+#### Key points
+
+- WfMS define, automate and monitor the execution of a series of tasks in a specific order. They improve efficiency, reduce errors, can be easily scaled (from a local computer to a HPC cluster) and increase reproducibility.
+- Popular WfMS in bioinformatics include Nextflow and Snakemake. Both of these projects have associated community-maintained workflows, with excellent documentation for their use: [nf-core](https://nf-co.re/) and the [snakemake workflow catalog](https://snakemake.github.io/snakemake-workflow-catalog/).
+- TODO: finish key points
 :::

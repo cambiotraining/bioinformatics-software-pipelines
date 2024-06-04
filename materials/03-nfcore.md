@@ -7,11 +7,10 @@ pagetitle: "Software & Pipelines"
 ::: callout-tip
 #### Learning objectives
 
-- What are workflows management systems and why would I want to use them?
-- What are some of the main documented workflows available?
-- How to use nf-core pipelines? 
-- How to configure nextflow to use software package managers?
-
+- Describe how workflow management systems (WfMS) work and their advantages in complex analysis pipelines.
+- List some of the most popular WfMS used in the field of bioinformatics.
+- Recognise the main configuration aspects needed to run a Nextflow pipeline: configuration profiles, cache, resumability, samplesheets.
+- Apply a standard Nextflow pipelines developed by the nf-core community to a set of sequencing data.
 :::
 
 ## Overview
@@ -73,7 +72,7 @@ The command `nextflow run` has some useful options:
 We detail each of these below. 
 
 
-### Configuration profile
+## Configuration profile
 
 There are several ways to **configure how our Nextflow workflow runs**. 
 All nf-core workflows come with some default profiles that we can choose from:
@@ -200,5 +199,7 @@ In this case we used the following options:
 ::: callout-tip
 #### Key points
 
-
+- WfMS define, automate and monitor the execution of a series of tasks in a specific order. They improve efficiency, reduce errors, can be easily scaled (from a local computer to a HPC cluster) and increase reproducibility.
+- Popular WfMS in bioinformatics include Nextflow and Snakemake. Both of these projects have associated community-maintained workflows, with excellent documentation for their use: [nf-core](https://nf-co.re/) and the [snakemake workflow catalog](https://snakemake.github.io/snakemake-workflow-catalog/).
+- TODO: finish key points
 :::
