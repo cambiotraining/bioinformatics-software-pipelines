@@ -325,14 +325,14 @@ We can see the script ran successfully by looking at the output directory `resul
 
 :::{.callout-exercise}
 
-TODO: example of environment with conflicts
+TODO: example of environment with conflicts?
 
 :::
 
 
 :::{.callout-exercise}
 
-TODO: example of pip-installable package
+TODO: example of pip-installable package?
 
 :::
 

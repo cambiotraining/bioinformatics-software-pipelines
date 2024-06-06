@@ -165,34 +165,206 @@ This way we save a lot of time of typing but also reduce the risk of having typo
 
 ## Demo nf-core pipeline
 
-TODO: add description
+To demonstrate the use of standard nf-core pipelines, we will use the aptly named [`nf-core/demo` pipeline](https://nf-co.re/demo/). 
+This workflow takes a set of FASTQ files as input, runs them through a simple QC step and outputs processed files as well as a MultiQC quality report.
 
 ![](https://raw.githubusercontent.com/nf-core/demo/dev//docs/images/nf-core-demo-subway.png)
 
+We will run this workflow on a set of files found in the `demo` directory.
+Looking at the documentation, we are given an example of the samplesheet CSV file.
+
+This is how the samplesheet looks like for our samples: 
+
+```
+sample,fastq_1,fastq_2
+drug_rep2,reads/SRR7657872_1.downsampled.fastq.gz,reads/SRR7657872_2.downsampled.fastq.gz
+drug_rep1,reads/SRR7657874_1.downsampled.fastq.gz,reads/SRR7657874_2.downsampled.fastq.gz
+control_rep2,reads/SRR7657876_1.downsampled.fastq.gz,reads/SRR7657876_2.downsampled.fastq.gz
+control_rep1,reads/SRR7657877_1.downsampled.fastq.gz,reads/SRR7657877_2.downsampled.fastq.gz
+```
+
+We have named our samples using informative names of our choice, and indicate the path to the respective FASTQ input files.
+We can then run our workflow as follows:
+
 ```bash
 nextflow run -profile "singularity" -revision "dev" nf-core/demo \
+  --max_memory "12GB" --max_cpus 8 \
   --input "samplesheet.csv" \
   --outdir "results/qc" \
-  --fasta "resources/genome/something.fa.gz"
+  --fasta "genome/Mus_musculus.GRCm38.dna_sm.chr14.fa.gz"
 ```
 
 In this case we used the following options: 
 
-- `-profile singularity` indicates we want to use Singularity to manage the software. Nextflow will automatically download containers for each step of the pipeline. 
-- `-revision dev` means we are running the development version of the pipeline. It's a good idea to define the specific version of the pipeline you run, so you can reproduce the results in the future, in case the pipeline changes. This demo pipeline only has a development version, but usually versions are numbered (some examples will be shown in the exercises).
-- `--input` is the samplesheet CSV for this pipeline. 
+- `-profile "singularity"` indicates we want to use Singularity to manage the software. Nextflow will automatically download containers for each step of the pipeline. 
+- `-revision "dev"` means we are running the development version of the pipeline. It's a good idea to define the specific version of the pipeline you run, so you can reproduce the results in the future, in case the pipeline changes. This demo pipeline only has a development version, but usually versions are numbered (some examples will be shown in the exercises).
+- `--input` is the samplesheet CSV for this pipeline, which we prepared beforehand using a spreadsheet program such as Excel. 
 - `--outdir` is the name of the output directory for our results. 
 - `--fasta` is the reference genome to be used by the pipeline.
+
+When the pipeline starts running, we are given information about its progress, for example: 
+
+```
+executor >  local (3)
+[-        ] process > NFCORE_DEMO:DEMO:FASTQC            -
+[72/e1a45a] process > NFCORE_DEMO:DEMO:FASTP (drug_rep1) [ 50%] 2 of 4
+[-        ] process > NFCORE_DEMO:DEMO:MULTIQC           -
+```
+
+You will also notice that a new directory called `work` is created. 
+As mentioned above, this is the cache directory, which stores intermediate files and allows the workflow to resume if it fails half-way through (using the `-resume` option).
+
+Once the pipeline completes (hopefully successfully), we are given a message: 
+
+```
+
+```
+
+If we are happy with our results, we can clean the `work` cache directory to save space: 
+
+```bash
+nextflow clean
+```
+
+::: callout-note
+#### Reference genomes
+
+TODO: add note about reference genomes and why using igenomes is not recommended.
+:::
+
+
+## Troubleshooting
+
+Inevitably workflows may fail, which could be due to several reasons. 
+For example, an error in our command, a mis-formatted samplesheet, missing input files or sometimes even a bug in the pipeline. 
+
+When an error occurs, the `nextflow` command terminates and an error message is printed on the screen (usually in bright red!). 
+The error messages can be quite long and feel difficult to interpret, but often only a small part of the message is relevant, so read it careful to see if you can spot what the problem is. 
+ 
+For example, we previously got the following error when running the `nf-core/demo` pipeline. 
+Can you see what the problem was?
+
+<pre>
+<code>
+-[nf-core/demo] Pipeline completed with errors-
+<span style="color:#ff0000;">
+ERROR ~ Error executing process > 'NFCORE_DEMO:DEMO:FASTP (drug_rep1)'
+
+Caused by:
+  Process requirement exceeds available memory -- req: 36 GB; avail: 23.5 GB
+
+Command executed:
+
+  [ ! -f  drug_rep1_1.fastq.gz ] && ln -sf SRR7657874_1.downsampled.fastq.gz drug_rep1_1.fastq.gz
+  [ ! -f  drug_rep1_2.fastq.gz ] && ln -sf SRR7657874_2.downsampled.fastq.gz drug_rep1_2.fastq.gz
+  fastp \
+      --in1 drug_rep1_1.fastq.gz \
+      --in2 drug_rep1_2.fastq.gz \
+      --out1 drug_rep1_1.fastp.fastq.gz \
+      --out2 drug_rep1_2.fastp.fastq.gz \
+      --json drug_rep1.fastp.json \
+      --html drug_rep1.fastp.html \
+       \
+       \
+       \
+      --thread 6 \
+      --detect_adapter_for_pe \
+       \
+      2> >(tee drug_rep1.fastp.log >&2)
+  
+  cat <<-END_VERSIONS > versions.yml
+  "NFCORE_DEMO:DEMO:FASTP":
+      fastp: $(fastp --version 2>&1 | sed -e "s/fastp //g")
+  END_VERSIONS
+</span>
+</code>
+</pre>
+
+<details><summary>Click here for the answer</summary>
+Although this is a long message, the cause of the error itself is at the top where we are told "Process requirement exceeds available memory -- req: 36 GB; avail: 23.5 GB".
+
+This means a step of the pipeline must have requested 36GB by default, but we only had 23.5GB on the computer used to run it. 
+In this case, we can add two options to our command that every nf-core pipeline has: `--max_memory 20GB --max_cpus 8`.
+
+Note that in real-world cases, where you are likely running these workflows on a HPC you don't need to worry about this. 
+We will learn more about running workflows on HPC in the [next section](04-nextflow_hpc.md). 
+</details>
 
 
 ## Exercises
 
 :::{.callout-exercise}
 
-- Create samplesheet
-- Run pipeline using a default profile
+In this exercise, you will explore one (or more, if you have time and interest) of the pipelines from the nf-core community, tailored to different areas of genomic analysis. 
+Start with the version of the exercise that aligns best with your data and interests. 
+
+Carefully read the respective nf-core pipeline documentation to understand the required format for the samplesheet and any specific parameters needed for running the pipeline. Once your samplesheet is ready, launch the pipeline and watch how Nextflow orchestrates the different steps of the analysis.
+
+In each case, remember to use the `-r` option to specify the version of the workflow to be used (use the latest available on the respective documentation page) and tell Nextflow to use `singularity` to manage the software. 
+
+Note that all of these datasets are downsampled to be small, so they run quickly. 
+They do not represent best practices in experimental design. 
+
+::: panel-tabset
+### RNA-seq
+
+Transcriptome data processing using `nf-core/rnaseq`. 
+Go into the `rnaseq` directory for this version of the exercise. 
+
+- Documentation at [nf-co.re/rnaseq/](https://nf-co.re/rnaseq/).
+- Input FASTQ files in `reads/`.
+- Reference genome in `genome/`.
+- Sample metadata in `sample_info.tsv` (tab-delimited).
+
+### ChIP-seq
+
+Chromatin immunoprecipitation sequencing analysis using `nf-core/chipseq`.
+Go into the `chipseq` directory for this version of the exercise. 
+
+- Documentation at [nf-co.re/chipseq/](https://nf-co.re/chipseq/).
+- Input FASTQ files in `reads/`.
+- Reference genome in `genome/`
+- Sample metadata in `sample_info.tsv` (tab-delimited).
+
+### Virus genomes - Illumina
+
+Analysis of viral genomes using `nf-core/viralrecon`.
+Go into the `virus_illumina` directory for this version of the exercise. 
+
+- Documentation at [nf-co.re/viralrecon/](https://nf-co.re/viralrecon/).
+- Input FASTQ files in `reads/`.
+- FASTA file for the reference genome, BED file for primer locations and GFF file with gene annotations in `genome/` (see if you can find the pipeline parameters for each of these files in the documentation).
+- Sample metadata in `sample_info.tsv` (tab-delimited).
+
+### Virus genomes - ONT
+
+Analysis of viral genomes using `nf-core/viralrecon`.
+Go into the `virus_ont` directory for this version of the exercise. 
+
+- Documentation at [nf-co.re/viralrecon/](https://nf-co.re/viralrecon/).
+- Input barcode directories with FASTQ files in `fast_pass/`.
+- FASTA file for the reference genome, BED file for primer locations and GFF file with gene annotations in `genome/`  (see if you can find the pipeline parameters for each of these files in the documentation).
+- Sample metadata in `sample_info.tsv` (tab-delimited).
+
+### Variant calling
+
+Identifying genetic variants using `nf-core/sarek`.
+Go into the `variants` directory for this version of the exercise. 
+
+- Documentation at [nf-co.re/sarek/](https://nf-co.re/sarek/).
+- Input FASTQ files in `reads/`.
+- FASTA file for the reference genome in `genome/`.
+- Sample metadata in `sample_info.tsv` (tab-delimited).
 
 :::
+
+::: callout-answer
+
+TODO
+
+:::
+:::
+
 
 ## Summary
 

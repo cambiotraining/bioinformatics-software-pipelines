@@ -121,7 +121,7 @@ This is because they will have often already set specific bindings to the filesy
 
 :::{.callout-exercise}
 
-To illustrate the use of Singularity, we will use the `seqkit` software to extract some basic statistics from the sequencing files in the `rnaseq/reads` directory. 
+To illustrate the use of Singularity, we will use the `seqkit` software to extract some basic statistics from the sequencing files in the `demo/reads` directory. 
 If you haven't done so already, first download the container with the commands shown above. 
 
 The way to check a command within a singularity container is: 
