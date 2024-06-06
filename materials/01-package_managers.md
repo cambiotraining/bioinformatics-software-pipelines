@@ -273,7 +273,7 @@ You can find a (checklist)[https://www.anaconda.com/blog/using-pip-in-a-conda-en
 
 :::{.callout-exercise}
 
-Go to the `rnaseq` directory, where you will find some FASTQ files in the `reads` folder. 
+Go to the `demo` directory, where you will find some FASTQ files in the `reads` folder. 
 The objective in this exercise is to setup a software environment to run a standard quality control software on these sequencing reads. 
 
 - Use a text editor to create a Conda/Mamba environment file called `envs/qc.yml`. This file should specify: 
