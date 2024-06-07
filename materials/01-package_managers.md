@@ -132,71 +132,20 @@ dependencies:
   - mafft==7.525
 ```
 
-Let's say we saved this file with the name `phylogenetic_environment.yml`. 
-Then, we could create the environment using the command: 
+We have included this example in the file `demo/envs/phylo.yml`.
+To create the environment from the file, we can use the command: 
 
 ```bash
-mamba env create -f phylogenetic_environment.yml
+mamba env create -f envs/phylo.yml
 ```
 
 If you later decide to update the environment, either by adding a new software or by updating the software versions, you can run the command: 
 
 ```bash
-mamba env update -f phylogenetic_environment.yml
+mamba env update -f envs/phylo.yml
 ```
 
-
-## Pip
-
-THe Python installer normally includes `pip`, i.e. when you install Python, `pip` is also installed by default. On linux, you mgiht need to install an additional package called `python3-pip`. To make sure pip is up-to-date and running you can run this command:
-
-```bash
-python -m pip install --upgrade pip 
-python -m pip --version
-```
-
-Output should look like:
-
-`pip 23.3.1 from .../.venv/lib/python3.9/site-packages (python 3.9)`
-
-`venv` is the Python package manager (similar to mamba you can create and manage environments with this software). For more information on pip/env please check the (Python docs)[https://packaging.python.org/en/latest/guides/installing-using-pip-and-virtual-environments/]
-
-### Installing with pip
-
-Installing a package with pip follows a similar syntax to mamba:
-
-```bash
-python -m pip install sampleproject
-```
-
-You can also install packages from GitHub if available:
-
-```bash
-python -m pip install git+https://github.com/pypa/sampleproject.git@main
-```
-
-Another option is to install a package from a distribution file which is normally a `tar.gz` file:
-
-```bash
-python -m pip install sampleproject-1.0.tar.gz
-```
-
-Finally, similar to mamba and YAML files, `pip` accepts `requirements.txt` files to specify a list of packages to be installed for a project.
-
-```bash
-python -m pip install -r requirements.txt
-```
-
-#### Upgrading and uninstalling packages with pip
-
-Upgrading or removing a packages using pip is also relatively straight forward:
-
-```bash
-# Upgrading
-python -m pip install --upgrade sampleproject
-# Uninstalling
-python -m pip uninstall sampleproject
-```
+You can practice this in an exercise below.
 
 
 ## Disadvantages and pitfalls
@@ -272,6 +221,7 @@ You can find a (checklist)[https://www.anaconda.com/blog/using-pip-in-a-conda-en
 ## Exercises
 
 :::{.callout-exercise}
+#### Creating a new Mamba environment
 
 Go to the `demo` directory, where you will find some FASTQ files in the `reads` folder. 
 The objective in this exercise is to setup a software environment to run a standard quality control software on these sequencing reads. 
@@ -324,15 +274,59 @@ We can see the script ran successfully by looking at the output directory `resul
 
 
 :::{.callout-exercise}
+#### Update a Mamba environment
 
-TODO: example of environment with conflicts?
+Going back to the `envs/phylo.yml` environment (in the `demo` folder), update the environment to include a software to for dating phylogenetic trees called TreeTime.
+
+- Go to [anaconda.org](https://anaconda.org/) to see what is the latest version available and from which channel.
+- Update the YAML environment file to include it.
+- Update the environment.
+- Check if the software was installed successfully by running `treetime --version`.
+
+::: callout-answer
+
+We can see the software is available from https://anaconda.org/bioconda/treetime, provided from the bioconda channel.
+The latest version at the time of writing is 0.11.3, so it is the one we demonstrate below. 
+
+Using a text editor of our choice, we update our YAML file: 
+
+```yml
+name: phylo
+channels:
+  - conda-forge
+  - bioconda
+dependencies:
+  - iqtree==2.3.3
+  - mafft==7.525
+  - treetime==0.11.3
+```
+
+After saving the changes, we update our environment: 
+
+```bash
+mamba env update -f envs/phylo.yml
+```
+
+Once the update runs successfully, we activate the environment first with `mamba activate phylo` and then test our software: 
+
+```bash
+treetime --version
+```
+
+```
+treetime 0.11.3
+```
+
+The command runs successfully, with the expected version printed, indicating it is successfully installed. 
 
 :::
+:::
+
 
 
 :::{.callout-exercise}
 
-TODO: example of pip-installable package?
+TODO: example of environment with conflicts?
 
 :::
 
