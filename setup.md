@@ -47,9 +47,6 @@ $HOME/miniforge3/bin/mamba init
 Restart your terminal (or open a new one) and confirm that your shell now starts with the word `(base)`.
 Then run the following commands: 
 
-Restart your terminal (or open a new one) and confirm that your shell now starts with the word `(base)`.
-Then run the following commands: 
-
 ```bash
 conda config --add channels defaults
 conda config --add channels bioconda
