@@ -159,7 +159,7 @@ ls reads/*_1.downsampled.fastq.gz
 
 This will give us a good start to create the samplesheet. 
 We can then open this file in a spreadsheet software such as _Excel_ and create the remaining columns. 
-We can copy-paste the file paths and use the "find and replace" feature to replace "R1" with "R2". 
+We can copy-paste the file paths and use the "find and replace" feature to replace "_1" with "_2". 
 This way we save a lot of time of typing but also reduce the risk of having typos in our file paths. 
 
 
