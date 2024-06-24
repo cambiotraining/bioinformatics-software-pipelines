@@ -239,7 +239,7 @@ Inevitably workflows may fail, which could be due to several reasons.
 For example, an error in our command, a mis-formatted samplesheet, missing input files or sometimes even a bug in the pipeline. 
 
 When an error occurs, the `nextflow` command terminates and an error message is printed on the screen (usually in bright red!). 
-The error messages can be quite long and feel difficult to interpret, but often only a small part of the message is relevant, so read it careful to see if you can spot what the problem is. 
+The error messages can be quite long and feel difficult to interpret, but often only a small part of the message is relevant, so read it carefully to see if you can spot what the problem is. 
  
 For example, we previously got the following error when running the `nf-core/demo` pipeline. 
 Can you see what the problem was?
@@ -342,7 +342,7 @@ Analysis of viral genomes using `nf-core/viralrecon`.
 Go into the `virus_ont` directory for this version of the exercise. 
 
 - Documentation at [nf-co.re/viralrecon/](https://nf-co.re/viralrecon/).
-- Input barcode directories with FASTQ files in `fast_pass/`.
+- Input barcode directories with FASTQ files in `fastq_pass/`.
 - FASTA file for the reference genome, BED file for primer locations and GFF file with gene annotations in `genome/`  (see if you can find the pipeline parameters for each of these files in the documentation).
 - Sample metadata in `sample_info.tsv` (tab-delimited).
 
