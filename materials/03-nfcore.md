@@ -154,7 +154,7 @@ As FASTQ files are often named using very long identifiers, it's a good idea to 
 For example, we can create a first version of our file by listing all read 1 files and saving it into a file: 
 
 ```bash
-ls reads/*_R1.fq.gz > samplesheet.csv
+ls reads/*_1.downsampled.fastq.gz
 ```
 
 This will give us a good start to create the samplesheet. 
