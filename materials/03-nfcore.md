@@ -346,6 +346,43 @@ Go into the `virus_ont` directory for this version of the exercise.
 - FASTA file for the reference genome, BED file for primer locations and GFF file with gene annotations in `genome/`  (see if you can find the pipeline parameters for each of these files in the documentation).
 - Sample metadata in `sample_info.tsv` (tab-delimited).
 
+<details><summary>Click here for the answer</summary>
+
+
+The nanopore sub-workflow of the viralrecon pipeline is based on the [ARTIC bioinformatics protocol](https://artic.network/ncov-2019/ncov2019-bioinformatics-sop.html) and uses several of the tools from the accompanying [`artic` software package](https://artic.readthedocs.io/en/latest/). 
+
+This sub-workflow is similar to the other nanopore sub-workflow, the main difference is the software used for generating a consensus sequence (`medaka` instead of `nanopolish`).
+
+First we need to convert the samplesheet to a comma-separated file and change the header. You could use a text editor such as nano and replace all the tabs with commas. Then change the header to "sample,barcode".
+
+To run the pipeline on the basecalled data (FASTQ files), we use the following command:
+
+```bash
+nextflow run nf-core/viralrecon \
+  -r 2.6.0 -profile singularity \
+  --platform nanopore \
+  --input sample_info.csv \
+  --fastq_dir fastq_pass/ \
+  --outdir results \
+  --protocol amplicon \
+  --genome 'MN908947.3' \
+  --primer_set artic \
+  --primer_set_version 3 \
+  --artic_minion_caller medaka \
+  --artic_minion_medaka_model r941_min_fast_g303\
+  --skip_assembly --skip_asciigenome \
+  --skip_pangolin --skip_nextclade
+```
+
+Some of the key options are:
+
+- `--platform nanopore` makes sure that the correct sub-workflow will be used. 
+- `--artic_minion_caller medaka` indicates we want to use the `medaka` program to do the variant/consensus calling (directly from the basecalled FASTQ files, rather than from the raw signal in the FAST5 files).
+- `--artic_minion_medaka_model` specifies the model used by the `guppy_basecaller` software to do the basecalling. The model name follows the structure `{pore}_{device}_{caller variant}_{caller version}`. See more details about this in the [medaka models documentation](https://github.com/nanoporetech/medaka#models). **Note:** for recent versions of Guppy (>6) there is no exact matching model from `medaka`. The recommendation is to use the model for the latest version available; a list of supported models can be found on the [`medaka` GitHub repository](https://github.com/nanoporetech/medaka/tree/master/medaka/data).
+- `--fastq_dir` specifies the directory containing the FASTQ files. This directory should contain sub-directories for each barcoded sample following the naming convention `barcodeXXXX` (where X is a number between 0 and 9). By default, the `guppy_basecaller` software from Nanopore generates a folder called "fastq_pass" which follows this convention. 
+
+</details>
+
 ### Variant calling
 
 Identifying genetic variants using `nf-core/sarek`.
