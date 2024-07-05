@@ -326,6 +326,32 @@ Go into the `chipseq` directory for this version of the exercise.
 - Reference genome in `genome/`
 - Sample metadata in `sample_info.tsv` (tab-delimited).
 
+<details><summary>Click here for the answer</summary>
+
+```
+
+# Generate samplesheet (manually edit header after)
+# Header: sample,fastq_1,fastq_2,antibody,control
+cat sample_info.tsv | perl -ne 'chomp;@a=split/\t/;print "$a[0],/mnt/home3/reid/ajr236/course_material/managing_software_and_pipelines/chipseq/reads/$a[1].fastq.gz,,$a[2],$a[3]\n"' > samplesheet.csv
+
+# Activate conda environment
+conda activate nextflow
+
+# Run the pipeline
+nextflow run nf-core/chipseq \
+        -r 2.0.0 \
+	--input samplesheet.csv \
+	--outdir results \
+        --fasta /mnt/home3/reid/ajr236/course_material/managing_software_and_pipelines/chipseq/genome/GRCh38.109.chr21.fasta.gz \
+        --gtf /mnt/home3/reid/ajr236/course_material/managing_software_and_pipelines/chipseq/genome/GRCh38.109.chr21.gtf.gz \
+        --blacklist /mnt/home3/reid/ajr236/course_material/managing_software_and_pipelines/chipseq/genome/ENCFF356LFX_exclusion_lists.chr21.bed.gz \
+        --read_length 100 \
+	-profile singularity
+
+```
+
+</details>
+
 ### Virus genomes - Illumina
 
 Analysis of viral genomes using `nf-core/viralrecon`.
