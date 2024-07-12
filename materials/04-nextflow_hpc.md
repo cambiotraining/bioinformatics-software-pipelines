@@ -87,11 +87,43 @@ singularity {
 }
 ```
 
+## Where to run your Nextflow pipeline
+
+You might wondering if it is kay to run your nextflow pipeline in the HPC headnode. Normally, it is absolutely fine as nextflow won't be taking too many resources. However, you do need to *keep your nextflow run open in your terminal*. There are several ways to achieve this:
+
+Option 1:
+
+You can run your nextflow pipeline using the `-bg` option, which will run your nextflow pipeline in the background of your terminal. If you need to look at the output of the nextflow run you can take a look at your `.nextflow.log`
+
+Option2:
+
+If you don't want to miss any output from your run we recommend using a *terminal ultiplexer* such as [`screen`](https://linuxize.com/post/how-to-use-linux-screen/) or [`tmux`](https://github.com/tmux/tmux/wiki). Both work the same way, except that `screen` is normally installed by default in the linux machine, therefore we recommend you start there. What these tools allow is to open a session within your terminal that it is virtually the same as your actual terminal with the exception that it will be kept open in the background. This allows processes to continue to run even if you close your window or get disconnected from the HPC.
+
+Example:
+
+```bash
+screen -s mysession
+# a screen session caller 'mysession' will be opened
+echo 'hello this is a test'
+# close your window.
+```
+
+After you close your terminal, open a new one. Make sure you are logged in in the same head node and run:
+
+```bash
+screen -ls
+# you will see mysession still running
+screen -r mysession
+# you re-attached to your session and keep working where you left it!
+```
+
+
 :::{.callout-exercise}
 
 - Create a configuration file for our "HPC" using the sapphire partition.
 - Singularity cache in custom directory.
 - Re-run the pipeline and see if it is submitting jobs to the scheduler as expected.
+  - Extra: run it from a `screen` session
 - Add `errorStrategy` to avoid specific error
 - [Optional/Advanced] Add a new label to an existing process using `withName`
 - [Optional/Advanced] Make a process run only `when` a condition is met
