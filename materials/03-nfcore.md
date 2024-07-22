@@ -316,6 +316,30 @@ Go into the `rnaseq` directory for this version of the exercise.
 - Reference genome in `genome/`.
 - Sample metadata in `sample_info.tsv` (tab-delimited).
 
+<details><summary>Click here for the answer</summary>
+
+```
+
+# Make samplesheet (header done manually in e.g. nano after)
+cat sample_info.tsv | perl -ne 'chomp;@a=split/\t/;print "$a[4],reads/$a[0]\_1.downsampled.fastq.gz,reads/$a[0]\_2.downsampled.fastq.gz,auto\n"' >> samplesheet.csv
+
+# Activate conda environment
+conda activate nextflow
+
+# Run nf-core/rnaseq pipeline
+nextflow run \
+    nf-core/rnaseq \
+    -r 3.14.0 \
+    --input samplesheet.csv \
+    --outdir results \
+    --gtf /mnt/home3/reid/ajr236/course_material/managing_software_and_pipelines/rnaseq/genome/Mus_musculus.GRCm38.102.chr14.gtf.gz \
+    --fasta /mnt/home3/reid/ajr236/course_material/managing_software_and_pipelines/rnaseq/genome/Mus_musculus.GRCm38.dna_sm.chr14.fa.gz  \
+    --igenomes_ignore \
+    -profile singularity
+```
+
+</details>
+
 ### ChIP-seq
 
 Chromatin immunoprecipitation sequencing analysis using `nf-core/chipseq`.
@@ -421,7 +445,18 @@ Go into the `variants` directory for this version of the exercise.
 
 ::: callout-answer
 
-TODO
+conda activate nextflow
+
+nextflow run \
+    nf-core/rnaseq \
+    -r 3.14.0 \
+    --input samplesheet.csv \
+    --outdir results \
+    --gtf /mnt/home3/reid/ajr236/course_material/managing_software_and_pipelines/rnaseq/genome/Mus_musculus.GRCm38.102.chr14.gtf.gz \
+    --fasta /mnt/home3/reid/ajr236/course_material/managing_software_and_pipelines/rnaseq/genome/Mus_musculus.GRCm38.dna_sm.chr14.fa.gz  \
+    --igenomes_ignore \
+    -profile singularity
+
 
 :::
 :::
