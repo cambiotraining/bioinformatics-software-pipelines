@@ -30,7 +30,61 @@ You can download the data used in these materials as a zip file from dropbox.
 
 ## Setup
 
-TODO
+### Conda
+
+We recommend using the _Conda_ package manager to install your software. 
+In particular, the newest implementation called _Mamba_. 
+
+To install _Mamba_, run the following commands from the terminal: 
+
+```bash
+wget "https://github.com/conda-forge/miniforge/releases/latest/download/Miniforge3-$(uname)-$(uname -m).sh"
+bash Miniforge3-$(uname)-$(uname -m).sh -b -p $HOME/miniforge3
+rm Miniforge3-$(uname)-$(uname -m).sh
+$HOME/miniforge3/bin/mamba init
+```
+
+Restart your terminal (or open a new one) and confirm that your shell now starts with the word `(base)`.
+Then run the following commands: 
+
+```bash
+conda config --add channels defaults
+conda config --add channels bioconda
+conda config --add channels conda-forge
+conda config --set channel_priority strict
+conda config --set remote_read_timeout_secs 1000
+```
+
+
+### Nextflow
+
+We recommend that you install _Nextflow_ within a conda environment.
+You can do that with the following command:
+
+```bash
+mamba create -n nextflow -y nextflow
+```
+
+When you want to use _Nextflow_ make sure to activate this software environment by running `mamba activate nextflow`. 
+
+
+### Singularity
+
+We recommend that you install _Singularity_ and use the `-profile singularity` option when running _Nextflow_ pipelines. 
+On Ubuntu/WSL2, you can install _Singularity_ using the following commands: 
+
+```bash
+sudo apt install -y runc cryptsetup-bin uidmap
+wget -O singularity.deb https://github.com/sylabs/singularity/releases/download/v4.0.2/singularity-ce_4.0.2-$(lsb_release -cs)_amd64.deb
+sudo dpkg -i singularity.deb
+rm singularity.deb
+```
+
+If you have a different Linux distribution, you can find more detailed instructions on the [_Singularity_ documentation page](https://docs.sylabs.io/guides/3.0/user-guide/installation.html#install-on-linux). 
+
+If you have issues running _Nextflow_ pipelines with _Singularity_, then you can follow the instructions below for _Docker_ instead. 
+
+
 
 <!-- 
 ### Quarto

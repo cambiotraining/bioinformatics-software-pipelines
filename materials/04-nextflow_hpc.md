@@ -1,11 +1,21 @@
 ---
-title: "Nextflow on HPC"
+pagetitle: "Software & Pipelines"
 ---
+
+# Nextflow on HPC
+
+::: callout-tip
+#### Learning objectives
+
+TODO
 
 How to configure Nextflow to run on a HPC.
 
 - Config file - e.g. setting SLURM options to use
 - Use `tmux`/`screen` to get a persistent terminal on a remote server
+- If running many samples consider using `sintr` - many samples might overload the memory and get the nextflow run killed.
+:::
+
 
 
 ## How to specify configuration in Nextflow
@@ -87,6 +97,7 @@ singularity {
 }
 ```
 
+
 ## Where to run your Nextflow pipeline
 
 You might wondering if it is kay to run your nextflow pipeline in the HPC headnode. Normally, it is absolutely fine as nextflow won't be taking too many resources. However, you do need to *keep your nextflow run open in your terminal*. There are several ways to achieve this:
@@ -118,9 +129,12 @@ screen -r mysession
 ```
 
 
+## Exercises
+
 :::{.callout-exercise}
 
 - Create a configuration file for our "HPC" using the sapphire partition.
+
 - Singularity cache in custom directory.
 - Re-run the pipeline and see if it is submitting jobs to the scheduler as expected.
   - Extra: run it from a `screen` session
@@ -128,4 +142,15 @@ screen -r mysession
 - [Optional/Advanced] Add a new label to an existing process using `withName`
 - [Optional/Advanced] Make a process run only `when` a condition is met
 
+:::
+
+
+## Summary
+
+::: callout-tip
+#### Key points
+
+- WfMS define, automate and monitor the execution of a series of tasks in a specific order. They improve efficiency, reduce errors, can be easily scaled (from a local computer to a HPC cluster) and increase reproducibility.
+- Popular WfMS in bioinformatics include Nextflow and Snakemake. Both of these projects have associated community-maintained workflows, with excellent documentation for their use: [nf-core](https://nf-co.re/) and the [snakemake workflow catalog](https://snakemake.github.io/snakemake-workflow-catalog/).
+- TODO: finish key points
 :::

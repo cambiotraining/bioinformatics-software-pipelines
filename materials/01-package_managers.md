@@ -1,6 +1,8 @@
 ---
-title: "Package Managers"
+pagetitle: "Software & Pipelines"
 ---
+
+# Package Managers
 
 :::{.callout-tip}
 #### Learning objectives
@@ -72,7 +74,7 @@ This can lead to several issues:
 
 Another advantage of using Mamba is that the **software is installed locally** (by default in your home directory), without the need for admin (`sudo`) permissions. 
 
-### Installating software with Mamba
+### Installing software with Mamba
 
 You can search for available packages from the [anaconda.org](https://anaconda.org/) website. 
 Packages are organised into "channels", which represent communities that develop and maintain the installation "recipes" for each software. 
@@ -80,7 +82,7 @@ The most popular channels for bioinformatics and data analysis are "**bioconda**
 
 There are three main commands to use with Mamba:
 
-- `mamba create -n ENVIRONMENT-NAME`: this command creates a new software environment, which can be named as you want. Usually people name their environments to either match the name of the main package they are installating there (e.g. an environment called `pangolin` if it's to install the _Pangolin_ software). Or, if you are installing several packages in the same environment, then you can name it as a topic (e.g. an environment called `rnaseq` if it contains several packages for RNA-seq data analysis).
+- `mamba create -n ENVIRONMENT-NAME`: this command creates a new software environment, which can be named as you want. Usually people name their environments to either match the name of the main package they are installing there (e.g. an environment called `pangolin` if it's to install the _Pangolin_ software). Or, if you are installing several packages in the same environment, then you can name it as a topic (e.g. an environment called `rnaseq` if it contains several packages for RNA-seq data analysis).
 - `mamba install -n ENVIRONMENT-NAME  NAME-OF-PACKAGE`: this command installs the desired package in the specified environment. 
 - `mamba activate ENVIRONMENT-NAME`: this command "activates" the environment, which means the software installed there becomes available from the terminal. 
 
@@ -109,7 +111,7 @@ If we want to use the software we installed in that environment, then we can act
 mamba activate phylo
 ```
 
-And usually this changes your terminal to have the word `(phylo)` at the start of your prompt. 
+And usually this changes your terminal to have the word `(phylo)` at the start of your prompt instead of `(base)`. 
 
 
 ### Environment files
@@ -130,30 +132,23 @@ dependencies:
   - mafft==7.525
 ```
 
-Let's say we saved this file with the name `phylogenetic_environment.yml`. 
-Then, we could create the environment using the command: 
+We have included this example in the file `demo/envs/phylo.yml`.
+To create the environment from the file, we can use the command: 
 
 ```bash
-mamba env create -f phylogenetic_environment.yml
+mamba env create -f envs/phylo.yml
 ```
 
 If you later decide to update the environment, either by adding a new software or by updating the software versions, you can run the command: 
 
 ```bash
-mamba env update -f phylogenetic_environment.yml
+mamba env update -f envs/phylo.yml
 ```
 
-
-## Pip
-
-Show syntax to install from `pip` and from `pip/github`.
+You can practice this in an exercise below.
 
 
 ## Disadvantages and pitfalls
-
-- Dependencies aren't always respected
-- Watch out for versions (sometimes things downgrade)
-- Order of channels matters - always `conda-forge` followed by `bioconda`.
 
 One thing to be very careful about is how Conda/Mamba manages the dependency graph of packages to install. 
 If you don't specify the version of the software you want, in theory Mamba will pick the latest version available on the channel. 
@@ -210,12 +205,25 @@ dependencies:
   - metaphlan==4.1.0
 ```
 
+::: {.callout-note}
+#### Mixing package managers
+
+There might be times when some packages/libraries are not available in a package manager. For example, it can be common to use conda/mamba but find a python library that is only available through `pip`. Unfortunately, this may cause issues in your environment as pip may change your conda-installed packages, which might break the conda environment. There are a few steps one can follow to avoid this pitfalls:
+
+1. Start from a new and clean environment. If the new environment break you can safely remove it and start over. You can create a new environment from pre-existing ones if necessary. We will see more of this later.
+2. Install `pip` in your conda environment. This is important as the pip you have in your base environment is different from your new environment (will avoid conflicts).
+3. Install any conda packages your need to get the environment ready and leave the pip install for last. Avoid switching between package managers. Start with one and finish with the other one so reversing or fixing conflicts is easier.
+
+You can find a (checklist)[https://www.anaconda.com/blog/using-pip-in-a-conda-environment] in the anaconda webpage for good practice.
+:::
+
 
 ## Exercises
 
 :::{.callout-exercise}
+#### Creating a new Mamba environment
 
-Go to the `rnaseq` directory, where you will find some FASTQ files in the `reads` folder. 
+Go to the `demo` directory, where you will find some FASTQ files in the `reads` folder. 
 The objective in this exercise is to setup a software environment to run a standard quality control software on these sequencing reads. 
 
 - Use a text editor to create a Conda/Mamba environment file called `envs/qc.yml`. This file should specify: 
@@ -266,14 +274,81 @@ We can see the script ran successfully by looking at the output directory `resul
 
 
 :::{.callout-exercise}
+#### Update a Mamba environment
 
-TODO: example of environment with conflicts
+Going back to the `envs/phylo.yml` environment (in the `demo` folder), update the environment to include a software to for dating phylogenetic trees called TreeTime.
+
+- Go to [anaconda.org](https://anaconda.org/) to see what is the latest version available and from which channel.
+- Update the YAML environment file to include it.
+- Update the environment.
+- Check if the software was installed successfully by running `treetime --version`.
+
+::: callout-answer
+
+We can see the software is available from https://anaconda.org/bioconda/treetime, provided from the bioconda channel.
+The latest version at the time of writing is 0.11.3, so it is the one we demonstrate below. 
+
+Using a text editor of our choice, we update our YAML file: 
+
+```yml
+name: phylo
+channels:
+  - conda-forge
+  - bioconda
+dependencies:
+  - iqtree==2.3.3
+  - mafft==7.525
+  - treetime==0.11.3
+```
+
+After saving the changes, we update our environment: 
+
+```bash
+mamba env update -f envs/phylo.yml
+```
+
+Once the update runs successfully, we activate the environment first with `mamba activate phylo` and then test our software: 
+
+```bash
+treetime --version
+```
+
+```
+treetime 0.11.3
+```
+
+The command runs successfully, with the expected version printed, indicating it is successfully installed. 
 
 :::
+:::
+
 
 
 :::{.callout-exercise}
 
-TODO: example of pip-installable package
+TODO: example of environment with conflicts?
 
+:::
+
+
+## Summary
+
+::: callout-tip
+#### Key points
+
+- A package manager automates the process of installing, upgrading, configuring, and managing software packages, including their dependencies.
+- Examples of package managers are `pip` (Python), `apt` (Debian/Ubuntu) and `conda`/`mamba` (generic).
+- Dependency conflicts, which often arise in complex bioinformatic workflows, can be resolved by managing software in isolated environments. 
+- Conda/Mamba simplify these tasks by managing dependencies, creating isolated environments, and ensuring reproducible setups across different systems.
+- Key Mamba commands include:
+  - `mamba create --name ENVIRONMENT-NAME` to create a new environment.
+  - `mamba install -n ENVIRONMENT-NAME  NAME-OF-PACKAGE` to install a package inside that environment.
+  - `mamba activate ENVIRONMENT-NAME` to make the software from that environment available.
+  - `mamba env create -f ENVIRONMENT-YAML-SPECIFICATION` to create an environment from a YAML file (recommended for reproducibility).
+  - `mamba env update -f ENVIRONMENT-YAML-SPECIFICATION` to update an environment from a YAML file (recommended for reproducibility).
+- Recognise some of limitations of Mamba as a package manager and how to avoid common pitfalls. 
+- There are some disadvantages/limitations of Mamba as a package manager: 
+  - Dependencies aren't always respected.
+  - Software versions are sometimes downgraded without explicit warning.
+  - It can be slow at resolving very complex environments. 
 :::
