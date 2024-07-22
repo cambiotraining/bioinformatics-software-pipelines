@@ -336,6 +336,30 @@ Go into the `virus_illumina` directory for this version of the exercise.
 - FASTA file for the reference genome, BED file for primer locations and GFF file with gene annotations in `genome/` (see if you can find the pipeline parameters for each of these files in the documentation).
 - Sample metadata in `sample_info.tsv` (tab-delimited).
 
+<details><summary>Click here for the answer</summary>
+
+The Illumina sub-workflow of the viralrecon pipeline is based on several standard bioinformatic tools and, importantly, on the iVar software, which was developed for analysing amplicon-based sequencing data.
+
+You need to make a comma-separated samplesheet with the header `sample,fastq_1,fastq_2` based on the information in `sample_info.tsv`. 'fastq_1' and 'fastq_2' should have the full or relative paths to the fastq files in the `reads/` directory.
+
+To run the pipeline, you could use these options:
+  
+```bash
+nextflow run nf-core/viralrecon 
+  -r 2.6.0 -profile singularity \
+  --platform illumina \
+  --input samplesheet.csv \
+  --outdir results \
+  --protocol amplicon \
+  --genome 'MN908947.3' \
+  --primer_set artic \
+  --primer_set_version 3 \
+  --skip_assembly --skip_asciigenome \
+  --skip_pangolin --skip_nextclade 
+```
+
+</details>
+
 ### Virus genomes - ONT
 
 Analysis of viral genomes using `nf-core/viralrecon`.
