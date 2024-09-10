@@ -17,132 +17,273 @@ How to configure Nextflow to run on a HPC.
 :::
 
 
+## Nextflow HPC configuration
 
-## How to specify configuration in Nextflow
+To run our workflows on an HPC, it is advisable to **specify a configuration file** tailored to your system. 
+This file should include:
 
-To run on a HPC, we can specify a `config` specific to our system. A `config file` is a set of configuration attributes for the pipeline execution. Nextflow by default will check for config file in default locations [link to advance-config?] but these can also be specified by using `-c` option in the command line. 
+- The job scheduler used to manage jobs (e.g. SLURM, LSF, PBS, HTCondor, etc.).
+- Job submission details, such as your billing account (if applicable), the partition or queue to submit jobs to, and other relevant information.
+- Resource specifications like maximum RAM and CPUs available on the partitions/queues.
+- Settings that control job submission, including the number of concurrent jobs, submission rate, and how often Nextflow checks job statuses.
 
-It is possible to have more than one `config` file and they can be all specified using `-c` though this will be merged and, so that the settings in the first override the same settings appearing in the second, and so on.
+As [briefly mentioned in the previous chapter](03-nfcore.md#configuration-profile), a config file is a set of attributes used by Nextflow when running a pipeline. 
+By default, Nextflow will look for configuration files in predefined locations (see [advanced configuration](05-advanced_config.md)), but you can also specify a config file using the `-c` option.
 
+Below is an example of a configuration file for an HPC that uses SLURM as the job scheduler. 
+This example is based on the Cambridge University HPC, specifically the "cascade lake" nodes ([docs](https://docs.hpc.cam.ac.uk/hpc/user-guide/cclake.html)). 
 
-## What do you need to configure as a basic nextflow user?
-Understanding the `config` file of a nextflow pipeline can be slightly daunting at first, specially if you start with a nf-core configuration, those can be complex and have many parameters that normally users won't need to modify. In general, you can get away with just modifying the necessary parameters using `-c your_config_profile.config` when launching your pipeline. We will show you in the next example.
-
-Let's say you want to run `nf-core/rnaseq`. Several questions may arise:
-
-- How do I specify my input data?
-- Where do I write my SLURM details such as my account and partition I want to use?
-- If I am analysing a non conventional organism, how do I change default resource files such as `genome`
-
-First things first, [check out the docs](https://nf-co.re/rnaseq/3.14.0/docs/usage/), there is a lot of useful info in there that can guide you for the first time you use the pipeline. Here you will find answers to those questions but also went through that is previous sections so hopefully we have all inputs located now.
-
-Now that you are ready, it is time to think how we can use our resources smartly. There are just a few settings that you need to modify as a cluster user. Let's create a `cambridge_hpc.config`, we will need the following:
-
-- Add `executor`, in this case `slurm`
-- Specify cluster options to add your account and the partition you desire to use
-- Add params specific for the system such as `max_memory`, `max_cpus` and `max_time`, this might be dependant on your account.
-- Executor configuration (extremely important to use `slurm` efficiently). We need to limit the submission rate and queue polls to avoid nextflow calling slurm continuously in very short periods of time as **this will overload our scheduler**.
-- [Singularity](https://docs.sylabs.io/guides/3.5/user-guide/introduction.html) configuration. The best way to run your processes safely in the cluster is using singularity, this can be configured using the [singularity scope](https://www.nextflow.io/docs/latest/config.html#scope-singularity).
-
-We will go through an example in the next section.
-
-:::{.callout-note collapse=true}
-
-# Have heard about Apptainer?
-
-[Singularity](https://docs.sylabs.io/guides/3.5/user-guide/introduction.html) as we knew it is no longer actively maintained and is deprecated. What happened to it?
-
-Singularity project moved a few years back to the [Linux Foundation](https://www.linuxfoundation.org/) (a non-profit that provides a neutral, trusted hub for developers and organizations to code, manage, and scale open technology projects and ecosystems) rebranding to **Apptainer**. It is still functionally the same as Singularity. Apptainer/Singularity is a free and open-source container platform that allows you to create and run applications in isolated environments (also called “containers”) in a simple, portable, fast, and secure manner. Containers ensure software components are encapsulated for portability and reproducibility, making them perfect to use is a safely in any shared system. Read the announcement [here](https://apptainer.org/news/community-announcement-20211130/).
-
-What about Sylabs? This is the company that used to run Singularity. The also moved on to **SingularityCE**, which  is the Sylabs-maintained branch of singularity while Apptainer is the branch supported by the Linux Foundation. Both SingularityCE and Apptainer are derivatives of the original Singularity software in some way.
-
-:::
-
-### Cambridge HPC configuration
-
-To work at the Cambridge University HPC we created the following configuration file:
-
-```conf
-// See more info on process scope [here](https://www.nextflow.io/docs/latest/config.html#scope-process)
+```groovy
+// See more info on process scope here: https://www.nextflow.io/docs/latest/config.html#scope-process
 process {
-    executor = 'slurm' // This is our job scheduling system or executor
-
-    // options to feed to slurm: this should be written as given to [sbatch](https://slurm.schedmd.com/sbatch.html) command
-    clusterOptions = '--account LEYSER-SL2-CPU --partition training' 
-}
-
-// Specify MAX parameters to avoid going over the limits and getting an error.
-params {
-    max_memory = '327.GB' // for cclake-himem
-    max_cpus = '56'       // for cclake nodes
-    max_time = '36.h'     // for SL2 service level
+    // Our job scheduling system or executor
+    // many executors supported (cloud and HPC): https://www.nextflow.io/docs/latest/executor.html
+    executor = 'slurm'
+    
+    // the queue or partition we want to use
+    queue = 'cclake'
 }
 
 // Limit nextflow submissions rates to a reasonable level to be kind to other users
-// See all options [here](https://www.nextflow.io/docs/latest/config.html#scope-executor)
+// See all options here: https://www.nextflow.io/docs/latest/config.html#scope-executor
 executor {
-    queueSize         = '2000'
-    pollInterval      = '3 min'
-    queueStatInterval = '5 min'
-    submitRateLimit   = '50sec'
-    exitReadTimeout   = '5 min'
+    account             = 'YOUR-BILLING-ACCOUNT'
+    perCpuMemAllocation = '3410MB'
+    queueSize           = '200'
+    pollInterval        = '3 min'
+    queueStatInterval   = '5 min'
+    submitRateLimit     = '50sec'
+    exitReadTimeout     = '5 min'
 }
-\\ More info on singularity options [here](https://www.nextflow.io/docs/latest/config.html#scope-singularity)
 
+// For nf-core pipelines, specify MAX parameters to avoid going over the limits
+// these values should match the resources in the chosen queue/partition
+params {
+    max_memory = '192.GB'
+    max_cpus = '56'
+    max_time = '12.h'
+}
+
+// Options when using the singularity profile
 singularity {
-    enabled = true  // We are forcing singularity to be enabled
-    autoMounts = true  // Extremely useful if you are unsure about [binding](https://apptainer.org/user-docs/master/bind_paths_and_mounts.html)
-    pullTimeout = '1 h'  // Allow extra time to pull out a container
-    cacheDir = '$HOME/rds/hpc-work/nextflow-singularity-cache'  // Specify a cache dir to avoid downloading same containers to different directories.
+    enabled = true
+    // useful if you are unsure about filesystem binding
+    autoMounts = true
+    // Allow extra time to pull out a container in case the servers are slow
+    pullTimeout = '1 h'  
+    // Specify a cache dir to re-use images that have already been downloaded
+    cacheDir = 'PATH/TO/nextflow-singularity-cache'
 }
 ```
 
+Here is an explanation of this configuration: 
 
-## Where to run your Nextflow pipeline
+- The `process` directive defines:
+  - The `executor`, which in this example is SLURM (the job scheduler). By default, this option would be "local", meaning commands run on the current computer.
+  - The `queue`, which corresponds to the SLURM `--partition` option, determining the type of node your jobs will run on.
 
-You might wondering if it is kay to run your nextflow pipeline in the HPC headnode. Normally, it is absolutely fine as nextflow won't be taking too many resources. However, you do need to *keep your nextflow run open in your terminal*. There are several ways to achieve this:
+- The `executor` directive further configures the job scheduler:
+  - `account` is the billing account (if relevant), equivalent to `-A` option in SLURM.
+  - `perCpuMemAllocation` submits jobs using `--mem-per-cpu`, relevant for the Cambridge HPC. This is optional and may vary by institution. 
+  - `queueSize` limits the number of simultaneous jobs in the queue. HPC admins may impose limits, so adjust this accordingly. Even with high limits, it's advisable to limit simultaneous jobs to reduce the load on the job scheduler.
+  - `pollInterval`, `queueStatInterval`, `submitRateLimit` and `exitReadTimeout`  are settings that manage how often Nextflow checks job statuses and interacts with the scheduler. These settings help ensure that you use the scheduler efficiently and ethically. Rapid job submissions and frequent queue checks can overload the scheduler and might trigger warnings from HPC admins.
 
-Option 1:
+- The `params` directive is for pipeline-specific options. Here, we set generic options for all nf-core pipelines:
+  - `max_memory`, `max_cpus` and `max_time`, which depend on your specific HPC setup and account.
 
-You can run your nextflow pipeline using the `-bg` option, which will run your nextflow pipeline in the background of your terminal. If you need to look at the output of the nextflow run you can take a look at your `.nextflow.log`
+- The `singularity` directive configures Singularity for running pipelines in an isolated software environment. This can be set up using the [singularity scope](https://www.nextflow.io/docs/latest/config.html#scope-singularity). 
+  - `autoMounts = true` automatically mounts the filesystem, which is helpful if you're unfamiliar with [filesystem bindings](https://apptainer.org/user-docs/master/bind_paths_and_mounts.html). On most HPC systems, admins handle this, so you may not need to worry about it.
+  - `cacheDir` ensures that previously downloaded images aren't downloaded again. This is beneficial if you run the same pipeline multiple times or different pipelines that use the same software images. We recommend setting up a cache directory in a location accessible from the compute nodes.
 
-Option2:
+**Proper executor configuration is crucial for running your jobs efficiently on the HPC**, so make sure you spend some time configuring it correctly.
 
-If you don't want to miss any output from your run we recommend using a *terminal ultiplexer* such as [`screen`](https://linuxize.com/post/how-to-use-linux-screen/) or [`tmux`](https://github.com/tmux/tmux/wiki). Both work the same way, except that `screen` is normally installed by default in the linux machine, therefore we recommend you start there. What these tools allow is to open a session within your terminal that it is virtually the same as your actual terminal with the exception that it will be kept open in the background. This allows processes to continue to run even if you close your window or get disconnected from the HPC.
 
-Example:
+## Running Nextflow on a HPC
+
+When working on an HPC cluster, you typically interact with two types of nodes:
+
+- The **head or login node**, used for low-resource tasks such as navigating the filesystem, moving files, editing scripts, and submitting jobs to the scheduler.
+- The **compute nodes**, where computationally intensive tasks are executed, typically managed by the job scheduler.
+
+You might wonder if it’s acceptable to run your Nextflow command directly on the HPC head/login node. 
+Generally, this is perfectly fine because Nextflow itself doesn’t consume a lot of resources. 
+The main Nextflow process handles interactions with the job scheduler (e.g. SLURM), checks job statuses in the queue, submits new jobs as needed, and logs progress information. 
+Essentially, it automates the process of submitting and tracking jobs, so it isn’t computationally demanding.
+
+However, it’s important to **ensure that your Nextflow process continues to run even if you log out of the HPC** (which you’ll likely want to do, as workflows can take hours or even days to complete!). 
+There are two primary ways to achieve this: running Nextflow as a background process or using a persistent terminal with a terminal multiplexer.
+
+### Nextflow as a background process
+
+The `nextflow` command has the `-bg` option, which allows you to run the process in the background. 
+If you want to check on the progress of your Nextflow run, you can review the `.nextflow.log` file, which logs the workflow’s progress in a text format.
+
+
+### Persistent terminal
+
+If you prefer interactive output on the terminal, we recommend using a **terminal multiplexer**.
+A terminal multiplexer lets you open "virtual terminals" that continue running in the background, allowing processes to persist even if you close your window or disconnect from the HPC.
+
+Two popular and widely available terminal multiplexers are [`screen`](https://linuxize.com/post/how-to-use-linux-screen/) and [`tmux`](https://github.com/tmux/tmux/wiki). 
+Both work similarly, and we’ll briefly demonstrate their usage below.
+
+The first step is to start a session:
+
+- For `screen`: `screen -S demo` (note the uppercase `-S`)
+- For `tmux`: `tmux -s demo`
+
+This opens a session, which essentially looks like your regular terminal. 
+However, you can **detach** from this session, leaving it running in the background and come back to it later. 
+
+As an illustrative example, let's run the following command, which counts to 600 every second:
 
 ```bash
-screen -s mysession
-# a screen session caller 'mysession' will be opened
-echo 'hello this is a test'
-# close your window.
+for i in {1..600}; do echo $i; sleep 1; done
 ```
 
-After you close your terminal, open a new one. Make sure you are logged in in the same head node and run:
+This command will run for 10 minutes. 
+Imagine this was your Nextflow process, printing pipeline progress on the screen.
+
+If you want to log out of the HPC and leave this task running, you can detach the session, returning to the main terminal:
+
+- For `screen`: press <kbd>Ctrl + A</kbd> then <kbd>D</kbd>
+- For `tmux`: press <kbd>Ctrl + B</kbd> then <kbd>D</kbd>
+
+Finally, log out from the HPC (e.g. using the `exit` command). 
+Before logging out, it’s a good idea to **note the node you’re on**. 
+One way to do this is with the `hostname` command.
+
+Suppose your login node was called `login-09`. 
+You can log back into this specific node as follows:
 
 ```bash
-screen -ls
-# you will see mysession still running
-screen -r mysession
-# you re-attached to your session and keep working where you left it!
+ssh username@login-09.train.bio
 ```
+
+Once back in your terminal, you can list any running sessions:
+
+- `screen -ls`
+- `tmux ls`
+
+You should see your `demo` session listed. 
+To **reattach** to your session:
+
+- `screen -r demo`
+- `tmux attach -t demo`
+
+You’ll find your command still running in the background!
 
 
 ## Exercises
 
 :::{.callout-exercise}
+#### Nextflow HPC config
 
-- Create a configuration file for our "HPC" using the sapphire partition.
+We have a training HPC available with the following characteristics:
 
-- Singularity cache in custom directory.
-- Re-run the pipeline and see if it is submitting jobs to the scheduler as expected.
-  - Extra: run it from a `screen` session
+- **Job scheduler**: SLURM
+- **Main queue/partition**: `training`
+- **Queue limits**: 8 CPUs and 20GB of RAM
+- **Job duration**: maximum 24 hours
+- **High-performance directory**: `~/rds/hpc-work`, shared by both the login and compute nodes
+
+First, **login to the HPC** with the command: `ssh participant@train.bio`
+
+In the directory `~/rds/hpc-work/demo` you will find the files needed to run the `nf-core/demo` workflow, as demonstrated in the [previous chapter](03-nfcore.md#demo-nf-core-pipeline). 
+Now, you will run this workflow on the HPC using SLURM as the executor for your analysis steps.
+
+Here's what you need to do: 
+
+- **Create a directory to cache the Singularity images** used by Nextflow. Consider whether this cache directory should be created in your `/home` or in `~/rds/hpc-work`.
+- **Create a configuration file** for running the pipeline, ensuring it includes the necessary settings for SLURM and respects the resource limits mentioned above.
+- **Start a `screen` or `tmux` session** (your choice) to keep a persistent terminal running.
+- **Edit the script `scripts/run_nfcore_demo.sh`** (e.g. using `nano`), adding the path to your configuration file to the Nextflow command with the `-c` option. 
+- **Launch the script** using `bash scripts/run_nfcore_demo.sh`.
+- **Detach the `screen`/`tmux` session** to return to your main terminal.
+- **Check the queue** with the `squeue` SLURM command to see if Nextflow has started submitting jobs.
+
+:::{.callout-answer}
+
+1. **Login to the HPC** as instructed: 
+
+    ```bash
+    ssh participant@train.bio
+    ```
+
+2. **Create the cache directory**. Since the working directory `~/rds/hpc-work` is high-performance and shared by both the login and compute nodes, it is the best location for the cache directory: 
+
+    ```bash
+    mkdir ~/rds/hpc-work/singularity-cache
+    ```
+    
+3. **Create a configuration file** in the `~/rds/hpc-work/demo` directory, which we call `training.config`:
+
+    ```groovy
+    process {
+        executor = 'slurm'
+        queue = 'training'
+    }
+
+    executor {
+        queueSize = '100'
+        pollInterval = '2 min'
+        queueStatInterval = '5 min'
+        submitRateLimit = '50 sec'
+        exitReadTimeout = '5 min'
+    }
+
+    params {
+        max_memory = '20.GB'
+        max_cpus = '8'
+        max_time = '24.h'
+    }
+
+    singularity {
+        enabled = true
+        cacheDir = '/home/participant/rds/hpc-work/singularity-cache'
+    }
+    ```
+
+4. **Start a persistent terminal** with either `tmux -s demo` or `screen -S demo`.
+
+5. **Edit the Nextflow script to include the configuration file** (`nano scripts/02-run_nfcore_demo.sh`): 
+
+    ```bash
+    nextflow run -c "training.config" -profile "singularity" -revision "1.0.0" nf-core/demo \
+      --max_memory "12GB" --max_cpus 8 \
+      --input "samplesheet.csv" \
+      --outdir "results/qc" \
+      --fasta "genome/Mus_musculus.GRCm38.dna_sm.chr14.fa.gz"
+    ```
+
+6. Detach the `screen`/`tmux` session using: 
+   - For `screen`: press <kbd>Ctrl + A</kbd> then <kbd>D</kbd>
+   - For `tmux`: press <kbd>Ctrl + B</kbd> then <kbd>D</kbd>
+
+7. Finally, use the squeue command to **verify that Nextflow has started submitting jobs** to the SLURM queue:
+
+    ```bash
+    squeue -u participant
+    ```
+
+You should see your jobs listed in the queue, confirming that the workflow is running.
+You can check back on the progress of the workflow by re-attaching to your session with: 
+
+- `screen -r demo`
+- `tmux attach -t demo`
+
+:::
+:::
+
+<!-- 
+Eventually create an exercise in the advanced configuration section
+
+:::{.callout-exercise}
 - Add `errorStrategy` to avoid specific error
 - [Optional/Advanced] Add a new label to an existing process using `withName`
 - [Optional/Advanced] Make a process run only `when` a condition is met
-
-:::
+::: 
+-->
 
 
 ## Summary

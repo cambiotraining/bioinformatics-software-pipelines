@@ -43,6 +43,18 @@ Singularity is specifically designed for use in HPC environments and can run on 
 - Singularity is specifically designed for use in HPC environments and can provide improved security and performance in those settings.
 :::
 
+:::{.callout-note collapse=true}
+#### Have heard about Apptainer?
+
+Singularity as we knew it is in fact no longer actively maintained and is deprecated - what happened to it?
+It was essentially split into two parallel projects: 
+
+- [**Apptainer**](https://apptainer.org/): this is a rebranding of the original Singularity, which is supported by the Linux Foundation since 2021 ([announcement](https://apptainer.org/news/community-announcement-20211130/)). The Linux foundation is a non-profit that provides a neutral, trusted hub for developers and organizations to code, manage, and scale open technology projects and ecosystems. As such, Apptainer is and will remain free and open source (FOSS) software. Apptainer is still functionally the same as the original Singularity, so you should be able to use Singularity images with Apptainer. 
+- [**SingularityCE**](https://docs.sylabs.io/guides/latest/user-guide/): this is a fork of the original Singularity, which is developed and maintained by the commercial company Sylabs. 
+
+There are some [differences between Apptainer and SingularityCE](https://github.com/sylabs/singularity/discussions/2948), but in practice they work very similarly to each other. 
+:::
+
 
 ## Singularity images
 
@@ -53,30 +65,45 @@ The sheet music is portable and can be performed on various instruments, yet the
 Although you can build your own Singularity images, for many popular software there are already pre-built images available from public repositories. 
 Some popular ones are: 
 
-- [Galaxy Project](https://galaxyproject.org/): an open-source platform for data analysis available to researchers and the community. They provide the [galaxy depot](https://depot.galaxyproject.org/singularity/) from where you can navigate to their singularity images and choose the one that you need for your analysis.
-- [Sylabs](https://cloud.sylabs.io/): Singularity Container Services from the Singularity developers.
-- [dockerhub](https://hub.docker.com/search): a more generic repository of Docker images, which can also be used with Singularity.
+- [BioContainers](https://biocontainers.pro/): a community project that provides a search page for bioinformatic software images stored on several repositories. This is our recommendation as the first page to look at, as it includes results from several repositories (Quay.io, DockerHub, Galaxy).
+- [Galaxy Project](https://galaxyproject.org/): an open-source platform for bioinformatic data analysis. They provide many pre-built images on their [galaxy depot](depot.galaxyproject.org).
+- [DockerHub](https://hub.docker.com/search): a generic repository of Docker images, which can also be used with Singularity.
+- [Quay.io](https://quay.io/): a generic repository of images maintained by Red Hat.
+- [Sylabs](https://cloud.sylabs.io/): a generic repository maintained by the Singularity developers.
 
 For example, let's consider the [SeqKit program](https://bioinf.shenwei.me/seqkit/), which is a toolkit for manipulating FASTA/Q files. 
 If we search on those websites, we will see this software is available on all of them. 
-In this case, the version on Sylabs ([here](https://cloud.sylabs.io/library/bhargava-morampalli/containers/seqkit)) is older than the one on the Galaxy server (at the time of writing we have 2.8.0 available). 
+In this case, the version on Sylabs ([here](https://cloud.sylabs.io/library/bhargava-morampalli/containers/seqkit)) is older than the one listed on BioContainers ([here](https://biocontainers.pro/tools/seqkit)). 
 
-Therefore, let's consider the file on the Galaxy server.
-First, go to [depot.galaxyproject.org](https://depot.galaxyproject.org/singularity/) and search for the software of interest (use <kbd>Ctrl</kbd> + <kbd>F</kbd> to find the text of interest). 
-When you find the software and version of interest, right-click the file and click "Copy Link". 
-Then use that link with the `singularity pull` command: 
+Looking at that BioContainers page, we can see the link to the image, which is pulled from depot.galaxyproject.org. 
+To pull the image, we can do the following:
 
 ```bash
 # create a directory for our singularity images
 mkdir images
 
 # download the image
-singularity pull images/seqkit-2.8.0.sif https://depot.galaxyproject.org/singularity/seqkit%3A2.8.0--h9ee0642_0
+singularity pull images/seqkit-2.8.2.sif https://depot.galaxyproject.org/singularity/seqkit:2.8.2--h9ee0642_1
 ```
 
-Here, we are saving the image file as `seqkit-2.8.0.sif` (`.sif` is the standard extension for singularity images). 
+Here, we are saving the image file as `seqkit-2.8.2.sif` (`.sif` is the standard extension for singularity images). 
 Once we have this image available, we are ready to run the software, which will see in practice with the exercise below. 
 
+:::{.callout-tip}
+#### Using Docker images with Singularity
+
+It's worth noting that Docker images are also compatible with Singularity.
+For example, on that same Biocontainers `seqkit` page, we are given a link to use with the `docker pull` command. 
+But we can use that same link to build a Singularity image using the `docker://` prefix in our link, like so: 
+
+```bash
+singularity pull images/seqkit-2.8.2.sif docker://quay.io/biocontainers/seqkit:2.8.2--h9ee0642_1
+```
+
+These are effectively the same image, just pulled from two different servers. 
+The image on depot.galaxy.org is already pre-built, so we're effectively only downloading a file to our computer. 
+On the other hand the image from Quay.io is the "recipe" to build the image, which the Singularity command takes care of building for us. 
+:::
 
 ## Executing commands
 
@@ -84,7 +111,7 @@ To execute a command inside the image container, we can use the `singularity run
 For example, let's run the command `seqkit --help` to look at the help documentation of the SeqKit software:
 
 ```bash
-singularity run images/seqkit-2.8.0.sif seqkit --help
+singularity run images/seqkit-2.8.2.sif seqkit --help
 ```
 
 And this should print the help of the program. 
@@ -104,7 +131,7 @@ Because this directory is not in the default home (`/home/robin`), it will not b
 The user could make it available as the default directory by running: 
 
 ```bash
-singularity run --bind /scratch/robin/awesomeproject images/seqkit-2.8.0.sif seqkit --help
+singularity run --bind /scratch/robin/awesomeproject images/seqkit-2.8.2.sif seqkit --help
 ```
 
 See more information about this in the [Singularity documentation](https://docs.sylabs.io/guides/3.0/user-guide/bind_paths_and_mounts.html).
@@ -122,22 +149,22 @@ This is because they will have often already set specific bindings to the filesy
 :::{.callout-exercise}
 
 To illustrate the use of Singularity, we will use the `seqkit` software to extract some basic statistics from the sequencing files in the `demo/reads` directory. 
-If you haven't done so already, first download the container with the commands shown above. 
+If you haven't done so already, first download the image with the commands [shown above](#singularity-images). 
 
-The way to check a command within a singularity container is: 
+We can test if our image is working by running the `seqkit --help` command in our container: 
 
 ```bash
-singularity run images/seqkit-2.8.0.sif seqkit --help
+singularity run images/seqkit-2.8.2.sif seqkit --help
 ```
 
-- Write a command to run the command `seqkit stats reads/*.fastq.gz` using the singularity container we downloaded earlier.
+- Run `seqkit stats reads/*.fastq.gz` using the singularity image we downloaded earlier.
 
 
 :::{.callout-answer}
 The Singularity command is: 
 
 ```bash
-singularity run images/seqkit-2.8.0.sif seqkit stats reads/*.fastq.gz
+singularity run images/seqkit-2.8.2.sif seqkit stats reads/*.fastq.gz
 ```
 
 If we run this, it produces an output like this: 

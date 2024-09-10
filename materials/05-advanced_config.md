@@ -1,16 +1,26 @@
 ---
-title: "Advanced Nextflow configuration"
+pagetitle: "Software & Pipelines"
 ---
 
-Understanding Nextflow config files
+# Advanced Nextflow configuration
 
-- Get to know the different config files from Nextflow pipelines
-- Be able to modify them appropriately
+:::{.callout-tip}
+#### Learning objectives
+
+- Recognise the different config files from Nextflow pipelines
+- Modify config files appropriately for different tasks
+
+:::
 
 
-### Nextflow configuration
-Nextflow is a quite powerful platform to scale your analysis, it is able to take advantage of your system and parallelise processing in a controlled and scalable manner. If used with an `executor` such as [SLURM](https://slurm.schedmd.com/documentation.html) or [AWS](https://aws.amazon.com/), a nextflow pipeline can submit many processes at the same time and track the progress. However, to make full use of the workflow manager capabilities careful configuration is still needed. For instance, not always is the system able to keep up with Nextflow submission rate (specially schedulers such as SLURM). **Configuring your pipeline correctly is very important.** It will allow you to use the HPC resources properly and in a efficient manner.
+## Nextflow configuration
 
+Nextflow is a quite powerful platform to scale your analysis, it is able to take advantage of your system and parallelise processing in a controlled and scalable manner. 
+If used with an `executor` such as [SLURM](https://slurm.schedmd.com/documentation.html) or [AWS](https://aws.amazon.com/), a nextflow pipeline can submit many processes at the same time and track the progress. 
+However, to make full use of the workflow manager capabilities careful configuration is still needed. 
+For instance, not always is the system able to keep up with Nextflow submission rate (specially schedulers such as SLURM). 
+**Configuring your pipeline correctly is very important.** 
+It will allow you to use the HPC resources properly and in a efficient manner.
 
 **From nextflow [docs](https://www.nextflow.io/docs/latest/config.html#configuration-file):**
 
@@ -32,12 +42,18 @@ When a pipeline script is launched, Nextflow checks for configuration files in m
 
 When more than one of these options for specifying configurations are used, they are merged, so that the settings in the first override the same settings appearing in the second, and so on. 
 
-#### nf-core .nextflow.config explained
-If using an `nf-core` pipeline you might have seen some of these files before with some settings already set up for you. These configuration files can be somehow daunting as they are long and contain lots of settings and information that you are not necessarily familiar with. Here, we explain for your reference the structure and what of this components are in case you ever needed. Let's take a look at the `nf-core/demo` `nextflow.config`. Normally it will follow this structure:
+
+## nf-core `.nextflow.config` explained
+
+If using an `nf-core` pipeline you might have seen some of these files before with some settings already set up for you. 
+These configuration files can be somehow daunting as they are long and contain lots of settings and information that you are not necessarily familiar with. 
+Here, we explain for your reference the structure and what of this components are in case you ever needed. 
+Let's take a look at the `nf-core/demo` `nextflow.config`. 
+Normally it will follow this structure:
 
 - Default parameters:
   
-```conf
+```groovy
 params {
 
     // Input options
@@ -53,7 +69,8 @@ params {
 ```
 
 - Include statements:
-```conf
+
+```groovy
 // Load base.config by default for all pipelines
 includeConfig 'conf/base.config'
 
@@ -69,11 +86,11 @@ if (!params.igenomes_ignore) {
 // {...}
 // Load modules.config for DSL2 module specific options
 includeConfig 'conf/modules.config'
-
 ```
 
 - Profiles, these are default configurations for specific institutions:
-```conf
+
+```groovy
 // Load nf-core custom profiles from different Institutions
 try {
     includeConfig "${params.custom_config_base}/nfcore_custom.config"
@@ -83,7 +100,8 @@ try {
 ```
 
 - Profiles for `executors`, debugging and/or testing. This can be activated through `--profile` option such as `nextflow run nf-core/demo -r dev --profile test,singularity`. Here we are specifying the `test` configuration and to run the processes with `singularity`.
-```conf
+
+```groovy
 profiles {
     debug {
         dumpHashes              = true
@@ -111,7 +129,7 @@ nextflow.enable.configProcessNamesValidation = false
 ```
 
 - Defaults for containers registry (where containers are hold). NExtflow mostly uses (quay.io)[quay.io]. 
-```conf
+```groovy
 apptainer.registry   = 'quay.io'
 docker.registry      = 'quay.io'
 podman.registry      = 'quay.io'
@@ -119,7 +137,7 @@ singularity.registry = 'quay.io'
 ```
 
 - Plugins:
-```conf
+```groovy
 // Nextflow plugins
 plugins {
     id 'nf-validation@1.1.3' // Validation of pipeline parameters and creation of an input channel from a sample sheet
@@ -127,7 +145,8 @@ plugins {
 ```
 
 - Scope `env`: the `env` scope allows the definition one or more variables that will be exported into the environment where workflow tasks are executed.
-```conf
+
+```groovy
 env {
     PYTHONNOUSERSITE = 1
     R_PROFILE_USER   = "/.Rprofile"
@@ -138,13 +157,13 @@ env {
 
 - Setting up `shell` directive: the shell directive allows you to define a custom shell command for process scripts.
 
-```conf
+```groovy
 // Capture exit codes from upstream processes when piping
 process.shell = ['/bin/bash', '-euo', 'pipefail']
 ```
 
 - Tracking set up: by default you will find nextflow logs and processese execution information in `pipeline_info/`
-```conf
+```groovy
 def trace_timestamp = new java.util.Date().format( 'yyyy-MM-dd_HH-mm-ss')
 timeline {
     enabled = true
@@ -165,7 +184,8 @@ dag {
 ```
 
 - A manifest, with some info about the pipeline:
-```conf
+
+```groovy
 manifest {
     name            = 'nf-core/demo'
     author          = """Christopher Hakkaart"""
@@ -179,7 +199,8 @@ manifest {
 ```
 
 - Functions:
-```conf
+
+```groovy
 // Function to ensure that resource requirements don't go beyond
 // a maximum limit
 def check_max(obj, type) {
@@ -224,7 +245,7 @@ In Nextflow, a process selector is used to dynamically choose which process to e
 
 The `withLabel` selectors allows to specify a configuration to all processes annotated with a `label`. This is specified in the [`process`](https://www.nextflow.io/docs/latest/config.html#scope-process) scope. Hence, the `label` directive allows the annotation of processes with mnemonic identifier of your choice. Meaning that you can specify the desired resources for a process from the config and then invoking those parameters adding this label to your process. 
 
-```config
+```groovy
 process {
     withLabel: big_mem {
         cpus = 16
@@ -236,7 +257,7 @@ process {
 
 And then this can be invoked into as many processes as you need as follows:
 
-```config
+```groovy
 process RUN_COMMAND {
     label 'big_mem'
 
@@ -257,7 +278,7 @@ process RUN_COMMAND {
 
 In the same manner, the `withName` selector can configure specific processes in your pipeline by its name. For example:
 
-```config
+```groovy
 process{
     withName: 'MULTIQC'{
             time    = { check_max( 2.h   * task.attempt, 'time' ) }
@@ -271,7 +292,7 @@ process{
 
 Both `withLabel` and `withName` selectors allow the use of a [regular expression](https://en.wikipedia.org/wiki/Regular_expression) in order to apply the same configuration to all processes matching the specified pattern. For example:
 
-```config
+```groovy
 process{
     withName: 'MULTIQC|FASTQC'{
             time    = { check_max( 2.h   * task.attempt, 'time' ) }
@@ -287,7 +308,7 @@ See more info and examples [here](https://www.nextflow.io/docs/latest/config.htm
 
 The [`params`](https://www.nextflow.io/docs/latest/config.html#scope-params) scope defines parameters that will be accessible in the pipeline script. Simply prefix the parameter names with the `params` scope or surround them by curly brackets, as shown below:
 
-```config
+```groovy
 params.custom_param = 123
 params.another_param = 'string value .. '
 
@@ -312,7 +333,7 @@ The `when` declaration in a process or configuration defines a condition that mu
 
 For example:
 
-```config
+```groovy
 withName: 'FASTQC' {
         ext.when         = { params.fastqc == true) }
 
@@ -326,7 +347,7 @@ You can achieve this by using the `when` directive within a process to specify c
 
 Example:
 
-```
+```groovy
 process bigTask {
   label 'process_single'
 
@@ -338,7 +359,7 @@ process bigTask {
 
 Then, these can be configured with the cluster specs. This can be added to your `cambridge_hpc.config` as follows under the `process` directive:
 
-```conf
+```groovy
   // Settings below are for CSD3 nodes detailed at
   //   https://docs.hpc.cam.ac.uk/hpc/index.html
   // Current resources (Jun 2023):

@@ -8,3 +8,4 @@ book:
       chapters:
         - materials/03-nfcore.md
         - materials/04-nextflow_hpc.md
+        # - materials/05-advanced_config.md

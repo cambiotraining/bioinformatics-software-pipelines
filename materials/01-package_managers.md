@@ -19,7 +19,7 @@ pagetitle: "Software & Pipelines"
 Most operating systems have **package managers** available, which allow the user to manage (install, remove, upgrade) their software easily. 
 The package manager takes care of automatically downloading and installing the software we want, as well as any dependencies it requires.
 
-![Diagram illustrating how package managers work. [Image source](https://itsfoss.com/package-manager/).](https://itsfoss.com/content/images/wordpress/2020/10/linux-package-manager-explanation.png)
+![Diagram illustrating how package managers work. [Image from _It's FOSS_](https://itsfoss.com/package-manager/), licensed under [CC BY-SA 4.0](https://itsfoss.com/copyright/)](https://itsfoss.com/content/images/wordpress/2020/10/linux-package-manager-explanation.png)
 
 There are many package managers available, some are specific to a given type of operating system, or specific to a programming language, while others are more generic.
 Each of these package managers will use their own repositories, meaning they have access to different sets of software (although there is often some overlap). 
@@ -150,22 +150,27 @@ You can practice this in an exercise below.
 
 ## Disadvantages and pitfalls
 
+### Dependency conflicts {.unnumbered .unlisted}
+
 One thing to be very careful about is how Conda/Mamba manages the dependency graph of packages to install. 
 If you don't specify the version of the software you want, in theory Mamba will pick the latest version available on the channel. 
 However, this is conditional on the other packages that are installed alongside it, as some versions may be incompatible with each other, it may downgrade some packages without you realising. 
 
-Take this example, where we create a new environment called `metagen` with some software for metagenomic analysis: 
+<!-- TODO: convert this to an exercise instead -->
+
+Take this example, where we create a new environment called `metagen` for a metagenomics project. 
+We initiate the environment with only two packages: GTDB-tk (taxonomic classification of genomes) and Bowtie2 (generic short-read aligner): 
 
 ```bash
-mamba create -n metagen multiqc bowtie2 metaphlan
+mamba create -n metagen bowtie2 gtdbtk
 ```
 
-At the time of writing, the [latest version of metaphlan on anaconda.org](https://anaconda.org/bioconda/metaphlan) is 4.1.0, however as we run this command we can see that Mamba is installing version 4.0.6. 
+At the time of writing, the [latest version of GTDB-tk on anaconda.org](https://anaconda.org/bioconda/metaphlan) is 2.4.0, however as we run this command we can see that Mamba is installing version 1.7.0 - that's a whole major versions older!
 
-Let's be more explicit and specify we want the latest versions available of all three packages (at the time of writing): 
+Let's be more explicit and specify we want the latest versions available for both packages (at the time of writing): 
 
 ```bash
-mamba create -n metagen multiqc==1.21 bowtie2==2.5.3 metaphlan==4.1.0
+mamba create -n metagen bowtie2==2.5.4 gtdbtk==2.4.0
 ```
 
 By running this command, we get an error message informing us that Mamba could not find a fully compatible environment for all these three software versions: 
@@ -173,25 +178,53 @@ By running this command, we get an error message informing us that Mamba could n
 ```
 Could not solve for environment specs
 The following packages are incompatible
-
-... followed by a ridiculously long message explanining the sofware incompatibilities ...
+├─ bowtie2 2.5.4  is installable and it requires
+│  ├─ tbb >=2021.12.0 , which requires
+│  │  └─ libhwloc [>=2.10.0,<2.10.1.0a0 |>=2.11.0,<2.11.1.0a0 |>=2.11.1,<2.11.2.0a0 ], which requires
+│  │     └─ libxml2 [>=2.12.6,<3.0a0 |>=2.12.7,<3.0a0 ] with the potential options
+│  │        ├─ libxml2 [2.12.6|2.12.7] would require
+│  │        │  └─ icu >=73.2,<74.0a0 , which can be installed;
+│  │        ├─ libxml2 [2.12.6|2.12.7] would require
+│  │        │  ├─ icu >=73.2,<74.0a0 , which can be installed;
+│  │        │  └─ libzlib [>=1.3.1,<1.4.0a0 |>=1.3.1,<2.0a0 ] with the potential options
+│  │        │     ├─ libzlib 1.3.1 would require
+│  │        │     │  └─ zlib 1.3.1 *_1, which can be installed;
+│  │        │     └─ libzlib 1.3.1 would require
+│  │        │        └─ zlib 1.3.1 *_0, which can be installed;
+│  │        ├─ libxml2 2.12.7 would require
+│  │        │  ├─ icu >=75.1,<76.0a0 , which can be installed;
+│  │        │  └─ libzlib >=1.3.1,<2.0a0 , which can be installed (as previously explained);
+│  │        └─ libxml2 2.13.1 would require
+│  │           └─ icu >=73.1,<74.0a0 , which can be installed;
+│  └─ zstd >=1.5.6,<1.6.0a0 , which can be installed;
+└─ gtdbtk 2.4.0  is uninstallable because it requires
+   └─ fastani 1.32.* , which requires
+      ├─ boost >=1.70.0,<1.70.1.0a0 , which requires
+      │  └─ boost-cpp 1.70.0.*  but there are no viable options
+      │     ├─ boost-cpp 1.70.0 would require
+      │     │  └─ zstd >=1.4.4,<1.5.0.0a0 , which conflicts with any installable versions previously reported;
+      │     ├─ boost-cpp 1.70.0 would require
+      │     │  └─ icu >=64.2,<65.0a0 , which conflicts with any installable versions previously reported;
+      │     └─ boost-cpp 1.70.0 would require
+      │        └─ icu >=58.2,<59.0a0 , which conflicts with any installable versions previously reported;
+      └─ zlib >=1.2.11,<1.3.0a0 , which conflicts with any installable versions previously reported.
 ```
 
-How would we solve this problem? 
+How could we solve this problem? 
 One possibility is to **install each software in a separate environment**. 
 The disadvantage is that you will need to run several `mamba activate` commands at every step of your analysis. 
 
 Another possibility is to **find a compatible combination of package versions** that is sufficient for your needs.
-For example, let's say that `metaphlan` was the most critical software for which we needed to run the latest version. 
-We could find what versions of the other two packages are compatible with it, by forcing its version, but not the version of the other two: 
+For example, let's say that `GTDB-tk` was the most critical software for which we needed to run the latest version. 
+We could find what is the latest version of Bowtie2 compatible with it, by forcing the GTDB-tk version, but not the other one: 
 
 ```bash
-mamba create -n metagen multiqc bowtie2 metaphlan==4.1.0
+mamba create -n metagen bowtie2 gtdbtk==2.4.0
 ```
 
-Running this command, we can see that we would get `bowtie2==2.5.1` and `multiqc==1.21`. 
-So, bowtie would be a slightly older version than currently available. 
-But if we were happy with this choice, then we could proceed. 
+Running this command, we can see that we would get `bowtie2==2.5.1`. 
+So, Bowtie2 would be a slightly older version than currently available, but not a major difference. 
+If we were happy with this choice, then we could proceed. 
 For reproducibility, we could save all this information in a YAML file specifying our environment: 
 
 ```yaml
@@ -201,16 +234,33 @@ channels:
   - bioconda
 dependencies:
   - bowtie==2.5.1
-  - multiqc==1.21
-  - metaphlan==4.1.0
+  - gtdbtk==2.4.0
 ```
+
+
+### Package availability {.unnumbered .unlisted}
+
+Some packages not available: 
+
+- [Cell Ranger](https://www.10xgenomics.com/support/software/cell-ranger/latest) is a very popular software for processing single-cell RNA-seq data from the 10x genomics platform. However, the software is not open source and therefore not available through the bioconda channel. 
+- Software that is not used by a wide-enough community, and thus has no available installation recipe. For example [AliView](https://ormbunkar.se/aliview/) (to visualise multiple sequence alignments) or [APAtrap](https://sourceforge.net/p/apatrap/wiki/User%20Manual/) (differential usage of alternative polyadenylation sites from RNA-seq).
+
+
+### Disk space {.unnumbered .unlisted}
+
+Environments can take a lot of disk space in your system. 
+This is software-dependent, but in some cases can become quite substantial (several GB of files). 
+Therefore, it's good practice to: 
+
+- 
+
 
 ::: {.callout-note}
 #### Mixing package managers
 
 There might be times when some packages/libraries are not available in a package manager. For example, it can be common to use conda/mamba but find a python library that is only available through `pip`. Unfortunately, this may cause issues in your environment as pip may change your conda-installed packages, which might break the conda environment. There are a few steps one can follow to avoid this pitfalls:
 
-1. Start from a new and clean environment. If the new environment break you can safely remove it and start over. You can create a new environment from pre-existing ones if necessary. We will see more of this later.
+1. Start from a new and clean environment. If the new environment breaks you can safely remove it and start over. You can create a new environment from pre-existing ones if necessary. We will see more of this later.
 2. Install `pip` in your conda environment. This is important as the pip you have in your base environment is different from your new environment (will avoid conflicts).
 3. Install any conda packages your need to get the environment ready and leave the pip install for last. Avoid switching between package managers. Start with one and finish with the other one so reversing or fixing conflicts is easier.
 
