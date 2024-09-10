@@ -1,6 +1,5 @@
 ---
 title: "Managing Bioinformatics Software and Pipelines"
-author: "Raquel Manzano Garcia, Hugo Tavares, Andries van Tonder"
 date: today
 number-sections: false
 ---
@@ -9,18 +8,18 @@ number-sections: false
 
 Setting up a computer for running bioinformatic analysis can be a challenging process. 
 Most bioinformatic applications involve the use of many different software packages, which are often part of long data processing pipelines. 
-In this course we will teach you how to overcome these challenges by using two types of tools: **package managers** and **workflow management software**. 
-You will learn about common tools to install software, with a particular focus on the popular Conda/Mamba package manager. 
-We will also cover containerisation systems (_Docker_ and _Singularity_), which are a way to further abstract software requirements by bundling them into virtual environments. 
-Finally, we will teach you how to use automated pipelines to streamline your bioinformatic analysis. 
-We will focus on the _Nextflow_ software, introducing you to its core pipelines and how you can configure it to run at scale on HPC clusters.
+These materials cover how you can overcome these challenges by using '''package managers''' and '''workflow management software'''.
+You will learn about common tools to install software, with a particular focus on the popular `conda`/`mamba` package manager. 
+We also cover how you can use pre-existing software containers (_Singularity_), which are a way to further abstract software requirements by bundling them into virtual environments. 
+Finally, you will learn how to use automated pipelines to streamline your bioinformatic analysis. 
+We focus on the _Nextflow_ software, introducing you to its core pipelines and how you can configure it to run at scale on HPC clusters.
 
 ::: {.callout-tip}
 ### Learning Objectives
 
-- Recognise the use of package managers in bioinformatics.
+- Recognise the utility of package managers in bioinformatics.
 - Use package managers to create and maintain complex software environments.
-- Understand how containerisation solutions can be used to solve the problem of software dependencies.
+- Describe how containerisation solutions can be used to solve the problem of software dependencies.
 - Install, configure and run automated analysis pipelines developed and maintained by the bioinformatics community.
 :::
 
@@ -57,55 +56,20 @@ Exercises in these materials are labelled according to their level of difficulty
 | {{< fa solid star >}} {{< fa solid star >}} {{< fa solid star >}} | Exercises in level 3 require going beyond the concepts and syntax introduced to solve new problems. |
 
 
-## Authors
-<!-- 
-The listing below shows an example of how you can give more details about yourself.
-These examples include icons with links to GitHub and Orcid. 
--->
-
-About the authors:
-
-- **Raquel Manzano Garcia**
-  <a href="https://orcid.org/0000-0002-5124-8992" target="_blank"><i class="fa-brands fa-orcid" style="color:#a6ce39"></i></a> 
-  <a href="https://github.com/RaqManzano" target="_blank"><i class="fa-brands fa-github" style="color:#4078c0"></i></a>  
-  _Affiliation_: Cancer Research UK Cambridge Institute, University of Cambridge  
-  _Roles_: writing; conceptualisation; coding
-- **Hugo Tavares**
-  <a href="https://orcid.org/0000-0001-9373-2726" target="_blank"><i class="fa-brands fa-orcid" style="color:#a6ce39"></i></a> 
-  <a href="https://github.com/tavareshugo" target="_blank"><i class="fa-brands fa-github" style="color:#4078c0"></i></a>  
-  _Affiliation_: Bioinformatics Training Facility, University of Cambridge  
-  _Roles_: writing; conceptualisation; coding
-- **Andries van Tonder**
-  <a href="https://orcid.org/0000-0002-4380-5250" target="_blank"><i class="fa-brands fa-orcid" style="color:#a6ce39"></i></a> 
-  <a href="https://github.com/avantonder" target="_blank"><i class="fa-brands fa-github" style="color:#4078c0"></i></a>  
-  _Affiliation_: Department of Veterinary Medicine, University of Cambridge  
-  _Roles_: writing
-
-
-## Citation
-
-<!-- We can do this at the end -->
+## Citation & Authors
 
 Please cite these materials if:
 
 - You adapted or used any of them in your own teaching.
-- These materials were useful for your research work. For example, you can cite us in the methods section of your paper: "We carried our analyses based on the recommendations in _Manzano Garcia & Tavares (2023)_.".
+- These materials were useful for your research work. For example, you can cite us in the methods section of your paper: "We carried our analyses based on the recommendations in _YourReferenceHere_".
 
-You can cite these materials as:
+<!-- 
+This is generated automatically from the CITATION.cff file. 
+If you think you should be added as an author, please get in touch with us.
+-->
 
-> Manzano Garcia R, Tavares H, van Tonder A (2024) "cambiotraining/bioinformatics-software-pipelines: Managing Bioinformatics Software and Pipelines", https://cambiotraining.github.io/bioinformatics-software-pipelines
+{{< citation CITATION.cff >}}
 
-Or in BibTeX format:
-
-```
-@Misc{,
-  author = {Manzano Garcia, Raquel and Tavares, Hugo and van Tonder, Andries},
-  title = {cambiotraining/bioinformatics-software-pipelines: Managing Bioinformatics Software and Pipelines},
-  month = {May},
-  year = {2024},
-  url = {https://cambiotraining.github.io/bioinformatics-software-pipelines},
-}
-```
 
 <!-- 
 ## Acknowledgements
