@@ -222,10 +222,10 @@ We then have workflow-specific options (all listed [in the documentation](https:
 When the pipeline starts running, we are given information about its progress, for example: 
 
 ```
-executor >  local (3)
-[-        ] process > NFCORE_DEMO:DEMO:FASTQC            -
-[72/e1a45a] process > NFCORE_DEMO:DEMO:FASTP (drug_rep1) [ 50%] 2 of 4
-[-        ] process > NFCORE_DEMO:DEMO:MULTIQC           -
+executor >  local (6)
+[d1/4efe7b] NFCORE_DEMO:DEMO:FASTQC (control_rep2)  | 4 of 4 ✔
+[4b/caf73e] NFCORE_DEMO:DEMO:SEQTK_TRIM (drug_rep2) | 1 of 4
+[-        ] NFCORE_DEMO:DEMO:MULTIQC                -
 ```
 
 You will also notice that a new directory called `work` is created. 
@@ -234,13 +234,11 @@ As mentioned above, this is the cache directory, which stores intermediate files
 Once the pipeline completes (hopefully successfully), we are given a message: 
 
 ```
-TODO
-```
-
-If we are happy with our results, we can clean the `work` cache directory to save space: 
-
-```bash
-nextflow clean
+-[nf-core/demo] Pipeline completed successfully-
+Completed at: 11-Sep-2024 09:26:05
+Duration    : 11m 59s
+CPU hours   : 0.3
+Succeeded   : 9
 ```
 
 ::: callout-note
@@ -254,6 +252,32 @@ Instead, you can download the latest version of the genome and annotations for y
 
 Most pipelines then have individual options to use these files as input: `--fasta` (for the reference genome) and `--gff`/`--gtf` (for the transcript annotation).
 :::
+
+
+### Cleaning up
+
+If you are happy with the results, you can clean the `work` cache directory to save space. 
+Before actually removing anything, you can see what the clean command would do using the `-dry-run` (or `-n`) option:
+
+```bash
+nextflow clean -n
+```
+
+This will inform you of what the command would remove. 
+If you're happy with this, you can go ahead and issue to command to `-force` (or `-f`) the removal: 
+
+```bash
+nextflow clean -f
+```
+
+The `clean` command has several options allowing you finer control over what gets deleted, for example the `-before` and `-after` options allow you to clean up cached files before or after the specified date/time.
+
+While `nextflow clean` works well, by default it still leaves behind some files.
+Usually these don't occupy much space, but if you want to completely remove the cached files and hidden log files, you can do this manually: 
+
+```bash
+rm -r .nextflow* work
+```
 
 
 ## Troubleshooting
@@ -1215,5 +1239,8 @@ TODO
 
 - WfMS define, automate and monitor the execution of a series of tasks in a specific order. They improve efficiency, reduce errors, can be easily scaled (from a local computer to a HPC cluster) and increase reproducibility.
 - Popular WfMS in bioinformatics include Nextflow and Snakemake. Both of these projects have associated community-maintained workflows, with excellent documentation for their use: [nf-core](https://nf-co.re/) and the [snakemake workflow catalog](https://snakemake.github.io/snakemake-workflow-catalog/).
-- TODO: finish key points
+- Nextflow pipelines have configuration profiles available to indicate how software should be managed by the pipeline. For example the option `-profile singularity` uses Singularity images to deploy the software (other options include `docker` and `conda`).
+- Nextflow keeps track of the current status of the pipeline by storing intermediate files in a **cache directory** (by default called "work"). This enables the workflow to **resume from a previous run**, in case of failure. 
+- Pipelines from the nf-core community commonly take as an input a CSV file detailing the input files for the workflow. This CSV file is commonly referred to as a samplesheet. 
+- Nf-core pipelines have extensive documentation at [nf-co.re/pipelines](https://nf-co.re/pipelines), allowing the user to configure many aspects of the run. 
 :::

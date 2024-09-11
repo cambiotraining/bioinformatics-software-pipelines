@@ -7,13 +7,10 @@ pagetitle: "Software & Pipelines"
 ::: callout-tip
 #### Learning objectives
 
-TODO
-
-How to configure Nextflow to run on a HPC.
-
-- Config file - e.g. setting SLURM options to use
-- Use `tmux`/`screen` to get a persistent terminal on a remote server
-- If running many samples consider using `sintr` - many samples might overload the memory and get the nextflow run killed.
+- Configure a Nextflow pipeline to run on an HPC cluster using a custom configuration file that matches the available resources and job scheduling policies.
+- Execute a Nextflow pipeline on a HPC and monitor job submissions using SLURM.
+- Use terminal multiplexers like `screen` or `tmux` to manage long-running Nextflow processes on an HPC.
+- Apply HPC best practices, including resource allocation and ethical job submission strategies, to optimise workflow performance.
 :::
 
 
@@ -291,7 +288,11 @@ Eventually create an exercise in the advanced configuration section
 ::: callout-tip
 #### Key points
 
-- WfMS define, automate and monitor the execution of a series of tasks in a specific order. They improve efficiency, reduce errors, can be easily scaled (from a local computer to a HPC cluster) and increase reproducibility.
-- Popular WfMS in bioinformatics include Nextflow and Snakemake. Both of these projects have associated community-maintained workflows, with excellent documentation for their use: [nf-core](https://nf-co.re/) and the [snakemake workflow catalog](https://snakemake.github.io/snakemake-workflow-catalog/).
-- TODO: finish key points
+- Nextflow pipelines can be configured to run on a HPC using a custom `config` file. This file should include:
+  - Which job scheduler is in use (e.g. `slurm`, `lsf`, etc.).
+  - The queue/partition name that you want to run the jobs in.
+  - CPU and memory resource limits for that queue.
+  - Job submission settings to keep the load on the scheduler low.
+- To execute the workflow using the custom configuration file, use the `-c your.config` option with the `nextflow` command.
+- The `nextflow` process can be run on the login node, however it is recommended to use a terminal multiplexer (`screen` or `tmux`) to have persistent terminal that can be retrieved after logout. 
 :::

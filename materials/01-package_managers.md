@@ -215,7 +215,7 @@ One possibility is to **install each software in a separate environment**.
 The disadvantage is that you will need to run several `mamba activate` commands at every step of your analysis. 
 
 Another possibility is to **find a compatible combination of package versions** that is sufficient for your needs.
-For example, let's say that `GTDB-tk` was the most critical software for which we needed to run the latest version. 
+For example, let's say that GTDB-tk was the most critical software for which we needed to run the latest version. 
 We could find what is the latest version of Bowtie2 compatible with it, by forcing the GTDB-tk version, but not the other one: 
 
 ```bash
@@ -373,12 +373,13 @@ The command runs successfully, with the expected version printed, indicating it 
 :::
 
 
-
+<!-- 
 :::{.callout-exercise}
 
 TODO: example of environment with conflicts?
 
-:::
+::: 
+-->
 
 
 ## Summary
