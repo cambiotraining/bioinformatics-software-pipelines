@@ -156,59 +156,81 @@ One thing to be very careful about is how Conda/Mamba manages the dependency gra
 If you don't specify the version of the software you want, in theory Mamba will pick the latest version available on the channel. 
 However, this is conditional on the other packages that are installed alongside it, as some versions may be incompatible with each other, it may downgrade some packages without you realising. 
 
-<!-- TODO: convert this to an exercise instead -->
+<!-- 
+mamba install -n metagen fastqc==0.12.1 multiqc==1.24.1 cutadapt==4.9 trimmomatic==0.39 bowtie2==2.5.4 samtools==1.21 metaphlan==4.1.1 mash==2.3 spades==4.0.0 bbmap==39.08 flash==1.2.11 maxbin2==2.2.7 prokka==1.14.6 gtdbtk==2.4.0 abricate==1.0.1 checkm-genome==1.2.3
+-->
 
 Take this example, where we create a new environment called `metagen` for a metagenomics project. 
-We initiate the environment with only two packages: GTDB-tk (taxonomic classification of genomes) and Bowtie2 (generic short-read aligner): 
+We initiate the environment with only two packages: GTDB-tk (taxonomic classification of genomes) and MultiQC (for aggregating quality metrics): 
 
 ```bash
-mamba create -n metagen bowtie2 gtdbtk
+mamba create -n metagen gtdbtk multiqc
 ```
 
-At the time of writing, the [latest version of GTDB-tk on anaconda.org](https://anaconda.org/bioconda/metaphlan) is 2.4.0, however as we run this command we can see that Mamba is installing version 1.7.0 - that's a whole major versions older!
+When you run this command, Mamba will ask if you want to proceed with the installation. 
+Before proceeding, it's always a good idea to **check which versions of the packages we are interested in are being installed**. 
+
+At the time of writing, the [latest version of MultiQC on anaconda.org](https://anaconda.org/bioconda/metaphlan) is 1.24.1, however as we run this command we can see that Mamba is installing version 1.21, which is a few versions behind.
 
 Let's be more explicit and specify we want the latest versions available for both packages (at the time of writing): 
 
 ```bash
-mamba create -n metagen bowtie2==2.5.4 gtdbtk==2.4.0
+mamba create -n metagen gtdbtk==2.4.0 multiqc==1.24.1
 ```
 
-By running this command, we get an error message informing us that Mamba could not find a fully compatible environment for all these three software versions: 
+By running this command, we get an error message informing us that Mamba could not find a fully compatible environment for these software versions: 
+
+<details><summary>Click here to view the long error message</summary>
 
 ```
 Could not solve for environment specs
 The following packages are incompatible
-├─ bowtie2 2.5.4  is installable and it requires
-│  ├─ tbb >=2021.12.0 , which requires
-│  │  └─ libhwloc [>=2.10.0,<2.10.1.0a0 |>=2.11.0,<2.11.1.0a0 |>=2.11.1,<2.11.2.0a0 ], which requires
-│  │     └─ libxml2 [>=2.12.6,<3.0a0 |>=2.12.7,<3.0a0 ] with the potential options
-│  │        ├─ libxml2 [2.12.6|2.12.7] would require
-│  │        │  └─ icu >=73.2,<74.0a0 , which can be installed;
-│  │        ├─ libxml2 [2.12.6|2.12.7] would require
-│  │        │  ├─ icu >=73.2,<74.0a0 , which can be installed;
-│  │        │  └─ libzlib [>=1.3.1,<1.4.0a0 |>=1.3.1,<2.0a0 ] with the potential options
-│  │        │     ├─ libzlib 1.3.1 would require
-│  │        │     │  └─ zlib 1.3.1 *_1, which can be installed;
-│  │        │     └─ libzlib 1.3.1 would require
-│  │        │        └─ zlib 1.3.1 *_0, which can be installed;
-│  │        ├─ libxml2 2.12.7 would require
-│  │        │  ├─ icu >=75.1,<76.0a0 , which can be installed;
-│  │        │  └─ libzlib >=1.3.1,<2.0a0 , which can be installed (as previously explained);
-│  │        └─ libxml2 2.13.1 would require
-│  │           └─ icu >=73.1,<74.0a0 , which can be installed;
-│  └─ zstd >=1.5.6,<1.6.0a0 , which can be installed;
-└─ gtdbtk 2.4.0  is uninstallable because it requires
-   └─ fastani 1.32.* , which requires
-      ├─ boost >=1.70.0,<1.70.1.0a0 , which requires
-      │  └─ boost-cpp 1.70.0.*  but there are no viable options
-      │     ├─ boost-cpp 1.70.0 would require
-      │     │  └─ zstd >=1.4.4,<1.5.0.0a0 , which conflicts with any installable versions previously reported;
-      │     ├─ boost-cpp 1.70.0 would require
-      │     │  └─ icu >=64.2,<65.0a0 , which conflicts with any installable versions previously reported;
-      │     └─ boost-cpp 1.70.0 would require
-      │        └─ icu >=58.2,<59.0a0 , which conflicts with any installable versions previously reported;
-      └─ zlib >=1.2.11,<1.3.0a0 , which conflicts with any installable versions previously reported.
+├─ gtdbtk 2.4.0  is installable with the potential options
+│  ├─ gtdbtk 2.4.0 would require
+│  │  ├─ fastani 1.32.* , which requires
+│  │  │  └─ boost >=1.70.0,<1.70.1.0a0  with the potential options
+│  │  │     ├─ boost 1.70.0 would require
+│  │  │     │  └─ python_abi * *_cp27mu, which can be installed;
+│  │  │     ├─ boost 1.70.0 would require
+│  │  │     │  └─ python_abi * *_cp36m, which can be installed;
+│  │  │     ├─ boost 1.70.0 would require
+│  │  │     │  └─ python_abi * *_cp37m, which can be installed;
+│  │  │     └─ boost 1.70.0 would require
+│  │  │        └─ python_abi * *_cp38, which can be installed;
+│  │  └─ pydantic >=1.9.2,<2  with the potential options
+│  │     ├─ pydantic [1.10.0|1.10.1|...|1.9.2] would require
+│  │     │  └─ python_abi 3.10.* *_cp310, which conflicts with any installable versions previously reported;
+│  │     ├─ pydantic [1.10.0|1.10.1|1.10.2|1.9.2] would require
+│  │     │  └─ python_abi 3.7.* *_cp37m, which conflicts with any installable versions previously reported;
+│  │     ├─ pydantic [1.10.0|1.10.1|...|1.9.2] would require
+│  │     │  └─ python_abi 3.8.* *_cp38, which conflicts with any installable versions previously reported;
+│  │     ├─ pydantic [1.10.0|1.10.1|...|1.9.2] would require
+│  │     │  └─ python_abi 3.8 *_pypy38_pp73, which conflicts with any installable versions previously reported;
+│  │     ├─ pydantic [1.10.0|1.10.1|...|1.9.2] would require
+│  │     │  └─ python_abi 3.9 *_pypy39_pp73, which conflicts with any installable versions previously reported;
+│  │     ├─ pydantic [1.10.0|1.10.1|...|1.9.2] would require
+│  │     │  └─ python_abi 3.9.* *_cp39, which conflicts with any installable versions previously reported;
+│  │     ├─ pydantic [1.10.10|1.10.11|...|1.10.9] would require
+│  │     │  └─ python_abi 3.11.* *_cp311, which conflicts with any installable versions previously reported;
+│  │     ├─ pydantic [1.10.13|1.10.14|1.10.16|1.10.17] would require
+│  │     │  └─ python_abi 3.12.* *_cp312, which conflicts with any installable versions previously reported;
+│  │     └─ pydantic [1.10.12|1.10.2|1.10.8], which can be installed;
+│  └─ gtdbtk 2.4.0 would require
+│     └─ pydantic >=1.9.2,<2  with the potential options
+│        ├─ pydantic [1.10.0|1.10.1|...|1.9.2], which cannot be installed (as previously explained);
+│        ├─ pydantic [1.10.0|1.10.1|1.10.2|1.9.2], which cannot be installed (as previously explained);
+│        ├─ pydantic [1.10.0|1.10.1|...|1.9.2], which cannot be installed (as previously explained);
+│        ├─ pydantic [1.10.0|1.10.1|...|1.9.2], which cannot be installed (as previously explained);
+│        ├─ pydantic [1.10.0|1.10.1|...|1.9.2], which cannot be installed (as previously explained);
+│        ├─ pydantic [1.10.0|1.10.1|...|1.9.2], which cannot be installed (as previously explained);
+│        ├─ pydantic [1.10.10|1.10.11|...|1.10.9], which cannot be installed (as previously explained);
+│        ├─ pydantic [1.10.13|1.10.14|1.10.16|1.10.17], which cannot be installed (as previously explained);
+│        └─ pydantic [1.10.12|1.10.2|1.10.8], which can be installed;
+└─ multiqc 1.24.1  is uninstallable because it requires
+   └─ pydantic >=2.7.1 , which conflicts with any installable versions previously reported.
 ```
+
+</details>
 
 How could we solve this problem? 
 One possibility is to **install each software in a separate environment**. 
@@ -216,14 +238,14 @@ The disadvantage is that you will need to run several `mamba activate` commands 
 
 Another possibility is to **find a compatible combination of package versions** that is sufficient for your needs.
 For example, let's say that GTDB-tk was the most critical software for which we needed to run the latest version. 
-We could find what is the latest version of Bowtie2 compatible with it, by forcing the GTDB-tk version, but not the other one: 
+We could find what is the latest version of MultiQC compatible with it, by forcing the GTDB-tk version, but not the other one: 
 
 ```bash
-mamba create -n metagen bowtie2 gtdbtk==2.4.0
+mamba create -n metagen multiqc gtdbtk==2.4.0
 ```
 
-Running this command, we can see that we would get `bowtie2==2.5.1`. 
-So, Bowtie2 would be a slightly older version than currently available, but not a major difference. 
+Running this command, we can see that we would get `multiqc==1.21`. 
+So, MultiQC would be a slightly older version than currently available, but for our purposes this might not be a problem. 
 If we were happy with this choice, then we could proceed. 
 For reproducibility, we could save all this information in a YAML file specifying our environment: 
 
@@ -233,7 +255,7 @@ channels:
   - conda-forge
   - bioconda
 dependencies:
-  - bowtie==2.5.1
+  - multiqc==1.21
   - gtdbtk==2.4.0
 ```
 
@@ -373,13 +395,60 @@ The command runs successfully, with the expected version printed, indicating it 
 :::
 
 
-<!-- 
 :::{.callout-exercise}
+#### Package dependencies
 
-TODO: example of environment with conflicts?
+A PhD student working on a machine learning project is trying to improve a classification model from a previous publication. 
 
+For benchmarking purposes, the student wants to reproduce the previous analysis and therefore use the same version of the package used by the authors: **PyTorch version 1.5.0**.
+
+For their own improved model, they will use a recent version of a different library: **TensorFlow version 2.17.0**. 
+
+The student came to you for advice: they've heard of Mamba and would like to create an environment for their project. 
+What would you recommend to them?
+
+:::{.callout-answer}
+
+We can start by running a command to create an environment with both packages, making sure we pin the specific versions required (we call the environment `ml` in this example, but you could name it anything you want): 
+
+```bash
+mamba create -n ml tensorflow==2.17.0 pytorch==1.5.0
+```
+
+However, we get a package dependency error: 
+
+```
+Could not solve for environment specs
+The following packages are incompatible
+├─ pytorch 1.5.0  is requested and can be installed;
+└─ tensorflow 2.17.0  is uninstallable because it requires
+   └─ tensorflow-base [2.17.0 cpu_py310h98e3cc3_1|2.17.0 cpu_py310h98e3cc3_2|...|2.17.0 cuda120py39hee30cbf_201], which requires
+      └─ keras >=3.0  with the potential options
+         ├─ keras [3.0.2|3.0.4|3.0.5|3.1.0] would require
+         │  └─ tensorflow >=2.15.0,<2.17.0a , which can be installed;
+         ├─ keras [3.1.0|3.1.1] would require
+         │  └─ pytorch 2.1.* , which conflicts with any installable versions previously reported;
+         ├─ keras [3.2.0|3.2.1|3.3.2|3.3.3|3.4.1] would require
+         │  └─ pytorch >=2.1,<2.3 , which conflicts with any installable versions previously reported;
+         └─ keras [3.0.5|3.4.1|3.5.0] would require
+            └─ pytorch >=2.1.0 , which conflicts with any installable versions previously reported.
+```
+
+This is because PyTorch 1.5.0 is quite an old version, while TensorFlow 2.17.0 is quite a new version, leading to different version requirements. 
+In fact, TensorFlow itself depends on PyTorch, but version 2.17 requires more recent versions of PyTorch than 1.5.
+
+As there is no easy way to install both of these packages in the same environment, our best recommendation to the student would be to create two separate environments for these packages: 
+
+```bash
+mamba create -n pytorch pytorch==1.5.0
+mamba create -n tensorflow tensorflow==2.17.0
+```
+
+In this case we simply named the environments after the main package we're installing, but again you could choose different names. 
+
+Installing the packages in separate environments avoids the previous Python version conflict. 
+:::
 ::: 
--->
 
 
 ## Summary
