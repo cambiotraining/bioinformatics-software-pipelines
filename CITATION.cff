@@ -5,7 +5,7 @@
 # This is a known limitation of CFF files: https://github.com/citation-file-format/citation-file-format/issues/112
 
 cff-version: 1.2.0
-title: Course Development Guidelines
+title: Managing Bioinformatics Software and Pipelines
 message: >-
   You may cite these materials using the metadata in this
   file. Please cite our materials if you publish materials
@@ -33,4 +33,4 @@ repository-code: 'https://github.com/cambiotraining/bioinformatics-software-pipe
 url: 'https://cambiotraining.github.io/bioinformatics-software-pipeline/'
 license: CC-BY-4.0
 commit: TODO
-date-released: '2024-09-03'
+date-released: '2024-09-18'
