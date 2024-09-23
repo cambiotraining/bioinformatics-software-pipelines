@@ -184,8 +184,13 @@ This workflow takes a set of FASTQ files as input, runs them through a simple QC
 ![[nf-core/demo workflow diagram](https://github.com/nf-core/demo/blob/1.0.0/docs/images/nf-core-demo-subway.png) by Christopher Hakkaart, licensed under [MIT](https://github.com/nf-core/demo/blob/1.0.0/LICENSE)](https://raw.githubusercontent.com/nf-core/demo/dev//docs/images/nf-core-demo-subway.png)
 
 We will run this workflow on a set of files found in the `demo` directory.
-Looking at the documentation, we are given an example of the samplesheet CSV file.
+We will start by activating a Mamba environment where we installed nextflow: 
 
+```bash
+mamba activate nextflow
+```
+
+Looking at the pipeline documentation, we are given an example of the samplesheet CSV file.
 This is how the samplesheet looks like for our samples: 
 
 ```
@@ -1104,7 +1109,6 @@ Here is the fixed nextflow command in our script:
 
 ```bash
 nextflow run nf-core/chipseq \
-  --max_memory "20GB" --max_cpus "8" \
   -r "2.0.0" \
   -profile "singularity" \
   --input "samplesheet.csv" \
@@ -1142,7 +1146,6 @@ Here is the fixed nextflow command in our script:
 
 ```bash
 nextflow run nf-core/viralrecon \
-  --max_memory "20GB" --max_cpus "8" \
   -r "2.6.0" \
   -profile "singularity" \
   --input "samplesheet.csv" \
@@ -1185,7 +1188,6 @@ Here is the fixed nextflow command in our script:
 
 ```bash
 nextflow run nf-core/viralrecon \
-  --max_memory "20GB" --max_cpus "8" \
   -r "2.6.0" \
   -profile "singularity" \
   --input "samplesheet.csv" \

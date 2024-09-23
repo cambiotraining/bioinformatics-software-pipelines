@@ -276,8 +276,10 @@ Therefore, it's good practice to:
 To see if this is a problem in your system, you can occasionally check the size of your Miniforge installation folder with the following command (assuming default installation path):
 
 ```bash
-du --si -s ~/miniforge3
+du --si -s $CONDA_PREFIX
 ```
+
+Note the `$CONDA_PREFIX` is an environment variable that stores the directory path to your conda/mamba installation. 
 
 ::: {.callout-note}
 #### Mixing package managers
