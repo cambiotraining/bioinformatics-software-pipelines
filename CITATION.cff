@@ -5,7 +5,7 @@
 # This is a known limitation of CFF files: https://github.com/citation-file-format/citation-file-format/issues/112
 
 cff-version: 1.2.0
-title: Managing Bioinformatics Software and Pipelines
+title: Managing bioinformatics software and pipelines
 message: >-
   You may cite these materials using the metadata in this
   file. Please cite our materials if you publish materials

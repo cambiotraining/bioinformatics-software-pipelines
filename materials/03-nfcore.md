@@ -201,7 +201,6 @@ We can then run our workflow as follows (this command is available from `scripts
 
 ```bash
 nextflow run -profile "singularity" -revision "1.0.0" nf-core/demo \
-  --max_memory "12GB" --max_cpus 8 \
   --input "samplesheet.csv" \
   --outdir "results/qc" \
   --fasta "genome/Mus_musculus.GRCm38.dna_sm.chr14.fa.gz"
@@ -217,7 +216,6 @@ We then have workflow-specific options (all listed [in the documentation](https:
 - `--input` is the samplesheet CSV for this pipeline, which we prepared beforehand using a spreadsheet program such as Excel. 
 - `--outdir` is the name of the output directory for our results. 
 - `--fasta` is the reference genome to be used by the pipeline.
-- `--max_memory` and `--max_cpus` are used to restrict the maximum resources the workflow can use. In most cases you won't have to define this (e.g. if you're running on a HPC), but since we're running these examples on a local desktop, we need to restrict the resources the workflow is allowed to use. 
 
 When the pipeline starts running, we are given information about its progress, for example: 
 
@@ -1070,7 +1068,6 @@ Here is the fixed nextflow command in our script:
 
 ```bash
 nextflow run nf-core/rnaseq \
-  --max_memory "20GB" --max_cpus "8" \
   -r "3.14.0" \
   -profile "singularity" \
   --input "samplesheet.csv" \

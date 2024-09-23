@@ -247,7 +247,6 @@ Here's what you need to do:
 
     ```bash
     nextflow run -c "training.config" -profile "singularity" -revision "1.0.0" nf-core/demo \
-      --max_memory "12GB" --max_cpus 8 \
       --input "samplesheet.csv" \
       --outdir "results/qc" \
       --fasta "genome/Mus_musculus.GRCm38.dna_sm.chr14.fa.gz"
