@@ -9,20 +9,20 @@ mamba create -n nextflow bioconda::nextflow==24.04.4 bioconda::nf-core==2.14.1
 
 # nextflow config
 mkdir -p /home/participant/.nextflow 
-echo "\
-params { \
-  max_memory = '20.GB' \
-  max_cpus = '8' \
-  max_time = '12.h' \
-} \
-singularity { \
-  singularity.enabled = true \
-  conda.enabled = false \
-  docker.enabled = false \
-  pullTimeout = '4 h' \
-  cacheDir = '/home/participant/.nextflow-singularity-cache/' \
-}" >> /home/participant/.nextflow/config
-
+cat <<EOF >> /home/participant/.nextflow/config
+params { 
+  max_memory = '20.GB' 
+  max_cpus = '8' 
+  max_time = '12.h' 
+} 
+singularity { 
+  singularity.enabled = true 
+  conda.enabled = false 
+  docker.enabled = false 
+  pullTimeout = '4 h' 
+  cacheDir = '/home/participant/.nextflow-singularity-cache/' 
+}
+EOF
 
 # cache nextflow images
 mamba activate nextflow
