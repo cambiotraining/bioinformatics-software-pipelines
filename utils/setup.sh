@@ -2,6 +2,7 @@
 
 # create an environment to cache some packages used in the course
 mamba create -n btf iqtree==2.3.3 mafft==7.525 treetime==0.11.3 multiqc==1.21 gtdbtk==2.4.0
+mamba create -y -n scipy scipy==1.12.0 numpy==1.26.4 matplotlib==3.8.3
 
 # create nextflow environment
 mamba create -n nextflow bioconda::nextflow==24.04.4 bioconda::nf-core==2.14.1
