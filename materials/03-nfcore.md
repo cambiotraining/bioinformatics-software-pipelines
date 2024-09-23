@@ -206,6 +206,7 @@ We can then run our workflow as follows (this command is available from `scripts
 
 ```bash
 nextflow run -profile "singularity" -revision "1.0.0" nf-core/demo \
+  --max_memory "20GB" --max_cpus "8" \
   --input "samplesheet.csv" \
   --outdir "results/qc" \
   --fasta "genome/Mus_musculus.GRCm38.dna_sm.chr14.fa.gz"
@@ -221,6 +222,7 @@ We then have workflow-specific options (all listed [in the documentation](https:
 - `--input` is the samplesheet CSV for this pipeline, which we prepared beforehand using a spreadsheet program such as Excel. 
 - `--outdir` is the name of the output directory for our results. 
 - `--fasta` is the reference genome to be used by the pipeline.
+- `--max_memory` and `--max_cpus` are used to restrict the maximum resources the workflow can use. In most cases you won't have to define this (e.g. if you're running on a HPC), but since we're running these examples on a local desktop, we need to restrict the resources the workflow is allowed to use. 
 
 When the pipeline starts running, we are given information about its progress, for example: 
 
@@ -824,7 +826,7 @@ Here's 4 different ways of doing it:
     # generate file names from metadata
     tail -n +2 sample_info.tsv | perl -ne 'chomp;
     @a=split/\t/;
-    print "$a[0],reads/$a[1]\_1.downsampled.fastq.gz,reads/$a[1]\_2.downsampled.fastq.gz\n"' >> samplesheet.csv
+    print "$a[0],reads/$a[1]\_1.fastq.gz,reads/$a[1]\_2.fastq.gz\n"' >> samplesheet.csv
     ```
 
 - With AWK:
@@ -836,7 +838,7 @@ Here's 4 different ways of doing it:
     # generate file names from metadata
     tail -n +2 sample_info.tsv | awk 'BEGIN { FS="\t"; OFS="," }
     {
-      print $1, "reads/" $2 "_1.downsampled.fastq.gz", "reads/" $2 "_2.downsampled.fastq.gz"
+      print $1, "reads/" $2 "_1.fastq.gz", "reads/" $2 "_2.fastq.gz"
     }' >> samplesheet.csv
     ```
     
@@ -1075,6 +1077,7 @@ Here is the fixed nextflow command in our script:
 nextflow run nf-core/rnaseq \
   -r "3.14.0" \
   -profile "singularity" \
+  --max_memory "20GB" --max_cpus "8" \
   --input "samplesheet.csv" \
   --outdir "results/rnaseq" \
   --gtf "$PWD/genome/Mus_musculus.GRCm38.102.chr14.gtf.gz" \
@@ -1111,6 +1114,7 @@ Here is the fixed nextflow command in our script:
 nextflow run nf-core/chipseq \
   -r "2.0.0" \
   -profile "singularity" \
+  --max_memory "20GB" --max_cpus "8" \
   --input "samplesheet.csv" \
   --outdir "results/chipseq" \
   --gtf "$PWD/genome/GRCh38.109.chr21.gtf.gz" \
@@ -1148,6 +1152,7 @@ Here is the fixed nextflow command in our script:
 nextflow run nf-core/viralrecon \
   -r "2.6.0" \
   -profile "singularity" \
+  --max_memory "20GB" --max_cpus "8" \
   --input "samplesheet.csv" \
   --outdir "results/viralrecon" \
   --platform "illumina" \
@@ -1190,14 +1195,15 @@ Here is the fixed nextflow command in our script:
 nextflow run nf-core/viralrecon \
   -r "2.6.0" \
   -profile "singularity" \
+  --max_memory "20GB" --max_cpus "8" \
   --input "samplesheet.csv" \
   --fastq_dir "fastq_pass/" \
   --outdir "results/viralrecon" \
   --platform "nanopore" \
   --protocol "amplicon" \
-  --gtf "$PWD/genome/nCoV-2019.annotation.gff.gz" \
-  --fasta "$PWD/genome/nCoV-2019.reference.fasta" \
-  --primer_bed "$PWD/genome/nCoV-2019.V3.primer.bed" \
+  --genome "MN908947.3" \
+  --primer_set "artic" \
+  --primer_set_version "3" \
   --artic_minion_medaka_model "r941_min_fast_g303" \
   --artic_minion_caller "medaka" \
   --skip_assembly --skip_asciigenome \
@@ -1213,7 +1219,7 @@ For example, we can open the file `results/viralrecon/multiqc/medaka/multiqc_rep
 :::
 
 
-#### Variant calling
+<!-- #### Variant calling
 
 Identifying genetic variants using `nf-core/sarek`.
 Go into the `variants` directory for this version of the exercise. 
@@ -1225,7 +1231,7 @@ Go into the `variants` directory for this version of the exercise.
 
 ::: callout-answer
 TODO
-:::
+::: -->
 
 :::
 :::
