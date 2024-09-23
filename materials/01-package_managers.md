@@ -170,7 +170,7 @@ mamba create -n metagen gtdbtk multiqc
 When you run this command, Mamba will ask if you want to proceed with the installation. 
 Before proceeding, it's always a good idea to **check which versions of the packages we are interested in are being installed**. 
 
-At the time of writing, the [latest version of MultiQC on anaconda.org](https://anaconda.org/bioconda/metaphlan) is 1.24.1, however as we run this command we can see that Mamba is installing version 1.21, which is a few versions behind.
+At the time of writing, the [latest version of MultiQC on anaconda.org](https://anaconda.org/bioconda/multiqc) is 1.24.1, however as we run this command we can see that Mamba is installing version 1.21, which is a few versions behind.
 
 Let's be more explicit and specify we want the latest versions available for both packages (at the time of writing): 
 
