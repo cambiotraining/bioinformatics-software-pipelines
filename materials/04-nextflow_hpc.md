@@ -179,19 +179,19 @@ You’ll find your command still running in the background!
 We have a training HPC available with the following characteristics:
 
 - **Job scheduler**: SLURM
-- **Main queue/partition**: `training`
+- **Main queue/partition**: `normal`
 - **Queue limits**: 8 CPUs and 20GB of RAM
 - **Job duration**: maximum 24 hours
-- **High-performance directory**: `~/rds/hpc-work`, shared by both the login and compute nodes
+- **High-performance directory**: `/data`, shared by both the login and compute nodes
 
-First, **login to the HPC** with the command: `ssh participant@train.bio`
+First, **login to the HPC** with the command: `ssh participant@trainhpc`
 
-In the directory `~/rds/hpc-work/demo` you will find the files needed to run the `nf-core/demo` workflow, as demonstrated in the [previous chapter](03-nfcore.md#demo-nf-core-pipeline). 
+In the directory `/data/demo` you will find the files needed to run the `nf-core/demo` workflow, as demonstrated in the [previous chapter](03-nfcore.md#demo-nf-core-pipeline). 
 Now, you will run this workflow on the HPC using SLURM as the executor for your analysis steps.
 
 Here's what you need to do: 
 
-- **Create a directory to cache the Singularity images** used by Nextflow. Consider whether this cache directory should be created in your `/home` or in `~/rds/hpc-work`.
+- **Create a directory to cache the Singularity images** used by Nextflow. Consider whether this cache directory should be created in your `/home` or in `/data`.
 - **Create a configuration file** for running the pipeline, ensuring it includes the necessary settings for SLURM and respects the resource limits mentioned above.
 - **Start a `screen` or `tmux` session** (your choice) to keep a persistent terminal running.
 - **Edit the script `scripts/run_nfcore_demo.sh`** (e.g. using `nano`), adding the path to your configuration file to the Nextflow command with the `-c` option. 
@@ -204,16 +204,16 @@ Here's what you need to do:
 1. **Login to the HPC** as instructed: 
 
     ```bash
-    ssh participant@train.bio
+    ssh participant@trainhpc
     ```
 
-2. **Create the cache directory**. Since the working directory `~/rds/hpc-work` is high-performance and shared by both the login and compute nodes, it is the best location for the cache directory: 
+2. **Create the cache directory**. Since the working directory `/data` is high-performance and shared by both the login and compute nodes, it is the best location for the cache directory: 
 
     ```bash
-    mkdir ~/rds/hpc-work/singularity-cache
+    mkdir /data/singularity-cache
     ```
     
-3. **Create a configuration file** in the `~/rds/hpc-work/demo` directory, which we call `training.config`:
+3. **Create a configuration file** in the `/data/demo` directory, which we call `training.config`:
 
     ```groovy
     process {
@@ -237,7 +237,7 @@ Here's what you need to do:
 
     singularity {
         enabled = true
-        cacheDir = '/home/participant/rds/hpc-work/singularity-cache'
+        cacheDir = '/data/singularity-cache'
     }
     ```
 
