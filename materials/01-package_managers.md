@@ -147,6 +147,12 @@ mamba env update -f envs/phylo.yml
 
 You can practice this in an exercise below.
 
+:::{.callout-note}
+#### Create a YAML file from an existing environment
+
+If you did not create an environment file at the start of your project, you can create one from an existing environment using the command `mamba env export > env.yaml`
+:::
+
 
 ## Disadvantages and pitfalls
 
@@ -274,8 +280,15 @@ Environments can take a lot of disk space in your system.
 This is software-dependent, but in some cases can become quite substantial (several GB of files). 
 Therefore, it's good practice to: 
 
-- 
+- **Remove unused environments**: regularly check for environments that you no longer need and remove them using `mamba env remove --name ENV_NAME`. You can use `mamba env list` to list your environments and find unused ones. 
+- **Recreate environments from YAML files**: related to the previous point, always make sure to keep YAML enviroment files for your environments. This way, you can safely remove less frequently used environments and later recreate them using `mamba env create -f env.yml`. If you did not create an environment file, you can create one from an existing environment with `mamba env export > env.yaml`.
+- **Regularly clear cached packages**: Mamba caches downloaded packages for faster installation in the future. However, you can clear this cache using `mamba clean --all`. This is particularly useful after upgrades, as you don't need old versions of the packages stored in your system.
 
+To see if this is a problem in your system, you can occasionally check the size of your Miniforge installation folder with the following command (assuming default installation path):
+
+```bash
+du --si -s ~/miniforge3
+```
 
 ::: {.callout-note}
 #### Mixing package managers
