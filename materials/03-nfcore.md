@@ -1023,7 +1023,7 @@ CH30,30
 :::
 
 
-#### Variant calling
+<!-- #### Variant calling
 
 Identifying genetic variants using `nf-core/sarek`.
 Go into the `variants` directory for this version of the exercise. 
@@ -1034,7 +1034,7 @@ Go into the `variants` directory for this version of the exercise.
 
 :::{.callout-answer}
 TODO
-:::
+::: -->
 
 :::
 :::
