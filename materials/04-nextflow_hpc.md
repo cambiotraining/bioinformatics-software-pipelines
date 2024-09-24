@@ -231,7 +231,7 @@ Here's what you need to do:
 
     params {
         max_memory = '20.GB'
-        max_cpus = '8'
+        max_cpus = 8
         max_time = '24.h'
     }
 
