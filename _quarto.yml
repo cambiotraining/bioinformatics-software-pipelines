@@ -35,10 +35,10 @@ book:
   favicon: "_extensions/cambiotraining/courseformat/img/university-of-cambridge-favicon.ico"
   bread-crumbs: false
   page-navigation: true
-  body-header: | 
-    <div class="callout-caution">
-    These materials are still under development
-    </div>
+  # body-header: | 
+  #   <div class="callout-caution">
+  #   These materials are still under development
+  #   </div>
   page-footer: 
     center: |
       Licensed [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/) 
