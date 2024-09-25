@@ -54,6 +54,19 @@ Another important aspect of these projects are the workflows and modules provide
 
 These materials will focus on Nextflow, due to the standarised and ready-to-use pipelines available through nf-core.
 
+:::{.callout-note}
+#### How do I install Nextflow and Snakemake?
+
+You can install both of these packages using Mamba: 
+
+```bash
+mamba create -n nextflow bioconda::nextflow==24.04.4
+mamba create -n snakemake bioconda::snakemake==8.20.4
+```
+
+You may want to check the latest versions available ([here](https://anaconda.org/bioconda/nextflow) and [here](https://anaconda.org/bioconda/snakemake)), which may be different from the ones in the command above. 
+:::
+
 
 ## Nextflow command line interface
 

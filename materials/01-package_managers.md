@@ -74,6 +74,12 @@ This can lead to several issues:
 
 Another advantage of using Mamba is that the **software is installed locally** (by default in your home directory), without the need for admin (`sudo`) permissions. 
 
+:::{.callout-note}
+#### How do I install Mamba?
+
+We give instructions to install Mamba on our [setup page](../setup.md#conda).
+:::
+
 ### Installing software with Mamba
 
 You can search for available packages from the [anaconda.org](https://anaconda.org/) website. 

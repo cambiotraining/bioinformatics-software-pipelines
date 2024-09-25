@@ -55,6 +55,22 @@ It was essentially split into two parallel projects:
 There are some [differences between Apptainer and SingularityCE](https://github.com/sylabs/singularity/discussions/2948), but in practice they work very similarly to each other. 
 :::
 
+:::{.callout-note}
+#### How do I install Singularity?
+
+Usually, Singularity is used on a HPC environment and in that case we recommend that you use the version installed by your system administrators. 
+
+If you want a local installation, you can install Singularity using Mamba: 
+
+```bash
+mamba create -n singularity conda-forge::singularity==3.8.7
+```
+
+You may want to change the command above to use the lastest version [available here](https://anaconda.org/conda-forge/singularity). 
+
+Alternatively, we show how to perform a system-level installation in our [setup page](../setup.md#singularity).
+:::
+
 
 ## Singularity images
 
