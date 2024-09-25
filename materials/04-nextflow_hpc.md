@@ -124,10 +124,10 @@ A terminal multiplexer lets you open "virtual terminals" that continue running i
 Two popular and widely available terminal multiplexers are [`screen`](https://linuxize.com/post/how-to-use-linux-screen/) and [`tmux`](https://github.com/tmux/tmux/wiki). 
 Both work similarly, and we’ll briefly demonstrate their usage below.
 
-The first step is to start a session:
+The first step is to start a session called "demo":
 
 - For `screen`: `screen -S demo` (note the uppercase `-S`)
-- For `tmux`: `tmux -s demo`
+- For `tmux`: `tmux new -s demo`
 
 This opens a session, which essentially looks like your regular terminal. 
 However, you can **detach** from this session, leaving it running in the background and come back to it later. 
@@ -241,7 +241,7 @@ Here's what you need to do:
     }
     ```
 
-4. **Start a persistent terminal** with either `tmux -s demo` or `screen -S demo`.
+4. **Start a persistent terminal** with either `tmux new -s demo` or `screen -S demo`.
 
 5. **Edit the Nextflow script to include the configuration file** using the `-c` option: 
 
