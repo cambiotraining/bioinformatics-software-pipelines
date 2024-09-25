@@ -139,6 +139,8 @@ To create the environment from the file, we can use the command:
 mamba env create -f envs/phylo.yml
 ```
 
+Note that this command is slightly different from the one we saw earlier: `mamba env create -f environment.yml` as shown here is to create an environment from a file, whereas `mamba create -n name-of-environment` that we saw earlier is used to create a new environment from scratch.
+
 If you later decide to update the environment, either by adding a new software or by updating the software versions, you can run the command: 
 
 ```bash
