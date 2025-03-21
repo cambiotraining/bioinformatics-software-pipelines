@@ -160,7 +160,7 @@ This is because they will have often already set specific bindings to the filesy
 :::
 
 
-### Exercises
+## Exercises
 
 :::{.callout-exercise}
 

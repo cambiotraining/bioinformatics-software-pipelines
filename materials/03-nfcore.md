@@ -469,61 +469,64 @@ We can see that the FASTQ file names are essentially the prefix given in the met
 Therefore, we can create the samplesheet based on our metadata TSV file using some programming tools. 
 Here's 4 different ways of doing it:
 
-- With Perl: 
+:::{.panel-tabset group=language}
+##### Python
 
-    ```bash
-    # create new file with the required column names
-    echo "sample,fastq_1,fastq_2,strandedness" > samplesheet.csv
-    
-    # generate file names from metadata
-    tail -n +2 sample_info.tsv | perl -ne 'chomp;
-    @a=split/\t/;
-    print "$a[4],reads/$a[0]\_1.downsampled.fastq.gz,reads/$a[0]\_2.downsampled.fastq.gz,auto\n"' >> samplesheet.csv
-    ```
+```python
+import pandas as pd
 
-- With AWK:
+# Read the input TSV file
+meta = pd.read_csv("sample_info.tsv", sep="\t")
 
-    ```bash
-    # create new file with the required column names
-    echo "sample,fastq_1,fastq_2,strandedness" > samplesheet.csv
-    
-    # generate file names from metadata
-    tail -n +2 sample_info.tsv | awk 'BEGIN { FS="\t"; OFS="," }
-    {
-      print $5, "reads/" $1 "_1.downsampled.fastq.gz", "reads/" $1 "_2.downsampled.fastq.gz", "auto"
-    }' >> samplesheet.csv
-    ```
-    
-- With R:
+# Create the output DataFrame
+out = pd.DataFrame({
+    'sample': meta['name'],
+    'fastq_1': "reads/" + meta['fastq'] + "_1.downsampled.fastq.gz",
+    'fastq_2': "reads/" + meta['fastq'] + "_2.downsampled.fastq.gz",
+    'strandedness': "auto"
+})
 
-    ```r
-    meta <- read.table("sample_info.tsv", header = TRUE, sep = "\t")
-    out <- data.frame(sample = meta$name, 
-                      fastq_1 = paste0("reads/", meta$fastq, "_1.downsampled.fastq.gz"), 
-                      fastq_2 = paste0("reads/", meta$fastq, "_2.downsampled.fastq.gz"),
-                      strandedness = "auto")
-    write.csv(out, "samplesheet.csv", row.names = FALSE, quote = FALSE)
-    ```
+# Write the output DataFrame to a CSV file
+out.to_csv("samplesheet.csv", index=False, quotechar='"') 
+```
 
-- With Python:
+##### R
 
-    ```python
-    import pandas as pd
+```r
+meta <- read.table("sample_info.tsv", header = TRUE, sep = "\t")
+out <- data.frame(sample = meta$name, 
+                  fastq_1 = paste0("reads/", meta$fastq, "_1.downsampled.fastq.gz"), 
+                  fastq_2 = paste0("reads/", meta$fastq, "_2.downsampled.fastq.gz"),
+                  strandedness = "auto")
+write.csv(out, "samplesheet.csv", row.names = FALSE, quote = FALSE)
+```
 
-    # Read the input TSV file
-    meta = pd.read_csv("sample_info.tsv", sep="\t")
+##### Perl
 
-    # Create the output DataFrame
-    out = pd.DataFrame({
-        'sample': meta['name'],
-        'fastq_1': "reads/" + meta['fastq'] + "_1.downsampled.fastq.gz",
-        'fastq_2': "reads/" + meta['fastq'] + "_2.downsampled.fastq.gz",
-        'strandedness': "auto"
-    })
+```bash
+# create new file with the required column names
+echo "sample,fastq_1,fastq_2,strandedness" > samplesheet.csv
 
-    # Write the output DataFrame to a CSV file
-    out.to_csv("samplesheet.csv", index=False, quotechar='"') 
-    ```
+# generate file names from metadata
+tail -n +2 sample_info.tsv | perl -ne 'chomp;
+@a=split/\t/;
+print "$a[4],reads/$a[0]\_1.downsampled.fastq.gz,reads/$a[0]\_2.downsampled.fastq.gz,auto\n"' >> samplesheet.csv
+```
+
+##### AWK
+
+```bash
+# create new file with the required column names
+echo "sample,fastq_1,fastq_2,strandedness" > samplesheet.csv
+
+# generate file names from metadata
+tail -n +2 sample_info.tsv | awk 'BEGIN { FS="\t"; OFS="," }
+{
+  print $5, "reads/" $1 "_1.downsampled.fastq.gz", "reads/" $1 "_2.downsampled.fastq.gz", "auto"
+}' >> samplesheet.csv
+```
+
+:::
 
 Note, if all of the coding suggestions above seem unclear, we reiterate that you can create the samplesheet by hand in a standard spreadsheet software. 
 At the end, our samplesheet should look like this: 
@@ -650,59 +653,62 @@ We can see that the FASTQ file names are essentially the prefix given in the met
 Therefore, we can create the samplesheet based on our metadata TSV file using some programming tools. 
 Here's 4 different ways of doing it:
 
-- With Perl: 
+:::{.panel-tabset group=language}
+##### Python
 
-    ```bash
-    # create new file with the required column names
-    echo "sample,fastq_1,fastq_2,antibody,control" > samplesheet.csv
+```python
+import pandas as pd
+
+meta = pd.read_csv("sample_info.tsv", sep="\t")
+out = pd.DataFrame({
+    'sample': meta['name'],
+    'fastq_1': "reads/" + meta['fastq'] + ".fastq.gz",
+    'fastq_2': "",
+    'antibody': meta['antibody'],
+    'control': meta['input_control']
+})
+out.to_csv("samplesheet.csv", index=False, quotechar='"')
+```
+
+##### R
+
+```r
+meta <- read.table("sample_info.tsv", header = TRUE, sep = "\t")
+out <- data.frame(sample = meta$name, 
+                  fastq_1 = paste0("reads/", meta$fastq, ".fastq.gz"), 
+                  fastq_2 = "",
+                  antibody = meta$antibody,
+                  control = meta$input_control)
+write.csv(out, "samplesheet.csv", row.names = FALSE, quote = FALSE)
+```
+
+##### Perl
+
+```bash
+# create new file with the required column names
+echo "sample,fastq_1,fastq_2,antibody,control" > samplesheet.csv
+
+# generate file names from metadata
+tail -n +2 sample_info.tsv | perl -ne 'chomp;
+@a=split/\t/;
+print "$a[0],reads/$a[1].fastq.gz,,$a[2],$a[3]\n"' >> samplesheet.csv
+```
+
+##### AWK
+
+```bash
+# create new file with the required column names
+echo "sample,fastq_1,fastq_2,antibody,control" > samplesheet.csv
+
+# generate file names from metadata
+tail -n +2 sample_info.tsv | awk 'BEGIN { FS="\t"; OFS="," }
+{
+  print $1, "reads/" $2 ".fastq.gz", "", $3, $4
+}' >> samplesheet.csv
+```
+
+:::
     
-    # generate file names from metadata
-    tail -n +2 sample_info.tsv | perl -ne 'chomp;
-    @a=split/\t/;
-    print "$a[0],reads/$a[1].fastq.gz,,$a[2],$a[3]\n"' >> samplesheet.csv
-    ```
-
-- With AWK:
-
-    ```bash
-    # create new file with the required column names
-    echo "sample,fastq_1,fastq_2,antibody,control" > samplesheet.csv
-    
-    # generate file names from metadata
-    tail -n +2 sample_info.tsv | awk 'BEGIN { FS="\t"; OFS="," }
-    {
-      print $1, "reads/" $2 ".fastq.gz", "", $3, $4
-    }' >> samplesheet.csv
-    ```
-    
-- With R:
-
-    ```r
-    meta <- read.table("sample_info.tsv", header = TRUE, sep = "\t")
-    out <- data.frame(sample = meta$name, 
-                      fastq_1 = paste0("reads/", meta$fastq, ".fastq.gz"), 
-                      fastq_2 = "",
-                      antibody = meta$antibody,
-                      control = meta$input_control)
-    write.csv(out, "samplesheet.csv", row.names = FALSE, quote = FALSE)
-    ```
-
-- With Python:
-
-    ```python
-    import pandas as pd
-
-    meta = pd.read_csv("sample_info.tsv", sep="\t")
-    out = pd.DataFrame({
-        'sample': meta['name'],
-        'fastq_1': "reads/" + meta['fastq'] + ".fastq.gz",
-        'fastq_2': "",
-        'antibody': meta['antibody'],
-        'control': meta['input_control']
-    })
-    out.to_csv("samplesheet.csv", index=False, quotechar='"')
-    ```
-
 Note, if all of the coding suggestions above seem unclear, we reiterate that you can create the samplesheet by hand in a standard spreadsheet software. 
 At the end, our samplesheet should look like this: 
 
@@ -830,59 +836,62 @@ We can see that the FASTQ file names are essentially the prefix given in the met
 Therefore, we can create the samplesheet based on our metadata TSV file using some programming tools. 
 Here's 4 different ways of doing it:
 
-- With Perl: 
+:::{.panel-tabset group=language}
+##### Python
 
-    ```bash
-    # create new file with the required column names
-    echo "sample,fastq_1,fastq_2" > samplesheet.csv
-    
-    # generate file names from metadata
-    tail -n +2 sample_info.tsv | perl -ne 'chomp;
-    @a=split/\t/;
-    print "$a[0],reads/$a[1]\_1.fastq.gz,reads/$a[1]\_2.fastq.gz\n"' >> samplesheet.csv
-    ```
+```python
+import pandas as pd
 
-- With AWK:
+# Read the input TSV file
+meta = pd.read_csv("sample_info.tsv", sep="\t")
 
-    ```bash
-    # create new file with the required column names
-    echo "sample,fastq_1,fastq_2" > samplesheet.csv
-    
-    # generate file names from metadata
-    tail -n +2 sample_info.tsv | awk 'BEGIN { FS="\t"; OFS="," }
-    {
-      print $1, "reads/" $2 "_1.fastq.gz", "reads/" $2 "_2.fastq.gz"
-    }' >> samplesheet.csv
-    ```
-    
-- With R:
+# Create the output DataFrame
+out = pd.DataFrame({
+    'sample': meta['name'],
+    'fastq_1': "reads/" + meta['fastq'] + "_1.fastq.gz",
+    'fastq_2': "reads/" + meta['fastq'] + "_2.fastq.gz"
+})
 
-    ```r
-    meta <- read.table("sample_info.tsv", header = TRUE, sep = "\t")
-    out <- data.frame(sample = meta$name, 
-                      fastq_1 = paste0("reads/", meta$fastq, "_1.fastq.gz"), 
-                      fastq_2 = paste0("reads/", meta$fastq, "_2.fastq.gz"))
-    write.csv(out, "samplesheet.csv", row.names = FALSE, quote = FALSE)
-    ```
+# Write the output DataFrame to a CSV file
+out.to_csv("samplesheet.csv", index=False, quotechar='"') 
+```
 
-- With Python:
+##### R
 
-    ```python
-    import pandas as pd
+```r
+meta <- read.table("sample_info.tsv", header = TRUE, sep = "\t")
+out <- data.frame(sample = meta$name, 
+                  fastq_1 = paste0("reads/", meta$fastq, "_1.fastq.gz"), 
+                  fastq_2 = paste0("reads/", meta$fastq, "_2.fastq.gz"))
+write.csv(out, "samplesheet.csv", row.names = FALSE, quote = FALSE)
+```
 
-    # Read the input TSV file
-    meta = pd.read_csv("sample_info.tsv", sep="\t")
+##### Perl
 
-    # Create the output DataFrame
-    out = pd.DataFrame({
-        'sample': meta['name'],
-        'fastq_1': "reads/" + meta['fastq'] + "_1.fastq.gz",
-        'fastq_2': "reads/" + meta['fastq'] + "_2.fastq.gz"
-    })
+```bash
+# create new file with the required column names
+echo "sample,fastq_1,fastq_2" > samplesheet.csv
 
-    # Write the output DataFrame to a CSV file
-    out.to_csv("samplesheet.csv", index=False, quotechar='"') 
-    ```
+# generate file names from metadata
+tail -n +2 sample_info.tsv | perl -ne 'chomp;
+@a=split/\t/;
+print "$a[0],reads/$a[1]\_1.fastq.gz,reads/$a[1]\_2.fastq.gz\n"' >> samplesheet.csv
+```
+
+##### AWK
+
+```bash
+# create new file with the required column names
+echo "sample,fastq_1,fastq_2" > samplesheet.csv
+
+# generate file names from metadata
+tail -n +2 sample_info.tsv | awk 'BEGIN { FS="\t"; OFS="," }
+{
+  print $1, "reads/" $2 "_1.fastq.gz", "reads/" $2 "_2.fastq.gz"
+}' >> samplesheet.csv
+```
+
+:::
 
 Note, if all of the coding suggestions above seem unclear, we reiterate that you can create the samplesheet by hand in a standard spreadsheet software. 
 At the end, our samplesheet should look like this: 
@@ -1067,6 +1076,9 @@ However, a few things to remember to do in every case:
 
 To make your code editing easier, make sure to include your command in a shell script and then run it using `bash`. 
 Also, make sure to activate the Nextflow mamba environment (`mamba activate nextflow`) before you run the script. 
+
+**Note:** some of these pipelines take a long time to run. 
+Once you initiate the pipeline and it seems to be running successfully, you can indicate to the trainers that you have completed the exercise. 
 
 :::{.panel-tabset group=workflow}
 #### RNA-seq

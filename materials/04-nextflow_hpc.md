@@ -237,7 +237,7 @@ Here's what you need to do:
 
     singularity {
         enabled = true
-        cacheDir = '/data/singularity-cache'
+        cacheDir = '/data/participant/singularity-cache'
     }
     ```
 
