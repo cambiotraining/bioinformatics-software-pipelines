@@ -191,11 +191,11 @@ Now, you will run this workflow on the HPC using SLURM as the executor for your 
 
 Here's what you need to do: 
 
-- **Create a directory to cache the Singularity images** used by Nextflow. Consider whether this cache directory should be created in `/home/participant` or in `/data/participant`.
 - **Create a configuration file** for running the pipeline, ensuring it includes the necessary settings for SLURM and respects the resource limits mentioned above.
+  - Note we've also **created a directory to cache the Singularity images** used by Nextflow in `/data/participant`. Make sure to add this to your config.
 - **Start a `screen` or `tmux` session** (your choice) to keep a persistent terminal running.
-- **Edit the script `scripts/run_nfcore_demo.sh`** (e.g. using `nano`), adding the path to your configuration file to the Nextflow command with the `-c` option. 
-- **Launch the script** using `bash scripts/run_nfcore_demo.sh`.
+- **Edit the script `scripts/02-run_nfcore_demo.sh`** (e.g. using `nano`), adding the path to your configuration file to the Nextflow command with the `-c` option. 
+- **Launch the script** using `bash scripts/02-run_nfcore_demo.sh`.
 - **Detach the `screen`/`tmux` session** to return to your main terminal.
 - **Check the queue** with the `squeue` SLURM command to see if Nextflow has started submitting jobs.
 
