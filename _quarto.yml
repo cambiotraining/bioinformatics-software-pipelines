@@ -49,7 +49,7 @@ book:
     logo: "_extensions/cambiotraining/courseformat/img/university_crest_reversed.png"
     left: 
       - text: Slides
-        href: https://docs.google.com/presentation/d/17xzb0caD0Rf9h6eYmP1cj45ZMTnVKQEPh8vhSNkqHJo/edit?usp=sharing
+        href: https://docs.google.com/presentation/d/169XRx7psE2d4NywWm4aqNKi8DQm84m037Ce9bz-ec8o/edit?usp=sharing
     right:
       - icon: github
         href: https://github.com/cambiotraining/bioinformatics-software-pipelines
