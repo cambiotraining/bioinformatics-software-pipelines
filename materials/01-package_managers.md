@@ -175,65 +175,47 @@ mamba install -n metagen fastqc==0.12.1 multiqc==1.24.1 cutadapt==4.9 trimmomati
 -->
 
 Take this example, where we create a new environment called `metagen` for a metagenomics project. 
-We initiate the environment with only two packages: GTDB-tk (taxonomic classification of genomes) and Pandas (for data analysis in Python): 
+We initiate the environment with only two packages: GTDB-tk (taxonomic classification of genomes) and MultiQC (quality control reporting tool): 
 
 ```bash
-mamba create -n metagen gtdbtk pandas
+mamba create -n metagen multiqc gtdbtk
 ```
 
 When you run this command, Mamba will ask if you want to proceed with the installation. 
 Before proceeding, it's always a good idea to **check which versions of the packages we are interested in are being installed**. 
 
-At the time of writing, the [latest version of Pandas on anaconda.org](https://anaconda.org/conda-forge/pandas) is 2.2.3, however as we run this command we can see that Mamba is installing version 2.0.3, which is a few versions behind.
+At the time of writing, the [latest version of GTDB-tk on anaconda.org](https://anaconda.org/bioconda/gtdbtk) is 2.4.0, however as we run this command we can see that Mamba is installing version 2.3.0, which is a version behind the latest.
 
 Let's be more explicit and specify we want the latest versions available for both packages (at the time of writing): 
 
 ```bash
-mamba create -n metagen gtdbtk==2.4.0 pandas==2.2.3
+mamba create -n metagen multiqc==1.28 gtdbtk==2.4.0
 ```
 
-By running this command, we get an error message informing us that Mamba could not find a fully compatible environment for these software versions: 
-
-<details><summary>Click here to view the long error message</summary>
+By running this command, we get an error message informing us that Mamba could not find a fully compatible environment for these software versions. 
+The message is very long, we only show the top few lines:
 
 ```
 Could not solve for environment specs
 The following packages are incompatible
-├─ gtdbtk 2.4.0  is installable and it requires
-│  └─ fastani 1.32.* , which requires
-│     └─ boost >=1.70.0,<1.70.1.0a0  with the potential options
-│        ├─ boost 1.70.0 would require
-│        │  ├─ python >=2.7,<2.8.0a0 , which can be installed;
-│        │  └─ python_abi * *_cp27mu, which can be installed;
-│        ├─ boost 1.70.0 would require
-│        │  ├─ python >=3.6,<3.7.0a0 , which can be installed;
-│        │  └─ python_abi * *_cp36m, which can be installed;
-│        ├─ boost 1.70.0 would require
-│        │  ├─ python >=3.7,<3.8.0a0 , which can be installed;
-│        │  └─ python_abi * *_cp37m, which can be installed;
-│        └─ boost 1.70.0 would require
-│           ├─ python >=3.8,<3.9.0a0 , which can be installed;
-│           └─ python_abi * *_cp38, which can be installed;
-└─ pandas 2.2.3  is uninstallable because there are no viable options
-   ├─ pandas 2.2.3 would require
-   │  ├─ python >=3.12,<3.13.0a0 , which conflicts with any installable versions previously reported;
-   │  └─ python_abi 3.12.* *_cp312, which requires
-   │     └─ python 3.12.* *_cpython, which can be installed;
-   ├─ pandas 2.2.3 would require
-   │  └─ python_abi 3.10.* *_cp310, which conflicts with any installable versions previously reported;
-   ├─ pandas 2.2.3 would require
-   │  └─ python_abi 3.11.* *_cp311, which conflicts with any installable versions previously reported;
-   ├─ pandas 2.2.3 would require
-   │  └─ python >=3.13.0rc2,<3.14.0a0 , which requires
-   │     └─ _python_rc  , which does not exist (perhaps a missing channel);
-   └─ pandas 2.2.3 would require
-      └─ python_abi 3.9.* *_cp39, which conflicts with any installable versions previously reported.
+├─ gtdbtk 2.4.0  is installable with the potential options
+│  ├─ gtdbtk 2.4.0 would require
+│  │  ├─ fastani 1.32.* , which requires
+│  │  │  └─ boost >=1.70.0,<1.70.1.0a0  with the potential options
+│  │  │     ├─ boost 1.70.0 would require
+│  │  │     │  └─ python >=2.7,<2.8.0a0 , which can be installed;
+│  │  │     ├─ boost 1.70.0 would require
+│  │  │     │  └─ python >=3.6,<3.7.0a0 , which can be installed;
+│  │  │     ├─ boost 1.70.0 would require
+│  │  │     │  └─ python >=3.7,<3.8.0a0  with the potential options
+│  │  │     │     ├─ python [3.7.0|3.7.1|...|3.7.9], which can be installed;
+│  │  │     │     └─ python [3.7.10|3.7.12] would require
+│  │  │     │        └─ python_abi 3.7.* *_cp37m, which can be installed;
+
+... etc ...
 ```
 
-</details>
-
-The message is a bit hard to interpret, but generally we can see that the issue seems to be related to the Python version that is required for these two packages. 
-We can see that GTDB-tk is only compatible with older versions of Python, whereas the latest version of Pandas requires newer versions. 
+The message is a bit hard to interpret, but generally we can see that the issue seems to be related to the Python versions required by these two packages. 
 
 How could we solve this problem? 
 One possibility is to **install each software in a separate environment**. 
@@ -241,14 +223,14 @@ The disadvantage is that you will need to run several `mamba activate` commands 
 
 Another possibility is to **find a compatible combination of package versions** that is sufficient for your needs.
 For example, let's say that GTDB-tk was the most critical software for which we needed to run the latest version. 
-We could find what is the latest version of Pandas compatible with it, by forcing the GTDB-tk version, but not the other one: 
+We could find what is the latest version of MultiQC compatible with it, by forcing the GTDB-tk version, but not the other one: 
 
 ```bash
-mamba create -n metagen gtdbtk==2.4.0 pandas
+mamba create -n metagen multiqc gtdbtk==2.4.0
 ```
 
-Running this command, we can see that we would get `pandas==2.0.3`. 
-So, Pandas would be a slightly older version than currently available, but for our purposes this might not be a problem. 
+Running this command, we can see that we would get `multiqc==1.21`. 
+So, MultiQC would be a slightly older version than currently available, but for our purposes this might not be a problem. 
 If we were happy with this choice, then we could proceed. 
 For reproducibility, we could save all this information in a YAML file specifying our environment: 
 
@@ -258,7 +240,7 @@ channels:
   - conda-forge
   - bioconda
 dependencies:
-  - pandas==2.0.3
+  - multiqc==1.21
   - gtdbtk==2.4.0
 ```
 
