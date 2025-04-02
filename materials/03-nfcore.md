@@ -218,7 +218,7 @@ We have named our samples using informative names of our choice, and indicate th
 We can then run our workflow as follows (this command is available from `scripts/02-run_nfcore_demo.sh`):
 
 ```bash
-nextflow run -profile "singularity" -revision "1.0.0" nf-core/demo \
+nextflow run -profile "singularity" -revision "1.0.1" nf-core/demo \
   --max_memory "20GB" --max_cpus "8" \
   --input "samplesheet.csv" \
   --outdir "results/qc" \
@@ -228,7 +228,7 @@ nextflow run -profile "singularity" -revision "1.0.0" nf-core/demo \
 In this case we used the following generic options: 
 
 - `-profile "singularity"` indicates we want to use Singularity to manage the software. Nextflow will automatically download containers for each step of the pipeline. 
-- `-revision "1.0.0"` means we are running version 1.0.0 of the pipeline. It's a good idea to define the specific version of the pipeline you run, so you can reproduce the results in the future, in case the pipeline changes. You can see the latest versions available from the [workflow documentation page](https://nf-co.re/demo/).
+- `-revision "1.0.1"` means we are running version 1.0.0 of the pipeline. It's a good idea to define the specific version of the pipeline you run, so you can reproduce the results in the future, in case the pipeline changes. You can see the latest versions available from the [workflow documentation page](https://nf-co.re/demo/).
 
 We then have workflow-specific options (all listed [in the documentation](https://nf-co.re/demo/1.0.0/parameters/)): 
 
@@ -1100,7 +1100,7 @@ Here is the fixed nextflow command in our script:
 
 ```bash
 nextflow run nf-core/rnaseq \
-  -r "3.14.0" \
+  -r "3.18.0" \
   -profile "singularity" \
   --max_memory "20GB" --max_cpus "8" \
   --input "samplesheet.csv" \
@@ -1137,7 +1137,7 @@ Here is the fixed nextflow command in our script:
 
 ```bash
 nextflow run nf-core/chipseq \
-  -r "2.0.0" \
+  -r "2.1.0" \
   -profile "singularity" \
   --max_memory "20GB" --max_cpus "8" \
   --input "samplesheet.csv" \
