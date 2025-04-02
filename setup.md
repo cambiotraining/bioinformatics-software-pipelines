@@ -48,7 +48,6 @@ Restart your terminal (or open a new one) and confirm that your shell now starts
 Then run the following commands: 
 
 ```bash
-conda config --add channels defaults
 conda config --add channels bioconda
 conda config --add channels conda-forge
 conda config --set channel_priority strict
