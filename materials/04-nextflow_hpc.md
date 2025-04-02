@@ -206,14 +206,8 @@ Here's what you need to do:
     ```bash
     ssh participant@trainhpc
     ```
-
-2. **Create the cache directory**. Since the working directory `/data` is high-performance and shared by both the login and compute nodes, it is the best location for the cache directory: 
-
-    ```bash
-    mkdir /data/participant/singularity-cache
-    ```
     
-3. **Create a configuration file** in the `/data/participant/demo` directory, which we call `trainhpc.config`:
+2. **Create a configuration file** in the `/data/participant/demo` directory, which we call `trainhpc.config`:
 
     ```groovy
     process {
@@ -241,24 +235,24 @@ Here's what you need to do:
     }
     ```
 
-4. **Start a persistent terminal** with either `tmux new -s demo` or `screen -S demo`.
+3. **Start a persistent terminal** with either `tmux new -s demo` or `screen -S demo`.
 
-5. **Edit the Nextflow script to include the configuration file** using the `-c` option: 
+4. **Edit the Nextflow script to include the configuration file** using the `-c` option: 
 
     ```bash
     nextflow run nf-core/demo \
-      -profile "singularity" -revision "1.0.0" \
+      -profile "singularity" -revision "1.0.1" \
       -c "trainhpc.config" \
       --input "samplesheet.csv" \
       --outdir "results/qc" \
       --fasta "genome/Mus_musculus.GRCm38.dna_sm.chr14.fa.gz"
     ```
 
-6. Detach the `screen`/`tmux` session using: 
+5. Detach the `screen`/`tmux` session using: 
    - For `screen`: press <kbd>Ctrl + A</kbd> then <kbd>D</kbd>
    - For `tmux`: press <kbd>Ctrl + B</kbd> then <kbd>D</kbd>
 
-7. Finally, use the squeue command to **verify that Nextflow has started submitting jobs** to the SLURM queue:
+6. Finally, use the squeue command to **verify that Nextflow has started submitting jobs** to the SLURM queue:
 
     ```bash
     squeue -u participant
