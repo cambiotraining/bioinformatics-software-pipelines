@@ -219,7 +219,6 @@ We can then run our workflow as follows (this command is available from `scripts
 
 ```bash
 nextflow run -profile "singularity" -revision "1.0.1" nf-core/demo \
-  --max_memory "20GB" --max_cpus "8" \
   --input "samplesheet.csv" \
   --outdir "results/qc" \
   --fasta "genome/Mus_musculus.GRCm38.dna_sm.chr14.fa.gz"
@@ -235,7 +234,6 @@ We then have workflow-specific options (all listed [in the documentation](https:
 - `--input` is the samplesheet CSV for this pipeline, which we prepared beforehand using a spreadsheet program such as Excel. 
 - `--outdir` is the name of the output directory for our results. 
 - `--fasta` is the reference genome to be used by the pipeline.
-- `--max_memory` and `--max_cpus` are used to restrict the maximum resources the workflow can use. In most cases you won't have to define this (e.g. if you're running on a HPC), but since we're running these examples on a local desktop, we need to restrict the resources the workflow is allowed to use. 
 
 When the pipeline starts running, we are given information about its progress, for example: 
 
@@ -349,10 +347,7 @@ Command executed:
 Although this is a long message, the cause of the error itself is at the top where we are told "Process requirement exceeds available memory -- req: 36 GB; avail: 23.5 GB".
 
 This means a step of the pipeline must have requested 36GB by default, but we only had 23.5GB on the computer used to run it. 
-In this case, we can add two options to our command that every nf-core pipeline has: `--max_memory 20GB --max_cpus 8`.
-
-Note that in real-world cases, where you are likely running these workflows on a HPC you don't need to worry about this. 
-We will learn more about running workflows on HPC in the [next section](04-nextflow_hpc.md). 
+In this case, we could have restricted the memory usage with a custom configuration file, which we will discuss [in the next section](04-nextflow_hpc.md).
 </details>
 
 
@@ -1102,7 +1097,6 @@ Here is the fixed nextflow command in our script:
 nextflow run nf-core/rnaseq \
   -r "3.18.0" \
   -profile "singularity" \
-  --max_memory "20GB" --max_cpus "8" \
   --input "samplesheet.csv" \
   --outdir "results/rnaseq" \
   --gtf "$PWD/genome/Mus_musculus.GRCm38.102.chr14.gtf.gz" \
@@ -1139,7 +1133,6 @@ Here is the fixed nextflow command in our script:
 nextflow run nf-core/chipseq \
   -r "2.1.0" \
   -profile "singularity" \
-  --max_memory "20GB" --max_cpus "8" \
   --input "samplesheet.csv" \
   --outdir "results/chipseq" \
   --gtf "$PWD/genome/GRCh38.109.chr21.gtf.gz" \
@@ -1177,7 +1170,6 @@ Here is the fixed nextflow command in our script:
 nextflow run nf-core/viralrecon \
   -r "2.6.0" \
   -profile "singularity" \
-  --max_memory "20GB" --max_cpus "8" \
   --input "samplesheet.csv" \
   --outdir "results/viralrecon" \
   --platform "illumina" \
@@ -1220,7 +1212,6 @@ Here is the fixed nextflow command in our script:
 nextflow run nf-core/viralrecon \
   -r "2.6.0" \
   -profile "singularity" \
-  --max_memory "20GB" --max_cpus "8" \
   --input "samplesheet.csv" \
   --fastq_dir "fastq_pass/" \
   --outdir "results/viralrecon" \

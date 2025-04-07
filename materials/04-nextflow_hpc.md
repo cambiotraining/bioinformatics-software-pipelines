@@ -39,6 +39,14 @@ process {
     
     // the queue or partition we want to use
     queue = 'cclake'
+    
+    // Specify MAX parameters to avoid going over the limits
+    // these values should match the resources in the chosen queue/partition
+    resourceLimits = [
+      cpus: '56',
+      memory: '192.GB',
+      time: '36.h'
+    ]
 }
 
 // Limit nextflow submissions rates to a reasonable level to be kind to other users
@@ -51,14 +59,6 @@ executor {
     queueStatInterval   = '5 min'
     submitRateLimit     = '50sec'
     exitReadTimeout     = '5 min'
-}
-
-// For nf-core pipelines, specify MAX parameters to avoid going over the limits
-// these values should match the resources in the chosen queue/partition
-params {
-    max_memory = '192.GB'
-    max_cpus = '56'
-    max_time = '12.h'
 }
 
 // Options when using the singularity profile
@@ -84,9 +84,6 @@ Here is an explanation of this configuration:
   - `perCpuMemAllocation` submits jobs using `--mem-per-cpu`, relevant for the Cambridge HPC. This is optional and may vary by institution. 
   - `queueSize` limits the number of simultaneous jobs in the queue. HPC admins may impose limits, so adjust this accordingly. Even with high limits, it's advisable to limit simultaneous jobs to reduce the load on the job scheduler.
   - `pollInterval`, `queueStatInterval`, `submitRateLimit` and `exitReadTimeout`  are settings that manage how often Nextflow checks job statuses and interacts with the scheduler. These settings help ensure that you use the scheduler efficiently and ethically. Rapid job submissions and frequent queue checks can overload the scheduler and might trigger warnings from HPC admins.
-
-- The `params` directive is for pipeline-specific options. Here, we set generic options for all nf-core pipelines:
-  - `max_memory`, `max_cpus` and `max_time`, which depend on your specific HPC setup and account.
 
 - The `singularity` directive configures Singularity for running pipelines in an isolated software environment. This can be set up using the [singularity scope](https://www.nextflow.io/docs/latest/config.html#scope-singularity). 
   - `autoMounts = true` automatically mounts the filesystem, which is helpful if you're unfamiliar with [filesystem bindings](https://apptainer.org/user-docs/master/bind_paths_and_mounts.html). On most HPC systems, admins handle this, so you may not need to worry about it.
@@ -213,6 +210,11 @@ Here's what you need to do:
     process {
         executor = 'slurm'
         queue = 'normal'
+        resourceLimits = [
+          cpus: '8',
+          memory: '20.GB',
+          time: '24.h'
+        ]
     }
 
     executor {
@@ -221,12 +223,6 @@ Here's what you need to do:
         queueStatInterval = '5 min'
         submitRateLimit = '50 sec'
         exitReadTimeout = '5 min'
-    }
-
-    params {
-        max_memory = '20.GB'
-        max_cpus = 8
-        max_time = '24.h'
     }
 
     singularity {

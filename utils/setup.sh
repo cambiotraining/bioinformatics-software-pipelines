@@ -11,11 +11,13 @@ mamba create -n nextflow bioconda::nextflow==24.04.4 bioconda::nf-core==2.14.1
 # nextflow config
 mkdir -p /home/participant/.nextflow 
 cat <<EOF >> /home/participant/.nextflow/config
-params { 
-  max_memory = '20.GB' 
-  max_cpus = '8' 
-  max_time = '12.h' 
-} 
+process {
+  resourceLimits = [
+    cpus: 8,
+    memory: 20.GB,
+    time: 12.h
+  ]
+}
 singularity { 
   singularity.enabled = true 
   conda.enabled = false 
