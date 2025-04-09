@@ -60,8 +60,8 @@ These materials will focus on Nextflow, due to the standarised and ready-to-use 
 You can install both of these packages using Mamba: 
 
 ```bash
-mamba create -n nextflow bioconda::nextflow==24.04.4
-mamba create -n snakemake bioconda::snakemake==8.20.4
+mamba create -n nextflow bioconda::nextflow=={{< var version.nextflow >}}
+mamba create -n snakemake bioconda::snakemake=={{< var version.snakemake >}}
 ```
 
 You may want to check the latest versions available ([here](https://anaconda.org/bioconda/nextflow) and [here](https://anaconda.org/bioconda/snakemake)), which may be different from the ones in the command above. 
@@ -101,7 +101,7 @@ For example, `-profile singularity` will use _Singularity_ to manage and run the
 
 Sometimes you may want to use custom profiles, or the pipeline you are using is not from the nf-core community. 
 In that case, you can define your own profile. 
-The easiest may be to look at one of the [nf-core configuration files](https://github.com/nf-core/rnaseq/blob/3.14.0/nextflow.config) and set your own based on that. 
+The easiest may be to look at one of the [nf-core configuration files](https://github.com/nf-core/rnaseq/blob/{{< var version.rnaseq >}}/nextflow.config) and set your own based on that. 
 For example, to set a profile for _Singularity_, we create a file with the following: 
 
 ```groovy
@@ -194,7 +194,7 @@ This way we save a lot of time of typing but also reduce the risk of having typo
 To demonstrate the use of standard nf-core pipelines, we will use the aptly named [`nf-core/demo` pipeline](https://nf-co.re/demo/). 
 This workflow takes a set of FASTQ files as input, runs them through a simple QC step and outputs processed files as well as a MultiQC quality report.
 
-![[nf-core/demo workflow diagram](https://github.com/nf-core/demo/blob/1.0.0/docs/images/nf-core-demo-subway.png) by Christopher Hakkaart, licensed under [MIT](https://github.com/nf-core/demo/blob/1.0.0/LICENSE)](https://raw.githubusercontent.com/nf-core/demo/dev//docs/images/nf-core-demo-subway.png)
+![[nf-core/demo workflow diagram](https://github.com/nf-core/demo/blob/{{< var version.demo >}}/docs/images/nf-core-demo-subway.png) by Christopher Hakkaart, licensed under [MIT](https://github.com/nf-core/demo/blob/{{< var version.demo >}}/LICENSE)](https://raw.githubusercontent.com/nf-core/demo/dev//docs/images/nf-core-demo-subway.png)
 
 We will run this workflow on a set of files found in the `demo` directory.
 We will start by activating a Mamba environment where we installed nextflow: 
@@ -218,7 +218,7 @@ We have named our samples using informative names of our choice, and indicate th
 We can then run our workflow as follows (this command is available from `scripts/02-run_nfcore_demo.sh`):
 
 ```bash
-nextflow run -profile "singularity" -revision "1.0.1" nf-core/demo \
+nextflow run -profile "singularity" -revision "{{< var version.demo >}}" nf-core/demo \
   --input "samplesheet.csv" \
   --outdir "results/qc" \
   --fasta "genome/Mus_musculus.GRCm38.dna_sm.chr14.fa.gz"
@@ -227,9 +227,9 @@ nextflow run -profile "singularity" -revision "1.0.1" nf-core/demo \
 In this case we used the following generic options: 
 
 - `-profile "singularity"` indicates we want to use Singularity to manage the software. Nextflow will automatically download containers for each step of the pipeline. 
-- `-revision "1.0.1"` means we are running version 1.0.0 of the pipeline. It's a good idea to define the specific version of the pipeline you run, so you can reproduce the results in the future, in case the pipeline changes. You can see the latest versions available from the [workflow documentation page](https://nf-co.re/demo/).
+- `-revision "{{< var version.demo >}}"` means we are running version {{< var version.demo >}} of the pipeline. It's a good idea to define the specific version of the pipeline you run, so you can reproduce the results in the future, in case the pipeline changes. You can see the latest versions available from the [workflow documentation page](https://nf-co.re/demo/).
 
-We then have workflow-specific options (all listed [in the documentation](https://nf-co.re/demo/1.0.0/parameters/)): 
+We then have workflow-specific options (all listed [in the documentation](https://nf-co.re/demo/{{< var version.demo >}}/parameters/)): 
 
 - `--input` is the samplesheet CSV for this pipeline, which we prepared beforehand using a spreadsheet program such as Excel. 
 - `--outdir` is the name of the output directory for our results. 
@@ -379,7 +379,7 @@ You could do this using command line tools (such as `awk` or `perl`) or even usi
 Transcriptome data processing using `nf-core/rnaseq`. 
 Go into the `rnaseq` directory for this version of the exercise.
 
-- Samplesheet documentation at [nf-co.re/rnaseq/docs/usage/](https://nf-co.re/rnaseq/docs/usage/).
+- Samplesheet documentation at [https://nf-co.re/rnaseq/{{< var version.rnaseq >}}/docs/usage/](https://nf-co.re/rnaseq/{{< var version.rnaseq >}}/docs/usage/).
 - Input FASTQ files in `reads/`.
 - Metadata for each sample is provided in the `sample_info.tsv` file, which gives you the name of each sample and their respective FASTQ file prefix name.
 
@@ -411,7 +411,7 @@ SRR7657874_1.downsampled.fastq.gz  SRR7657877_1.downsampled.fastq.gz
 SRR7657874_2.downsampled.fastq.gz  SRR7657877_2.downsampled.fastq.gz
 ```
 
-Following [the documentation](https://nf-co.re/rnaseq/docs/usage/#multiple-runs-of-the-same-sample) for the pipeline, we could have created our samplesheet in Excel like this (note: the filenames are truncated): 
+Following [the documentation](https://nf-co.re/rnaseq/{{< var version.rnaseq >}}/docs/usage/#multiple-runs-of-the-same-sample) for the pipeline, we could have created our samplesheet in Excel like this (note: the filenames are truncated): 
 
 <table style="border-collapse: collapse; width: auto; font-family: Arial, sans-serif;">
   <tr>
@@ -470,10 +470,10 @@ Here's 4 different ways of doing it:
 ```python
 import pandas as pd
 
-# Read the input TSV file
-meta = pd.read_csv("sample_info.tsv", sep="\t")
+# read metadata table, ensuring NA values are correctly imported
+meta = pd.read_csv("sample_info.tsv", sep="\t", na_values="")
 
-# Create the output DataFrame
+# create data frame for output samplesheet
 out = pd.DataFrame({
     'sample': meta['name'],
     'fastq_1': "reads/" + meta['fastq'] + "_1.downsampled.fastq.gz",
@@ -481,19 +481,25 @@ out = pd.DataFrame({
     'strandedness': "auto"
 })
 
-# Write the output DataFrame to a CSV file
-out.to_csv("samplesheet.csv", index=False, quotechar='"') 
+# save the samplesheet ensuring NA values are written as empty cells
+out.to_csv("samplesheet.csv", index=False, quoting=3, na_rep="")
 ```
 
 ##### R
 
 ```r
-meta <- read.table("sample_info.tsv", header = TRUE, sep = "\t")
+# read metadata table, ensuring NA values are correctly imported
+meta <- read.table("sample_info.tsv", header = TRUE, 
+                   sep = "\t", na.strings = "")
+
+# create data frame for output samplesheet
 out <- data.frame(sample = meta$name, 
                   fastq_1 = paste0("reads/", meta$fastq, "_1.downsampled.fastq.gz"), 
                   fastq_2 = paste0("reads/", meta$fastq, "_2.downsampled.fastq.gz"),
                   strandedness = "auto")
-write.csv(out, "samplesheet.csv", row.names = FALSE, quote = FALSE)
+
+# save the samplesheet ensuring NA values are written as empty cells
+write.csv(out, "samplesheet.csv", row.names = FALSE, quote = FALSE, na = "")
 ```
 
 ##### Perl
@@ -540,7 +546,7 @@ un11_rep2,reads/SRR7657876_1.downsampled.fastq.gz,reads/SRR7657876_2.downsampled
 Transcriptome data processing using `nf-core/chipseq`. 
 Go into the `chipseq` directory for this version of the exercise.
 
-- Samplesheet documentation at [nf-co.re/chipseq/docs/usage/](https://nf-co.re/chipseq/docs/usage/).
+- Samplesheet documentation at [nf-co.re/chipseq/{{< var version.chipseq >}}/docs/usage/](https://nf-co.re/chipseq/{{< var version.chipseq >}}/docs/usage/).
 - Input FASTQ files in `reads/`.
 - Metadata for each sample is provided in the `sample_info.tsv` file, which gives you the name of each sample and their respective FASTQ file prefix name.
 
@@ -573,7 +579,7 @@ SRR1193527.fastq.gz  SRR1193562.fastq.gz
 SRR1193529.fastq.gz  SRR1193563.fastq.gz
 ```
 
-Following [the documentation](https://nf-co.re/chipseq/docs/usage/#multiple-runs-of-the-same-library) for the pipeline, we could have created our samplesheet in Excel like this: 
+Following [the documentation](https://nf-co.re/chipseq/{{< var version.chipseq >}}/docs/usage/#multiple-runs-of-the-same-library) for the pipeline, we could have created our samplesheet in Excel like this: 
 
 <table style="border-collapse: collapse; width: auto; font-family: Arial, sans-serif;">
   <tr>
@@ -583,51 +589,65 @@ Following [the documentation](https://nf-co.re/chipseq/docs/usage/#multiple-runs
     <th style="border: 1px solid lightgrey; background-color: #f0f0f0;">C</th>
     <th style="border: 1px solid lightgrey; background-color: #f0f0f0;">D</th>
     <th style="border: 1px solid lightgrey; background-color: #f0f0f0;">E</th>
+    <th style="border: 1px solid lightgrey; background-color: #f0f0f0;">F</th>
+    <th style="border: 1px solid lightgrey; background-color: #f0f0f0;">G</th>
   </tr>
   <tr>
     <td style="border: 1px solid lightgrey; background-color: #f0f0f0;">1</td>
     <td style="border: 1px solid lightgrey;">sample</td>
     <td style="border: 1px solid lightgrey;">fastq_1</td>
     <td style="border: 1px solid lightgrey;">fastq_2</td>
+    <td style="border: 1px solid lightgrey;">replicate</td>
     <td style="border: 1px solid lightgrey;">antibody</td>
     <td style="border: 1px solid lightgrey;">control</td>
+    <td style="border: 1px solid lightgrey;">control_replicate</td>
   </tr>
   <tr>
     <td style="border: 1px solid lightgrey; background-color: #f0f0f0;">2</td>
-    <td style="border: 1px solid lightgrey;">brd4_veh_rep1</td>
+    <td style="border: 1px solid lightgrey;">brd4_veh</td>
     <td style="border: 1px solid lightgrey;">reads/SRR1193526.fastq.gz</td>
     <td style="border: 1px solid lightgrey;"></td>
+    <td style="border: 1px solid lightgrey;">1</td>
     <td style="border: 1px solid lightgrey;">BRD4</td>
     <td style="border: 1px solid lightgrey;">mcf7_input_veh</td>
+    <td style="border: 1px solid lightgrey;">1</td>
   </tr>
   <tr>
     <td style="border: 1px solid lightgrey; background-color: #f0f0f0;">3</td>
-    <td style="border: 1px solid lightgrey;">brd4_veh_rep2</td>
+    <td style="border: 1px solid lightgrey;">brd4_veh</td>
     <td style="border: 1px solid lightgrey;">reads/SRR1193527.fastq.gz</td>
     <td style="border: 1px solid lightgrey;"></td>
+    <td style="border: 1px solid lightgrey;">2</td>
     <td style="border: 1px solid lightgrey;">BRD4</td>
     <td style="border: 1px solid lightgrey;">mcf7_input_veh</td>
+    <td style="border: 1px solid lightgrey;">1</td>
   </tr>
   <tr>
     <td style="border: 1px solid lightgrey; background-color: #f0f0f0;">4</td>
-    <td style="border: 1px solid lightgrey;">brd4_e2_rep1</td>
+    <td style="border: 1px solid lightgrey;">brd4_e2</td>
     <td style="border: 1px solid lightgrey;">reads/SRR1193529.fastq.gz</td>
     <td style="border: 1px solid lightgrey;"></td>
+    <td style="border: 1px solid lightgrey;">1</td>
     <td style="border: 1px solid lightgrey;">BRD4</td>
     <td style="border: 1px solid lightgrey;">mcf7_input_e2</td>
+    <td style="border: 1px solid lightgrey;">1</td>
   </tr>
   <tr>
     <td style="border: 1px solid lightgrey; background-color: #f0f0f0;">5</td>
-    <td style="border: 1px solid lightgrey;">brd4_e2_rep2</td>
+    <td style="border: 1px solid lightgrey;">brd4_e2</td>
     <td style="border: 1px solid lightgrey;">reads/SRR1193530.fastq.gz</td>
     <td style="border: 1px solid lightgrey;"></td>
+    <td style="border: 1px solid lightgrey;">2</td>
     <td style="border: 1px solid lightgrey;">BRD4</td>
     <td style="border: 1px solid lightgrey;">mcf7_input_e2</td>
+    <td style="border: 1px solid lightgrey;">1</td>
   </tr>
   <tr>
     <td style="border: 1px solid lightgrey; background-color: #f0f0f0;">6</td>
     <td style="border: 1px solid lightgrey;">mcf7_input_veh</td>
     <td style="border: 1px solid lightgrey;">reads/SRR1193562.fastq.gz</td>
+    <td style="border: 1px solid lightgrey;"></td>
+    <td style="border: 1px solid lightgrey;">1</td>
     <td style="border: 1px solid lightgrey;"></td>
     <td style="border: 1px solid lightgrey;"></td>
     <td style="border: 1px solid lightgrey;"></td>
@@ -636,6 +656,8 @@ Following [the documentation](https://nf-co.re/chipseq/docs/usage/#multiple-runs
     <td style="border: 1px solid lightgrey; background-color: #f0f0f0;">7</td>
     <td style="border: 1px solid lightgrey;">mcf7_input_e2</td>
     <td style="border: 1px solid lightgrey;">reads/SRR1193563.fastq.gz</td>
+    <td style="border: 1px solid lightgrey;"></td>
+    <td style="border: 1px solid lightgrey;">1</td>
     <td style="border: 1px solid lightgrey;"></td>
     <td style="border: 1px solid lightgrey;"></td>
     <td style="border: 1px solid lightgrey;"></td>
@@ -654,51 +676,67 @@ Here's 4 different ways of doing it:
 ```python
 import pandas as pd
 
-meta = pd.read_csv("sample_info.tsv", sep="\t")
+# read metadata table, ensuring NA values are correctly imported
+meta = pd.read_csv("sample_info.tsv", sep="\t", na_values="")
+
+# create data frame for output samplesheet
+# "Int64" is used to ensure replicate columns output as integers
 out = pd.DataFrame({
-    'sample': meta['name'],
-    'fastq_1': "reads/" + meta['fastq'] + ".fastq.gz",
-    'fastq_2': "",
-    'antibody': meta['antibody'],
-    'control': meta['input_control']
+    "sample": meta["name"],
+    "fastq_1": "reads/" + meta["fastq"] + ".fastq.gz",
+    "fastq_2": pd.NA,
+    "replicate": meta["rep"].astype("Int64"),
+    "antibody": meta["antibody"],
+    "control": meta["input_control"],
+    "control_replicate": meta["input_rep"].astype("Int64")
 })
-out.to_csv("samplesheet.csv", index=False, quotechar='"')
+
+# save the samplesheet ensuring NA values are written as empty cells
+out.to_csv("samplesheet.csv", index=False, quoting=3, na_rep="")
 ```
 
 ##### R
 
 ```r
-meta <- read.table("sample_info.tsv", header = TRUE, sep = "\t")
+# read metadata table, ensuring NA values are correctly imported
+meta <- read.table("sample_info.tsv", header = TRUE, 
+                   sep = "\t", na.strings = "")
+
+# create data frame for output samplesheet
 out <- data.frame(sample = meta$name, 
                   fastq_1 = paste0("reads/", meta$fastq, ".fastq.gz"), 
-                  fastq_2 = "",
+                  fastq_2 = NA,
+                  replicate = meta$rep,
                   antibody = meta$antibody,
-                  control = meta$input_control)
-write.csv(out, "samplesheet.csv", row.names = FALSE, quote = FALSE)
+                  control = meta$input_control, 
+                  control_replicate = meta$input_rep)
+
+# save the samplesheet ensuring NA values are written as empty cells
+write.csv(out, "samplesheet.csv", row.names = FALSE, quote = FALSE, na = "")
 ```
 
 ##### Perl
 
 ```bash
 # create new file with the required column names
-echo "sample,fastq_1,fastq_2,antibody,control" > samplesheet.csv
+echo "sample,fastq_1,fastq_2,replicate,antibody,control,control_replicate" > samplesheet.csv
 
 # generate file names from metadata
 tail -n +2 sample_info.tsv | perl -ne 'chomp;
 @a=split/\t/;
-print "$a[0],reads/$a[1].fastq.gz,,$a[2],$a[3]\n"' >> samplesheet.csv
+print "$a[0],reads/$a[2].fastq.gz,,$a[1],$a[3],$a[4],$a[5]\n"' >> samplesheet.csv
 ```
 
 ##### AWK
 
 ```bash
 # create new file with the required column names
-echo "sample,fastq_1,fastq_2,antibody,control" > samplesheet.csv
+echo "sample,fastq_1,fastq_2,replicate,antibody,control,control_replicate" > samplesheet.csv
 
 # generate file names from metadata
 tail -n +2 sample_info.tsv | awk 'BEGIN { FS="\t"; OFS="," }
 {
-  print $1, "reads/" $2 ".fastq.gz", "", $3, $4
+  print $1, "reads/" $3 ".fastq.gz", "", $2, $4, $5, $6
 }' >> samplesheet.csv
 ```
 
@@ -708,13 +746,13 @@ Note, if all of the coding suggestions above seem unclear, we reiterate that you
 At the end, our samplesheet should look like this: 
 
 ```
-sample,fastq_1,fastq_2,antibody,control
-brd4_veh_rep1,reads/SRR1193526.fastq.gz,,BRD4,mcf7_input_veh
-brd4_veh_rep2,reads/SRR1193527.fastq.gz,,BRD4,mcf7_input_veh
-brd4_e2_rep1,reads/SRR1193529.fastq.gz,,BRD4,mcf7_input_e2
-brd4_e2_rep2,reads/SRR1193530.fastq.gz,,BRD4,mcf7_input_e2
-mcf7_input_veh,reads/SRR1193562.fastq.gz,,,
-mcf7_input_e2,reads/SRR1193563.fastq.gz,,,
+sample,fastq_1,fastq_2,replicate,antibody,control,control_replicate
+brd4_veh,reads/SRR1193526.fastq.gz,,1,BRD4,mcf7_input_veh,1
+brd4_veh,reads/SRR1193527.fastq.gz,,2,BRD4,mcf7_input_veh,1
+brd4_e2,reads/SRR1193529.fastq.gz,,1,BRD4,mcf7_input_e2,1
+brd4_e2,reads/SRR1193530.fastq.gz,,2,BRD4,mcf7_input_e2,1
+mcf7_input_veh,reads/SRR1193562.fastq.gz,,1,,,
+mcf7_input_e2,reads/SRR1193563.fastq.gz,,1,,,
 ```
 :::
 
@@ -724,7 +762,7 @@ mcf7_input_e2,reads/SRR1193563.fastq.gz,,,
 Transcriptome data processing using `nf-core/viralrecon`. 
 Go into the `virus_illumina` directory for this version of the exercise.
 
-- Samplesheet documentation at [nf-co.re/viralrecon/docs/usage/](https://nf-co.re/viralrecon/docs/usage/).
+- Samplesheet documentation at [nf-co.re/viralrecon/{{< var version.viralrecon >}}/docs/usage/](https://nf-co.re/viralrecon/{{< var version.viralrecon >}}/docs/usage/).
 - Input FASTQ files in `reads/`.
 - Metadata for each sample is provided in the `sample_info.tsv` file, which gives you the name of each sample and their respective FASTQ file prefix name.
 
@@ -760,7 +798,7 @@ SRR17051916_1.fastq.gz  SRR17051932_1.fastq.gz  SRR17051951_1.fastq.gz  SRR17054
 SRR17051916_2.fastq.gz  SRR17051932_2.fastq.gz  SRR17051951_2.fastq.gz  SRR17054503_2.fastq.gz
 ```
 
-Following [the documentation](https://nf-co.re/viralrecon/docs/usage/#illumina) for the pipeline, we could have created our samplesheet in Excel like this: 
+Following [the documentation](https://nf-co.re/viralrecon/{{< var version.viralrecon >}}/docs/usage/#illumina) for the pipeline, we could have created our samplesheet in Excel like this: 
 
 <table style="border-collapse: collapse; width: auto; font-family: Arial, sans-serif;">
   <tr>
@@ -837,28 +875,34 @@ Here's 4 different ways of doing it:
 ```python
 import pandas as pd
 
-# Read the input TSV file
-meta = pd.read_csv("sample_info.tsv", sep="\t")
+# read metadata table, ensuring NA values are correctly imported
+meta = pd.read_csv("sample_info.tsv", sep="\t", na_values="")
 
-# Create the output DataFrame
+# create data frame for output samplesheet
 out = pd.DataFrame({
     'sample': meta['name'],
     'fastq_1': "reads/" + meta['fastq'] + "_1.fastq.gz",
     'fastq_2': "reads/" + meta['fastq'] + "_2.fastq.gz"
 })
 
-# Write the output DataFrame to a CSV file
-out.to_csv("samplesheet.csv", index=False, quotechar='"') 
+# save the samplesheet ensuring NA values are written as empty cells
+out.to_csv("samplesheet.csv", index=False, quoting=3, na_rep="")
 ```
 
 ##### R
 
 ```r
-meta <- read.table("sample_info.tsv", header = TRUE, sep = "\t")
+# read metadata table, ensuring NA values are correctly imported
+meta <- read.table("sample_info.tsv", header = TRUE, 
+                   sep = "\t", na.strings = "")
+
+# create data frame for output samplesheet
 out <- data.frame(sample = meta$name, 
                   fastq_1 = paste0("reads/", meta$fastq, "_1.fastq.gz"), 
                   fastq_2 = paste0("reads/", meta$fastq, "_2.fastq.gz"))
-write.csv(out, "samplesheet.csv", row.names = FALSE, quote = FALSE)
+
+# save the samplesheet ensuring NA values are written as empty cells
+write.csv(out, "samplesheet.csv", row.names = FALSE, quote = FALSE, na = "")
 ```
 
 ##### Perl
@@ -910,7 +954,7 @@ ZA08,reads/SRR17054503_1.fastq.gz,reads/SRR17054503_2.fastq.gz
 Transcriptome data processing using `nf-core/viralrecon`. 
 Go into the `virus_ont` directory for this version of the exercise.
 
-- Samplesheet documentation at [nf-co.re/viralrecon/docs/usage/](https://nf-co.re/viralrecon/docs/usage/).
+- Samplesheet documentation at [nf-co.re/viralrecon/{{< var version.viralrecon >}}/docs/usage/](https://nf-co.re/viralrecon/{{< var version.viralrecon >}}/docs/usage/).
 - Input barcode directories with FASTQ files in `fastq_pass/`. This is the directory that is created by standard ONT basecalling software such as Guppy or Dorado.
 - Metadata for each sample is provided in the `sample_info.tsv` file, which gives you the name of each sample and their respective barcode folder.
 
@@ -946,7 +990,7 @@ barcode01  barcode03  barcode05  barcode27  barcode29
 barcode02  barcode04  barcode26  barcode28  barcode30
 ```
 
-Following [the documentation](https://nf-co.re/viralrecon/docs/usage/#nanopore) for the pipeline, we could have created our samplesheet in Excel like this: 
+Following [the documentation](https://nf-co.re/viralrecon/{{< var version.viralrecon >}}/docs/usage/#nanopore) for the pipeline, we could have created our samplesheet in Excel like this: 
 
 <table style="border-collapse: collapse; width: auto; font-family: Arial, sans-serif;">
   <tr>
@@ -1045,7 +1089,7 @@ CH30,30
 Identifying genetic variants using `nf-core/sarek`.
 Go into the `variants` directory for this version of the exercise. 
 
-- Documentation at [nf-co.re/sarek/](https://nf-co.re/sarek/docs/usage). Note this workflow allows for quite complex experimental designs, but we will use the "minimal config" shown on that page.
+- Documentation at [nf-co.re/sarek/](https://nf-co.re/sarek/). Note this workflow allows for quite complex experimental designs, but we will use the "minimal config" shown on that page.
 - Input FASTQ files in `reads/`.
 - Metadata for each sample is provided in the `sample_info.tsv` file, which gives you the name of each sample and their respective FASTQ file prefix name.
 
@@ -1081,7 +1125,7 @@ Once you initiate the pipeline and it seems to be running successfully, you can 
 Transcriptome data processing using `nf-core/rnaseq`. 
 Go into the `rnaseq` directory for this version of the exercise. 
 
-- Parameter documentation at [nf-co.re/rnaseq/parameters](https://nf-co.re/rnaseq/parameters).
+- Parameter documentation at [nf-co.re/rnaseq/{{< var version.rnaseq >}}/parameters](https://nf-co.re/rnaseq/{{< var version.rnaseq >}}/parameters).
 - Use the samplesheet created in the previous exercise as input.
 - The reference genome and annotation are in the `genome/` directory.
   - Note that the options to specify these input files require the **full path** to the file to be specified. In the code skeleton below we show the trick of using the `$PWD` environment variable to specify the path relative to the current working directory. 
@@ -1095,7 +1139,7 @@ Here is the fixed nextflow command in our script:
 
 ```bash
 nextflow run nf-core/rnaseq \
-  -r "3.18.0" \
+  -r "{{< var version.rnaseq >}}" \
   -profile "singularity" \
   --input "samplesheet.csv" \
   --outdir "results/rnaseq" \
@@ -1117,7 +1161,7 @@ For example, we can open the file `results/rnaseq/multiqc/star_salmon/multiqc_re
 Chromatin immunoprecipitation sequencing analysis using `nf-core/chipseq`.
 Go into the `chipseq` directory for this version of the exercise. 
 
-- Parameter documentation at [nf-co.re/chipseq/parameters](https://nf-co.re/chipseq/parameters).
+- Parameter documentation at [nf-co.re/chipseq/{{< var version.chipseq >}}/parameters](https://nf-co.re/chipseq/{{< var version.chipseq >}}/parameters).
 - Use the samplesheet created in the previous exercise as input.
 - The reference genome and annotation are in the `genome/` directory. 
   - Note that the options to specify these input files require the **full path** to the file to be specified. In the code skeleton below we show the trick of using the `$PWD` environment variable to specify the path relative to the current working directory. 
@@ -1131,7 +1175,7 @@ Here is the fixed nextflow command in our script:
 
 ```bash
 nextflow run nf-core/chipseq \
-  -r "2.1.0" \
+  -r "{{< var version.chipseq >}}" \
   -profile "singularity" \
   --input "samplesheet.csv" \
   --outdir "results/chipseq" \
@@ -1154,7 +1198,7 @@ For example, we can open the file `results/chipseq/multiqc/broadPeak/multiqc_rep
 Analysis of viral genomes using `nf-core/viralrecon`.
 Go into the `virus_illumina` directory for this version of the exercise. 
 
-- Parameter documentation at [nf-co.re/viralrecon/parameters](https://nf-co.re/viralrecon/parameters).
+- Parameter documentation at [nf-co.re/viralrecon/{{< var version.viralrecon >}}/parameters](https://nf-co.re/viralrecon/{{< var version.viralrecon >}}/parameters).
 - Use the samplesheet created in the previous exercise as input.
 - The reference genome, gene annotation and primer locations are in the `genome/` directory. 
   - Note that the options to specify these input files require the **full path** to the file to be specified. In the code skeleton below we show the trick of using the `$PWD` environment variable to specify the path relative to the current working directory. 
@@ -1168,7 +1212,7 @@ Here is the fixed nextflow command in our script:
 
 ```bash
 nextflow run nf-core/viralrecon \
-  -r "2.6.0" \
+  -r "{{< var version.viralrecon >}}" \
   -profile "singularity" \
   --input "samplesheet.csv" \
   --outdir "results/viralrecon" \
@@ -1194,7 +1238,7 @@ For example, we can open the file `results/viralrecon/multiqc/multiqc_report.htm
 Analysis of viral genomes using `nf-core/viralrecon`.
 Go into the `virus_ont` directory for this version of the exercise. 
 
-- Parameter documentation at [nf-co.re/viralrecon/parameters](https://nf-co.re/viralrecon/parameters).
+- Parameter documentation at [nf-co.re/viralrecon/{{< var version.viralrecon >}}/parameters](https://nf-co.re/viralrecon/{{< var version.viralrecon >}}/parameters).
 - Use the samplesheet created in the previous exercise as input.
 - The reference genome, gene annotation and primer locations are in the `genome/` directory. 
   - Note that the options to specify these input files require the **full path** to the file to be specified. In the code skeleton below we show the trick of using the `$PWD` environment variable to specify the path relative to the current working directory. 
@@ -1210,7 +1254,7 @@ Here is the fixed nextflow command in our script:
 
 ```bash
 nextflow run nf-core/viralrecon \
-  -r "2.6.0" \
+  -r "{{< var version.viralrecon >}}" \
   -profile "singularity" \
   --input "samplesheet.csv" \
   --fastq_dir "fastq_pass/" \

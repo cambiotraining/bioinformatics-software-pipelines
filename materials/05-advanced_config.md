@@ -46,7 +46,7 @@ As an example, consider the [`nextflow.config` file for `nf-core/demo`](https://
 The nextflow.config file generally follows a structured format, with several key components:
 
 - **Default parameters** (`params{}` scope): defines the default values for various parameters that the pipeline uses, such as input data, reference genomes, etc.
-  - You may notice that several of these parameters match those [specified in the documentation](https://nf-co.re/demo/latest/parameters/), and in fact they refer to the same thing. For example `--input`, `--genome` and `--outdir`. 
+  - You may notice that several of these parameters match those [specified in the documentation](https://nf-co.re/demo//{{< var version.demo >}}/parameters/), and in fact they refer to the same thing. For example `--input`, `--genome` and `--outdir`. 
 
 - **Include statements** (`includeConfig`): import other configuration files, which may set additional parameters or override defaults. For example:
   - `includeConfig 'conf/base.config'` imports the respective file [found in the repository](https://github.com/nf-core/demo/blob/1.0.0/conf/base.config). This "base" configuration file sets a more dynamic resource allocation, depending on the computational demands of each task (more on this later).

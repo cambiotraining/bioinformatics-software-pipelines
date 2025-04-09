@@ -1,0 +1,10 @@
+# Versions of workflows and software used in the materials
+# these can be used as dynamic variables in the markdown documents
+# see https://quarto.org/docs/authoring/variables.html
+version:
+  demo: 1.0.1
+  rnaseq: 3.18.0
+  chipseq: 2.1.0
+  viralrecon: 2.6.0
+  nextflow: 24.10.5 
+  snakemake: 9.1.9

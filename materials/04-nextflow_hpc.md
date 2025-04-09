@@ -237,7 +237,7 @@ Here's what you need to do:
 
     ```bash
     nextflow run nf-core/demo \
-      -profile "singularity" -revision "1.0.1" \
+      -profile "singularity" -revision "{{< var version.demo >}}" \
       -c "trainhpc.config" \
       --input "samplesheet.csv" \
       --outdir "results/qc" \
