@@ -1,5 +1,11 @@
 #!/bin/bash
 
+# This script sets the software environment for the course.
+# The directories to be sync'ed across training machines are:
+# ~/.nextflow-singularity-cache/
+# ~/.singularity
+# ~/.nextflow
+
 # create an environment to cache some packages used in the course
 mamba create -n btf iqtree==2.3.3 mafft==7.525 treetime==0.11.3 multiqc==1.21 gtdbtk==2.4.0 fastqc==0.12.1
 mamba create -y -n scipy scipy==1.12.0 numpy==1.26.4 matplotlib==3.8.3
@@ -30,7 +36,7 @@ EOF
 # cache nextflow images
 mamba activate nextflow
 
-export NXF_SINGULARITY_CACHEDIR="$HOME/.temp-nextflow-singularity-cache"
+export NXF_SINGULARITY_CACHEDIR="$HOME/.nextflow-singularity-cache"
 
 # cache singularity images and pull workflows
 for wf in demo rnaseq chipseq viralrecon
@@ -40,7 +46,7 @@ do
   echo "$wf: $version"
 
   # download images
-  nf-core download $wf \
+  nf-core pipelines download $wf \
     --revision $version \
     --outdir /tmp/$wf \
     --force \
