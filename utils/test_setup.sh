@@ -49,7 +49,8 @@ nextflow run nf-core/chipseq \
   --gtf "$PWD/genome/GRCh38.109.chr21.gtf.gz" \
   --fasta "$PWD/genome/GRCh38.109.chr21.fasta.gz" \
   --blacklist "$PWD/genome/ENCFF356LFX_exclusion_lists.chr21.bed.gz" \
-  --read_length 100
+  --read_length 100 \
+  --skip_preseq
   
   
 ## nf-core/viralrecon illumina
