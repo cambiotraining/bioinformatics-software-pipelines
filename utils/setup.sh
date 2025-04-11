@@ -51,7 +51,7 @@ do
     --outdir /tmp/$wf \
     --force \
     --compress none \
-    --download-configuration \
+    --download-configuration yes \
     --container-system singularity \
     --container-cache-utilisation amend
   
