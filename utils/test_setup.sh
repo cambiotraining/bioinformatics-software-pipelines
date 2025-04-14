@@ -2,10 +2,21 @@
 
 set -euxo pipefail
 
+# Check if setup_versions.yml was given as argument
+if [ "$#" -ne 1 ]; then
+    echo "Usage: $0 <path/to/setup_versions.yml>"
+    exit 1
+fi
+
+versions="$1"
+
 ## nf-core/demo
 
+# get workflow version from yml
+demo_version=$(grep "demo:" "$versions" | sed 's/.* //')
+
 cd demo
-nextflow run -profile "singularity" -revision "1.0.1" nf-core/demo \
+nextflow run -profile "singularity" -revision "$demo_version" nf-core/demo \
   --input "samplesheet.csv" \
   --outdir "results/qc" \
   --fasta "genome/Mus_musculus.GRCm38.dna_sm.chr14.fa.gz"
@@ -15,6 +26,9 @@ nextflow run -profile "singularity" -revision "1.0.1" nf-core/demo \
 
 cd ../rnaseq
 
+# get workflow version from yml
+rnaseq_version=$(grep "rnaseq:" "$versions" | sed 's/.* //')
+
 echo "sample,fastq_1,fastq_2,strandedness" > samplesheet.csv
 tail -n +2 sample_info.tsv | awk 'BEGIN { FS="\t"; OFS="," }
 {
@@ -22,7 +36,7 @@ tail -n +2 sample_info.tsv | awk 'BEGIN { FS="\t"; OFS="," }
 }' >> samplesheet.csv
 
 nextflow run nf-core/rnaseq \
-  -r "3.18.0" \
+  -r "$rnaseq_version" \
   -profile "singularity" \
   --input "samplesheet.csv" \
   --outdir "results/rnaseq" \
@@ -34,6 +48,9 @@ nextflow run nf-core/rnaseq \
 ## nf-core/chipseq
 
 cd ../chipseq
+
+# get workflow version from yml
+chipseq_version=$(grep "chipseq:" "$versions" | sed 's/.* //')
 
 echo "sample,fastq_1,fastq_2,replicate,antibody,control,control_replicate" > samplesheet.csv
 tail -n +2 sample_info.tsv | awk 'BEGIN { FS="\t"; OFS="," }
@@ -57,6 +74,9 @@ nextflow run nf-core/chipseq \
 
 cd ../virus_illumina
 
+# get workflow version from yml
+viralrecon_version=$(grep "viralrecon:" "$versions" | sed 's/.* //')
+
 echo "sample,fastq_1,fastq_2" > samplesheet.csv
 tail -n +2 sample_info.tsv | awk 'BEGIN { FS="\t"; OFS="," }
 {
@@ -64,7 +84,7 @@ tail -n +2 sample_info.tsv | awk 'BEGIN { FS="\t"; OFS="," }
 }' >> samplesheet.csv
 
 nextflow run nf-core/viralrecon \
-  -r "2.6.0" \
+  -r "$viralrecon_version" \
   -profile "singularity" \
   --input "samplesheet.csv" \
   --outdir "results/viralrecon" \
@@ -85,7 +105,7 @@ echo "sample,barcode" > samplesheet.csv
 tail -n +2 sample_info.tsv | sed 's/\t/,/' >> samplesheet.csv
 
 nextflow run nf-core/viralrecon \
-  -r "2.6.0" \
+  -r "$viralrecon_version" \
   -profile "singularity" \
   --input "samplesheet.csv" \
   --fastq_dir "fastq_pass/" \

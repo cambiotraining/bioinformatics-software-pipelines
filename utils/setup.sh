@@ -11,7 +11,7 @@ mamba create -n btf iqtree==2.3.3 mafft==7.525 treetime==0.11.3 multiqc==1.21 gt
 mamba create -y -n scipy scipy==1.12.0 numpy==1.26.4 matplotlib==3.8.3
 
 # create nextflow environment
-mamba create -n nextflow bioconda::nextflow==24.04.4 bioconda::nf-core==3.2.0
+mamba create -n nextflow bioconda::nextflow bioconda::nf-core
 
 
 # nextflow config
@@ -38,12 +38,18 @@ mamba activate nextflow
 
 export NXF_SINGULARITY_CACHEDIR="$HOME/.nextflow-singularity-cache"
 
+# initialise yaml file with workflow versions
+echo "version:" > setup_versions.yml
+echo "  nextflow: $(nextflow -v | sed 's/.* //')" >> setup_versions.yml
+
 # cache singularity images and pull workflows
 for wf in demo rnaseq chipseq viralrecon
 do
   # grab latest version of the workflow
   version=$(nf-core pipelines list 2> /dev/null | grep " $wf " | awk -F'│' '{print $4}' | sed 's/ //g' 2> /dev/null)
-  echo "$wf: $version"
+
+  # print the workflow name and version
+  echo "  $wf: $version" >> setup_versions.yml
 
   # download images
   nf-core pipelines download $wf \
@@ -61,3 +67,6 @@ do
   # pull the workflow to its standard directory
   nextflow pull -r $version nf-core/$wf
 done
+
+# run the test script?
+bash test_setup.sh setup_versions.yml
