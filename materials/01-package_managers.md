@@ -162,6 +162,91 @@ If you did not create an environment file at the start of your project, you can 
 :::
 
 
+### Mixing package managers
+
+There might be times when some packages/libraries are not available directly through conda/mamba. 
+For example, there might be a python library that is only available through `pip`. 
+Or an R package that you want to install from GitHub. 
+There are ways to address these challenges, which we cover below. 
+
+#### `pip` packages
+
+**You can use `pip` to install packages within a Conda environment.**
+You should be careful when doing this, as `pip` may change your conda-installed packages, which might break the conda environment. 
+There are a few steps one can follow to avoid this pitfall:
+
+1. Start from a new and clean environment. 
+   If the new environment breaks you can safely remove it and start over. 
+2. Install `pip` in your conda environment. 
+   This is important as the pip you have in your base environment is different from your new environment (will avoid conflicts).
+3. Install any conda packages your need to get the environment ready and leave the pip install for last. 
+   Avoid switching between package managers. Start with one and finish with the other one so reversing or fixing conflicts is easier.
+
+The Anaconda blog has a useful [best-practices checklist](https://www.anaconda.com/blog/using-pip-in-a-conda-environment) covering these points.
+
+The `pip`-installed packages can be specified in the YAML file. 
+For example, let's say we wanted to install the package `nomspectra` for working with high-resolution mass spectrometry data. 
+This package is available from [PiPy](https://pypi.org/project/nomspectra/), but not on any public Conda channel. 
+It requires Numpy version 1, so we may specify our environment like this: 
+
+```yaml
+name: massspec
+channels: 
+  - conda-forge
+  - bioconda
+depedencies: 
+  - numpy=1.22.4
+  - pip:
+    - nomspectra
+```
+
+Notice the new syntax, where we specify packages we want installed with `pip` at the end of the configuration file. 
+
+
+#### R packages
+
+Most R and Bioconductor packages are available through the conda-forge and bioconda channels.
+However, you may be interested in **installing a non-published package directly from GitHub/GitLab/Bitbucket**.
+In R, this can be done using the `remotes` package (or, alternatively, `devtools`), which contains a function `install_github()` allowing you to do this. 
+
+Unfortunately, there is no way to specify installing such packages directly in an environment YAML file. 
+The workaround in this case is to perform things in two steps: 
+
+1. Create a new environment with R, any packages you want and that are available from Conda channels, and the package `remotes`. 
+2. Activate the environment.
+3. Launch an R console directly from the terminal. 
+4. Run the command `install_github()`/`install_gitlab()`/`install_bitbucket()` as appropriate. 
+
+Let's see an example of using the package `qtl2helper` ([available on github](https://github.com/tavareshugo/qtl2helper)), which contains addon functions to work with objects from the `qtl2` package. 
+The `qtl2` package itself, is available from the usual CRAN and, as such, also [available from conda-forge](https://anaconda.org/conda-forge/r-qtl2). 
+Let's say in addition we also wanted the `tidyverse` package. 
+We could create the following YAML:
+
+```yaml
+name: qtl
+channels:
+  - conda-forge
+  - bioconda
+dependencies: 
+  - r-qtl2=0.36
+  - r-tidyverse=2.0.0
+  - r-remotes=2.5.0
+
+# Manually installed qtl2helper in this environment with
+# remotes::install_github("tavareshugo/qtl2helper")
+```
+
+We install the dependencies that are available from Conda, and added a comment to our YAML to indicate we further installed packages "manually". 
+We could do so by activating our environment (`mamba activate qtl`), launching an R terminal and then running the command shown. 
+
+:::{.callout-warning}
+#### Managing R packages
+
+On your local computer, we usually recommend that you manage your R packages normally, without the use of Conda. 
+However, it may sometimes be necessary to setup R environments on HPC servers, in which case the method above would work. 
+:::
+
+
 ## Disadvantages and pitfalls
 
 ### Dependency conflicts {.unnumbered .unlisted}
@@ -270,18 +355,6 @@ du --si -s $CONDA_PREFIX
 ```
 
 Note the `$CONDA_PREFIX` is an environment variable that stores the directory path to your conda/mamba installation. 
-
-::: {.callout-note}
-#### Mixing package managers
-
-There might be times when some packages/libraries are not available in a package manager. For example, it can be common to use conda/mamba but find a python library that is only available through `pip`. Unfortunately, this may cause issues in your environment as pip may change your conda-installed packages, which might break the conda environment. There are a few steps one can follow to avoid this pitfalls:
-
-1. Start from a new and clean environment. If the new environment breaks you can safely remove it and start over. You can create a new environment from pre-existing ones if necessary. We will see more of this later.
-2. Install `pip` in your conda environment. This is important as the pip you have in your base environment is different from your new environment (will avoid conflicts).
-3. Install any conda packages your need to get the environment ready and leave the pip install for last. Avoid switching between package managers. Start with one and finish with the other one so reversing or fixing conflicts is easier.
-
-You can find a (checklist)[https://www.anaconda.com/blog/using-pip-in-a-conda-environment] in the anaconda webpage for good practice.
-:::
 
 
 ## Exercises
