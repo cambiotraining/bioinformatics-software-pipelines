@@ -177,6 +177,7 @@ We have a training HPC available with the following characteristics:
 
 - **Job scheduler**: SLURM
 - **Main queue/partition**: `normal`
+- **Billing account**: not used (can be omitted from config)
 - **Queue limits**: 8 CPUs and 20GB of RAM
 - **Job duration**: maximum 24 hours
 - **High-performance directory**: `/data/participant`, shared by both the login and compute nodes
