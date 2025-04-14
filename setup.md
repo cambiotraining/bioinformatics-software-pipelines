@@ -1,5 +1,6 @@
 ---
 title: "Data & Setup"
+pagetitle: "Software & Pipelines"
 number-sections: false
 ---
 

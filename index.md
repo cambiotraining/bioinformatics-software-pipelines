@@ -1,5 +1,6 @@
 ---
 title: "Managing Bioinformatics Software and Pipelines"
+pagetitle: "Software & Pipelines"
 date: today
 number-sections: false
 ---
