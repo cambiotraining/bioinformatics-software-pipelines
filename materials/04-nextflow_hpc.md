@@ -182,7 +182,7 @@ We have a training HPC available with the following characteristics:
 - **Job duration**: maximum 24 hours
 - **High-performance directory**: `/data/participant`, shared by both the login and compute nodes
 
-First, **login to the HPC** with the command: `ssh participant@trainhpc`
+First, **login to the HPC** with the command: `ssh participant@train.hpc`
 
 In the directory `/data/participant/demo` you will find the files needed to run the `nf-core/demo` workflow, as demonstrated in the [previous chapter](03-nfcore.md#demo-nf-core-pipeline). 
 Now, you will run this workflow on the HPC using SLURM as the executor for your analysis steps.
@@ -202,7 +202,7 @@ Here's what you need to do:
 1. **Login to the HPC** as instructed: 
 
     ```bash
-    ssh participant@trainhpc
+    ssh participant@train.hpc
     ```
     
 2. **Create a configuration file** in the `/data/participant/demo` directory, which we call `trainhpc.config`:
