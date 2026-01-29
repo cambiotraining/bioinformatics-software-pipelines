@@ -1223,7 +1223,8 @@ nextflow run nf-core/viralrecon \
   --fasta "$PWD/genome/nCoV-2019.reference.fasta" \
   --primer_bed "$PWD/genome/nCoV-2019.V3.primer.bed" \
   --skip_assembly --skip_asciigenome \
-  --skip_pangolin --skip_nextclade
+  --skip_pangolin --skip_nextclade \
+  --skip_freyja
 ```
 
 We then ran our script with `bash scripts/run_viralrecon.sh`. 
@@ -1268,7 +1269,8 @@ nextflow run nf-core/viralrecon \
   --artic_minion_medaka_model "r941_min_fast_g303" \
   --artic_minion_caller "medaka" \
   --skip_assembly --skip_asciigenome \
-  --skip_pangolin --skip_nextclade
+  --skip_pangolin --skip_nextclade \
+  --skip_freyja
 ```
 
 We then ran our script with `bash scripts/run_viralrecon.sh`. 

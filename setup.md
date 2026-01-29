@@ -49,13 +49,14 @@ To install _Mamba_, run the following commands from the terminal:
 wget "https://github.com/conda-forge/miniforge/releases/latest/download/Miniforge3-$(uname)-$(uname -m).sh"
 bash Miniforge3-$(uname)-$(uname -m).sh -b -p $HOME/miniforge3
 rm Miniforge3-$(uname)-$(uname -m).sh
-$HOME/miniforge3/bin/mamba init
+$HOME/miniforge3/bin/mamba shell init
 ```
 
-Restart your terminal (or open a new one) and confirm that your shell now starts with the word `(base)`.
+Restart your terminal (or open a new one).
 Then run the following commands: 
 
 ```bash
+conda config --add channels nodefaults
 conda config --add channels bioconda
 conda config --add channels conda-forge
 conda config --set channel_priority strict
@@ -82,7 +83,7 @@ On Ubuntu/WSL2, you can install _Singularity_ using the following commands:
 
 ```bash
 sudo apt install -y libfuse2t64 runc fuse2fs uidmap
-wget -O singularity.deb https://github.com/sylabs/singularity/releases/download/v4.3.0/singularity-ce_4.3.0-$(lsb_release -cs)_amd64.deb
+wget -O singularity.deb https://github.com/sylabs/singularity/releases/download/v4.3.7/singularity-ce_4.3.7-$(lsb_release -cs)_amd64.deb
 sudo dpkg -i singularity.deb
 rm singularity.deb
 ```

@@ -7,12 +7,11 @@
 # ~/.nextflow
 
 # create an environment to cache some packages used in the course
-mamba create -n btf iqtree==2.3.3 mafft==7.525 treetime==0.11.3 multiqc==1.21 gtdbtk==2.4.0 fastqc==0.12.1
+mamba create -y -n btf iqtree==2.3.3 mafft==7.525 treetime==0.11.3 multiqc==1.21 gtdbtk==2.4.0 fastqc==0.12.1
 mamba create -y -n scipy scipy==1.12.0 numpy==1.26.4 matplotlib==3.8.3
 
 # create nextflow environment
-mamba create -n nextflow bioconda::nextflow bioconda::nf-core
-
+mamba create -y -n nextflow bioconda::nextflow bioconda::nf-core
 
 # nextflow config
 mkdir -p /home/participant/.nextflow 
