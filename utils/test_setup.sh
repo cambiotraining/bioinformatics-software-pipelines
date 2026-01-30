@@ -42,8 +42,8 @@ nextflow run nf-core/rnaseq \
   --outdir "results/rnaseq" \
   --gtf "$PWD/genome/Mus_musculus.GRCm38.102.chr14.gtf.gz" \
   --fasta "$PWD/genome/Mus_musculus.GRCm38.dna_sm.chr14.fa.gz"  \
-  --igenomes_ignore
-
+  --igenomes_ignore \
+  --skip_alignment
 
 ## nf-core/chipseq
 
@@ -90,12 +90,11 @@ nextflow run nf-core/viralrecon \
   --outdir "results/viralrecon" \
   --platform "illumina" \
   --protocol "amplicon" \
-  --gtf "$PWD/genome/nCoV-2019.annotation.gff.gz" \
+  --gff "$PWD/genome/nCoV-2019.annotation.gff.gz" \
   --fasta "$PWD/genome/nCoV-2019.reference.fasta" \
   --primer_bed "$PWD/genome/nCoV-2019.V3.primer.bed" \
-  --skip_assembly --skip_asciigenome \
-  --skip_pangolin --skip_nextclade \
-  --skip_freyja
+  --skip_assembly --skip_freyja \
+  --skip_pangolin --skip_nextclade
   
 
 ## nf-core/viralrecon ont
@@ -116,8 +115,7 @@ nextflow run nf-core/viralrecon \
   --genome "MN908947.3" \
   --primer_set "artic" \
   --primer_set_version "3" \
-  --artic_minion_medaka_model "r941_min_fast_g303" \
-  --artic_minion_caller "medaka" \
-  --skip_assembly --skip_asciigenome \
-  --skip_pangolin --skip_nextclade \
-  --skip_freyja
+  --artic_minion_model "r941_prom_sup_g5014" \
+  --skip_assembly --skip_freyja \
+  --skip_pangolin --skip_nextclade
+

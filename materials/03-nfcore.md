@@ -25,7 +25,7 @@ To overcome these limitations, dedicated [**workflow/pipeline management softwar
 These dedicated packages are designed to streamline and automate the process of coordinating complex sequences of tasks and data processing (for instance an RNA-seq analysis).
 In this way, researchers can focus on their scientific questions instead of the nitty-gritty of data processing.
 
-![A) Workflow illustration, showing ready-for-running tasks highlighted in green, indicating all necessary input files are available. The initial red task produces a temporary file, potentially removable once the blue tasks complete. Workflow management systems ensure tasks are run in an optimal and automated manner. For example, in B) there is suboptimal scheduling of tasks, as only one blue task is scheduled the temporary file cannot be removed. Conversely, in C) we have optimal scheduling, since the three blue tasks are scheduled first enabling deletion of the temporary file after their completion. Diagram taken from [Mölder et al. 2021](https://doi.org/10.12688/f1000research.29032.2), licensed under [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/)).](https://f1000research.s3.amazonaws.com/manuscripts/56004/3c3b99f9-b002-4f62-b11c-18cca6cf9ed4_figure4.gif)
+![A) Workflow illustration, showing ready-for-running tasks highlighted in green, indicating all necessary input files are available. The initial red task produces a temporary file, potentially removable once the blue tasks complete. Workflow management systems ensure tasks are run in an optimal and automated manner. For example, in B) there is suboptimal scheduling of tasks, as only one blue task is scheduled the temporary file cannot be removed. Conversely, in C) we have optimal scheduling, since the three blue tasks are scheduled first enabling deletion of the temporary file after their completion. Diagram taken from [Mölder et al. 2025](https://doi.org/10.12688/f1000research.29032.3), licensed under [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/)).](https://f1000research-files.f1000.com/manuscripts/173023/40b5b393-1e56-45f5-ac61-18e05f629d86_figure4.gif)
 
 Here are some of the key advantages of using a standardised workflow for our analysis:
 
@@ -1145,7 +1145,8 @@ nextflow run nf-core/rnaseq \
   --outdir "results/rnaseq" \
   --gtf "$PWD/genome/Mus_musculus.GRCm38.102.chr14.gtf.gz" \
   --fasta "$PWD/genome/Mus_musculus.GRCm38.dna_sm.chr14.fa.gz"  \
-  --igenomes_ignore
+  --igenomes_ignore \
+  --skip_alignment
 ```
 
 We then ran our script with `bash scripts/run_rnaseq.sh`. 
@@ -1153,6 +1154,16 @@ While running, we got the progress of the pipeline printed on the screen.
 
 At the end of the pipeline we could see the results in the `results/rnaseq` folder. 
 For example, we can open the file `results/rnaseq/multiqc/star_salmon/multiqc_report.html` to look at a quality control report for the pipeline. 
+
+:::{.callout-warning}
+In the code above we've used the option `--skip_alignment`. 
+In real-world analysis we would not recommend doing this by default, as the alignment provides many useful QC metrics for RNA-seq (e.g. gene body coverage, PCR duplication issues, etc.). 
+
+Skipping the alignment does result in a much faster run, so it may be justified, for example, if you are processing a very large number of samples and need to save compute resources. 
+
+In this case, we used it to save time, as our purpose is to show how to set and run an nf-core pipeline, not to get precise results. 
+:::
+
 :::
 
 
@@ -1219,12 +1230,11 @@ nextflow run nf-core/viralrecon \
   --outdir "results/viralrecon" \
   --platform "illumina" \
   --protocol "amplicon" \
-  --gtf "$PWD/genome/nCoV-2019.annotation.gff.gz" \
+  --gff "$PWD/genome/nCoV-2019.annotation.gff.gz" \
   --fasta "$PWD/genome/nCoV-2019.reference.fasta" \
   --primer_bed "$PWD/genome/nCoV-2019.V3.primer.bed" \
-  --skip_assembly --skip_asciigenome \
-  --skip_pangolin --skip_nextclade \
-  --skip_freyja
+  --skip_assembly --skip_freyja \
+  --skip_pangolin --skip_nextclade
 ```
 
 We then ran our script with `bash scripts/run_viralrecon.sh`. 
@@ -1266,11 +1276,9 @@ nextflow run nf-core/viralrecon \
   --genome "MN908947.3" \
   --primer_set "artic" \
   --primer_set_version "3" \
-  --artic_minion_medaka_model "r941_min_fast_g303" \
-  --artic_minion_caller "medaka" \
-  --skip_assembly --skip_asciigenome \
-  --skip_pangolin --skip_nextclade \
-  --skip_freyja
+  --artic_minion_model "r941_prom_sup_g5014" \
+  --skip_assembly --skip_freyja \
+  --skip_pangolin --skip_nextclade
 ```
 
 We then ran our script with `bash scripts/run_viralrecon.sh`. 
