@@ -2,7 +2,7 @@
 # these can be used as dynamic variables in the markdown documents
 # see https://quarto.org/docs/authoring/variables.html
 version:
-  demo: 1.0.2
+  demo: 1.1.0
   rnaseq: 3.22.2
   chipseq: 2.1.0
   viralrecon: 3.0.0

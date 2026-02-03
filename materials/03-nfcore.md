@@ -218,7 +218,8 @@ We have named our samples using informative names of our choice, and indicate th
 We can then run our workflow as follows (this command is available from `scripts/02-run_nfcore_demo.sh`):
 
 ```bash
-nextflow run -profile "singularity" -revision "{{< var version.demo >}}" nf-core/demo \
+nextflow run nf-core/demo \
+  -profile "singularity" -revision "{{< var version.demo >}}" \
   --input "samplesheet.csv" \
   --outdir "results/qc" \
   --fasta "genome/Mus_musculus.GRCm38.dna_sm.chr14.fa.gz"
