@@ -228,7 +228,7 @@ Here's what you need to do:
 
     singularity {
         enabled = true
-        cacheDir = '/data/participant/singularity-cache'
+        cacheDir = '/data/participant/.nextflow-singularity-cache'
     }
     ```
 
