@@ -467,7 +467,7 @@ The command runs successfully, with the expected version printed, indicating it 
 
 A PhD student working on a machine learning project is trying to improve a classification model from a previous publication. 
 
-For benchmarking purposes, the student wants to reproduce the previous analysis and therefore use the same version of the package used by the authors: **PyTorch version 1.5.0**.
+For benchmarking purposes, the student wants to reproduce the previous analysis and therefore use the same version of the package used by the authors: **PyTorch version 1.13.0**.
 
 For their own improved model, they will use a recent version of a different library: **TensorFlow version 2.17.0**. 
 
@@ -479,35 +479,39 @@ What would you recommend to them?
 We can start by running a command to create an environment with both packages, making sure we pin the specific versions required (we call the environment `ml` in this example, but you could name it anything you want): 
 
 ```bash
-mamba create -n ml tensorflow==2.17.0 pytorch==1.5.0
+mamba create -n ml tensorflow==2.17.0 pytorch==1.13.0
 ```
 
 However, we get a package dependency error: 
 
-```
-Could not solve for environment specs
-The following packages are incompatible
-├─ pytorch 1.5.0  is requested and can be installed;
-└─ tensorflow 2.17.0  is uninstallable because it requires
-   └─ tensorflow-base [2.17.0 cpu_py310h98e3cc3_1|2.17.0 cpu_py310h98e3cc3_2|...|2.17.0 cuda120py39hee30cbf_201], which requires
-      └─ keras >=3.0  with the potential options
-         ├─ keras [3.0.2|3.0.4|3.0.5|3.1.0] would require
-         │  └─ tensorflow >=2.15.0,<2.17.0a , which can be installed;
-         ├─ keras [3.1.0|3.1.1] would require
-         │  └─ pytorch 2.1.* , which conflicts with any installable versions previously reported;
-         ├─ keras [3.2.0|3.2.1|3.3.2|3.3.3|3.4.1] would require
-         │  └─ pytorch >=2.1,<2.3 , which conflicts with any installable versions previously reported;
-         └─ keras [3.0.5|3.4.1|3.5.0] would require
-            └─ pytorch >=2.1.0 , which conflicts with any installable versions previously reported.
-```
 
-This is because PyTorch 1.5.0 is quite an old version, while TensorFlow 2.17.0 is quite a new version, leading to different version requirements. 
-In fact, TensorFlow itself depends on PyTorch, but version 2.17 requires more recent versions of PyTorch than 1.5.
+<pre><code>
+<font color="#C01C28"><b>error    libmamba</b></font> Could not solve for environment specs
+    The following packages are incompatible
+    ├─ <font color="#26A269">pytorch ==1.13.0 *</font> is requested and can be installed;
+    └─ <font color="#C01C28">tensorflow ==2.17.0 *</font> is not installable because it requires
+       └─ <font color="#26A269">tensorflow-base [==2.17.0 cpu_py310h98e3cc3_1|==2.17.0 cpu_py310h98e3cc3_2|...|==2.17.0 cuda120py39hf283d87_203]</font>, which requires
+          └─ <font color="#26A269">keras &gt;=3.0 *</font> with the potential options
+             ├─ <font color="#26A269">keras [3.0.2|3.0.4|3.0.5|3.1.0]</font> would require
+             │  └─ <font color="#26A269">tensorflow &gt;=2.15.0,&lt;2.17.0a *</font>, which can be installed;
+             ├─ <font color="#C01C28">keras [3.1.0|3.1.1]</font> would require
+             │  └─ <font color="#C01C28">pytorch =2.1 *</font>, which conflicts with any installable versions previously reported;
+             ├─ <font color="#C01C28">keras [3.10.0|3.11.2|...|3.9.2]</font> would require
+             │  └─ <font color="#C01C28">pytorch &gt;=2.1.0 *</font>, which conflicts with any installable versions previously reported;
+             ├─ <font color="#C01C28">keras 3.12.0</font> would require
+             │  └─ <font color="#C01C28">pytorch &gt;=2.6.0 *</font>, which conflicts with any installable versions previously reported;
+             └─ <font color="#C01C28">keras [3.2.0|3.2.1|3.3.2|3.3.3|3.4.1]</font> would require
+                └─ <font color="#C01C28">pytorch &gt;=2.1,&lt;2.3 *</font>, which conflicts with any installable versions previously reported.
+<span style="background-color:#C01C28"><b>critical libmamba</b></span> Could not solve for environment specs
+</code></pre>
+
+This is because PyTorch 1.13.0 is quite an old version, while TensorFlow 2.17.0 is quite a new version, leading to different version requirements. 
+In fact, TensorFlow itself depends on PyTorch, but version 2.17 requires more recent versions of PyTorch than 1.13.
 
 As there is no easy way to install both of these packages in the same environment, our best recommendation to the student would be to create two separate environments for these packages: 
 
 ```bash
-mamba create -n pytorch pytorch==1.5.0
+mamba create -n pytorch pytorch==1.13.0
 mamba create -n tensorflow tensorflow==2.17.0
 ```
 
