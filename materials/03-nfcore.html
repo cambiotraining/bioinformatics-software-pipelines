@@ -1,0 +1,2266 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.8.27">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>Software &amp; Pipelines</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../">
+<link href="../materials/04-nextflow_hpc.html" rel="next">
+<link href="../materials/02-containers.html" rel="prev">
+<link href="../site_libs/quarto-contrib/quarto-project/cambiotraining/courseformat/img/university-of-cambridge-favicon.ico" rel="icon">
+<script src="../site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="../site_libs/quarto-html/axe/axe-check.js" type="module"></script>
+<script src="../site_libs/quarto-html/popper.min.js"></script>
+<script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-ed96de9b727972fe78a7b5d16c58bf87.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../site_libs/bootstrap/bootstrap-fd4369bcce5669dc6f092a5d180a1716.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script src="../site_libs/quarto-contrib/iconify-2.1.0/iconify-icon.min.js"></script>
+<script id="quarto-search-options" type="application/json">{
+  "location": "sidebar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "start",
+  "type": "textbox",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+
+
+</head>
+
+<body class="nav-sidebar floating nav-fixed quarto-light">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a href="../index.html" class="navbar-brand navbar-brand-logo">
+    <img src="../site_libs/quarto-contrib/quarto-project/cambiotraining/courseformat/img/university_crest_reversed.png" alt="" class="navbar-logo light-content">
+    <img src="../site_libs/quarto-contrib/quarto-project/cambiotraining/courseformat/img/university_crest_reversed.png" alt="" class="navbar-logo dark-content">
+    </a>
+    <a class="navbar-brand" href="../index.html">
+    <span class="navbar-title">Managing Bioinformatics Software and Pipelines</span>
+    </a>
+  </div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" role="menu" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll me-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="https://docs.google.com/presentation/d/169XRx7psE2d4NywWm4aqNKi8DQm84m037Ce9bz-ec8o/edit?usp=sharing"> 
+<span class="menu-text">Slides</span></a>
+  </li>  
+</ul>
+            <ul class="navbar-nav navbar-nav-scroll ms-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="https://github.com/cambiotraining/bioinformatics-software-pipelines"> 
+<span class="menu-text"><iconify-icon role="img" inline="" icon="fa6-brands:github" style="font-size: 1.25em;" aria-label="Icon github from fa6-brands Iconify.design set." title="CRIT GitHub"></iconify-icon></span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="https://bsky.app/profile/bioinfocambs.bsky.social"> 
+<span class="menu-text"><iconify-icon role="img" inline="" icon="fa6-brands:bluesky" style="font-size: 1.25em;" aria-label="Icon bluesky from fa6-brands Iconify.design set." title="CRIT Bluesky"></iconify-icon></span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="https://genomic.social/@BioInfoCambs"> 
+<span class="menu-text"><iconify-icon role="img" inline="" icon="fa6-brands:mastodon" style="font-size: 1.25em;" aria-label="Icon mastodon from fa6-brands Iconify.design set." title="CRIT Mastodon"></iconify-icon></span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="https://bioinfotraining.bio.cam.ac.uk/"> 
+<span class="menu-text"><iconify-icon role="img" inline="" icon="mdi:web" style="font-size: 1.25em;" aria-label="Icon web from mdi Iconify.design set." title="CRIT Website"></iconify-icon></span></a>
+  </li>  
+</ul>
+          </div> <!-- /navcollapse -->
+            <div class="quarto-navbar-tools">
+</div>
+      </div> <!-- /container-fluid -->
+    </nav>
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+        <a class="flex-grow-1 no-decor" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+          <h1 class="quarto-secondary-nav-title"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Automated Workflows</span></h1>
+        </a>     
+      <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
+        <i class="bi bi-search"></i>
+      </button>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
+        <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="sidebar-search">
+        <div id="quarto-search" class="" title="Search"></div>
+        </div>
+        </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true">
+ <span class="menu-text">Welcome</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Introduction</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../setup.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Data &amp; Setup</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="true">
+ <span class="menu-text">Software</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../materials/01-package_managers.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Package Managers</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../materials/02-containers.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Container Virtualisation</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="true">
+ <span class="menu-text">Pipelines</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-3" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../materials/03-nfcore.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Automated Workflows</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../materials/04-nextflow_hpc.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Nextflow on HPC</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../materials/05-advanced_config.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Advanced Nextflow configuration</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Table of contents</h2>
+   
+  <ul>
+  <li><a href="#overview" id="toc-overview" class="nav-link active" data-scroll-target="#overview"><span class="header-section-number">5.1</span> Overview</a></li>
+  <li><a href="#nextflow-and-snakemake" id="toc-nextflow-and-snakemake" class="nav-link" data-scroll-target="#nextflow-and-snakemake"><span class="header-section-number">5.2</span> Nextflow and Snakemake</a></li>
+  <li><a href="#nextflow-command-line-interface" id="toc-nextflow-command-line-interface" class="nav-link" data-scroll-target="#nextflow-command-line-interface"><span class="header-section-number">5.3</span> Nextflow command line interface</a>
+  <ul class="collapse">
+  <li><a href="#configuration-profile" id="toc-configuration-profile" class="nav-link" data-scroll-target="#configuration-profile"><span class="header-section-number">5.3.1</span> Configuration profile</a></li>
+  <li><a href="#cache-directory" id="toc-cache-directory" class="nav-link" data-scroll-target="#cache-directory"><span class="header-section-number">5.3.2</span> Cache directory</a></li>
+  <li><a href="#checkpoint-and-resume" id="toc-checkpoint-and-resume" class="nav-link" data-scroll-target="#checkpoint-and-resume"><span class="header-section-number">5.3.3</span> Checkpoint-and-resume</a></li>
+  <li><a href="#samplesheet" id="toc-samplesheet" class="nav-link" data-scroll-target="#samplesheet"><span class="header-section-number">5.3.4</span> Samplesheet</a></li>
+  </ul></li>
+  <li><a href="#demo-nf-core-pipeline" id="toc-demo-nf-core-pipeline" class="nav-link" data-scroll-target="#demo-nf-core-pipeline"><span class="header-section-number">5.4</span> Demo nf-core pipeline</a>
+  <ul class="collapse">
+  <li><a href="#cleaning-up" id="toc-cleaning-up" class="nav-link" data-scroll-target="#cleaning-up"><span class="header-section-number">5.4.1</span> Cleaning up</a></li>
+  </ul></li>
+  <li><a href="#troubleshooting" id="toc-troubleshooting" class="nav-link" data-scroll-target="#troubleshooting"><span class="header-section-number">5.5</span> Troubleshooting</a></li>
+  <li><a href="#exercises" id="toc-exercises" class="nav-link" data-scroll-target="#exercises"><span class="header-section-number">5.6</span> Exercises</a></li>
+  <li><a href="#summary" id="toc-summary" class="nav-link" data-scroll-target="#summary"><span class="header-section-number">5.7</span> Summary</a></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title d-none d-lg-block"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Automated Workflows</span></h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Tip</span>Learning objectives
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<ul>
+<li>Describe how workflow management systems (WfMS) work and their advantages in complex analysis pipelines.</li>
+<li>List some of the most popular WfMS used in the field of bioinformatics.</li>
+<li>Recognise the main configuration aspects needed to run a Nextflow pipeline: configuration profiles, cache, resumability, samplesheets.</li>
+<li>Apply a standard Nextflow pipelines developed by the nf-core community to a set of sequencing data.</li>
+</ul>
+</div>
+</div>
+<section id="overview" class="level2" data-number="5.1">
+<h2 data-number="5.1" class="anchored" data-anchor-id="overview"><span class="header-section-number">5.1</span> Overview</h2>
+<p>Bioinformatic analyses always involve multiple steps where data is gathered, cleaned and integrated to give a final set of processed files of interest to the user. These sequences of steps are called a <strong>workflow</strong> or <strong>pipeline</strong>. As analyses become more complex, pipelines may include the use of many different software tools, each requiring a specific set of inputs and options to be defined. Furthermore, as we want to chain multiple tools together, the inputs of one tool may be the output of another, which can become challenging to manage.</p>
+<p>Although it is possible to code such workflows using <em>shell</em> scripts, these often don’t scale well across different users and compute setups. To overcome these limitations, dedicated <a href="https://en.wikipedia.org/wiki/Bioinformatics_workflow_management_system"><strong>workflow/pipeline management software</strong></a> packages have been developed to help standardise pipelines and make it easier for the user to process their data. These dedicated packages are designed to streamline and automate the process of coordinating complex sequences of tasks and data processing (for instance an RNA-seq analysis). In this way, researchers can focus on their scientific questions instead of the nitty-gritty of data processing.</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="https://f1000research-files.f1000.com/manuscripts/173023/40b5b393-1e56-45f5-ac61-18e05f629d86_figure4.gif" class="img-fluid figure-img"></p>
+<figcaption>A) Workflow illustration, showing ready-for-running tasks highlighted in green, indicating all necessary input files are available. The initial red task produces a temporary file, potentially removable once the blue tasks complete. Workflow management systems ensure tasks are run in an optimal and automated manner. For example, in B) there is suboptimal scheduling of tasks, as only one blue task is scheduled the temporary file cannot be removed. Conversely, in C) we have optimal scheduling, since the three blue tasks are scheduled first enabling deletion of the temporary file after their completion. Diagram taken from <a href="https://doi.org/10.12688/f1000research.29032.3">Mölder et al.&nbsp;2025</a>, licensed under <a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a>).</figcaption>
+</figure>
+</div>
+<p>Here are some of the key advantages of using a standardised workflow for our analysis:</p>
+<ul>
+<li><strong>Fewer errors</strong> - because the workflow automates the process of managing input/output files, there are less chances for errors or bugs in the code to occur.</li>
+<li><strong>Consistency and reproducibility</strong> - analysis ran by different people should result in the same output, regardless of their computational setup.</li>
+<li><strong>Software installation</strong> - all software dependencies are automatically installed for the user using solutions such as <em>Conda/Mamba</em>, <em>Docker</em> and <em>Singularity</em>.</li>
+<li><strong>Scalability</strong> - workflows can run on a local desktop or scale up to run on <em>high performance compute (HPC) clusters</em>.</li>
+<li><strong>Checkpoint and resume</strong> - if a workflow fails in one of the tasks, it can be resumed at a later time.</li>
+</ul>
+</section>
+<section id="nextflow-and-snakemake" class="level2" data-number="5.2">
+<h2 data-number="5.2" class="anchored" data-anchor-id="nextflow-and-snakemake"><span class="header-section-number">5.2</span> Nextflow and Snakemake</h2>
+<p>Two of the most popular <em>workflow software</em> packages are <a href="https://snakemake.readthedocs.io/en/stable/"><em>Snakemake</em></a> and <a href="https://www.nextflow.io/"><em>Nextflow</em></a>. We will not cover how to develop workflows with these packages, but rather <strong>how to use existing workflows developed by the community</strong>.<a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a> Both Snakemake and Nextflow offer similar functionality and can work on different computer systems, from personal laptops to large cloud-based platforms, making them very versatile. One of the main noticeable difference to those developing pipelines with these tools is that Snakemake syntax is based on <a href="https://www.python.org/">Python</a>, whereas Nextflow is based on <a href="https://groovy-lang.org/">Groovy</a>. The choice between one of the other is really down to individual preference.</p>
+<!-- footnote -->
+<p>Another important aspect of these projects are the workflows and modules provided by the community:</p>
+<ul>
+<li><a href="https://nf-co.re/"><strong>nf-core</strong></a>: a community project where scientists contribute ready-to-use, high-quality analysis pipelines. This means you don’t have to start from scratch if someone else has already created a workflow for a similar analysis. It’s all about making data analysis more accessible, standardized, and reproducible across the globe​​​​.</li>
+<li><a href="https://snakemake.github.io/snakemake-workflow-catalog/"><strong>Snakemake workflow catalog</strong></a>: a searcheable catalog of workflows developed by the community, with instructions and details on how to use them. Although there is some standardisation of these pipelines, they are not as well curated as the ones from nf-core.</li>
+</ul>
+<p>These materials will focus on Nextflow, due to the standarised and ready-to-use pipelines available through nf-core.</p>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>How do I install Nextflow and Snakemake?
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>You can install both of these packages using Mamba:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="ex">mamba</span> create <span class="at">-n</span> nextflow bioconda::nextflow==25.10.3.10983</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="ex">mamba</span> create <span class="at">-n</span> snakemake bioconda::snakemake==9.15.0</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>You may want to check the latest versions available (<a href="https://anaconda.org/bioconda/nextflow">here</a> and <a href="https://anaconda.org/bioconda/snakemake">here</a>), which may be different from the ones in the command above.</p>
+</div>
+</div>
+</section>
+<section id="nextflow-command-line-interface" class="level2" data-number="5.3">
+<h2 data-number="5.3" class="anchored" data-anchor-id="nextflow-command-line-interface"><span class="header-section-number">5.3</span> Nextflow command line interface</h2>
+<p>Nextflow has an array of subcommands for the command line interface to manage and execute pipelines. To see all options you can simply run <code>nextflow -h</code> and a list of available top-level options will appear in your terminal’. here we highlight the three we will be using:</p>
+<ul>
+<li><code>nextflow run [options] [pipeline]</code>: will execute a nextflow pipeline</li>
+<li><code>nextflow log</code>: will print the execution history and log information of a pipeline</li>
+<li><code>nextflow clean</code>: will clean up <strong>cache</strong> and <strong>work</strong> directories.</li>
+</ul>
+<p>The command <code>nextflow run</code> has some useful options:</p>
+<ul>
+<li><code>-profile</code>: defines which configuration profile(s) to use.</li>
+<li><code>-resume</code>: restarts the pipeline where it last stopped (using cached results).</li>
+<li><code>-work-dir</code>: defines the directory where intermediate result files (cache) are stored.</li>
+</ul>
+<p>We detail each of these below.</p>
+<section id="configuration-profile" class="level3" data-number="5.3.1">
+<h3 data-number="5.3.1" class="anchored" data-anchor-id="configuration-profile"><span class="header-section-number">5.3.1</span> Configuration profile</h3>
+<p>There are several ways to <strong>configure how our Nextflow workflow runs</strong>. All nf-core workflows come with some default profiles that we can choose from:</p>
+<ul>
+<li><code>singularity</code> uses <em>Singularity</em> images for software management. This is the recommended (including on HPC systems).</li>
+<li><code>docker</code> uses <em>Docker</em> images for software management.</li>
+<li><code>mamba</code> uses Mamba for software management. This is not recommended as it is known to be slow and buggy.</li>
+</ul>
+<p>More details about these in the <a href="https://nf-co.re/docs/usage/configuration">nf-core documentation</a>.</p>
+<p>To use one of these profiles we use the option <code>-profile</code> followed by the name of the configuration profile we wish to use. For example, <code>-profile singularity</code> will use <em>Singularity</em> to manage and run the software.</p>
+<p>Sometimes you may want to use custom profiles, or the pipeline you are using is not from the nf-core community. In that case, you can define your own profile. The easiest may be to look at one of the <a href="https://github.com/nf-core/rnaseq/blob/3.22.2/nextflow.config">nf-core configuration files</a> and set your own based on that. For example, to set a profile for <em>Singularity</em>, we create a file with the following:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2"><pre class="sourceCode groovy code-with-copy"><code class="sourceCode groovy"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>profiles <span class="op">{</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>  singularity <span class="op">{</span></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>    singularity<span class="op">.</span>enabled    <span class="op">=</span> <span class="kw">true</span></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>  <span class="op">}</span></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>Let’s say we saved this file as <code>nextflow.config</code>. We can then use this profile by running our pipeline with the options <code>-profile singularity -c nextflow.config</code>. You can also specify more than one configuration file in your command as <code>-c myconfig1 -c myconfig2</code>. If you provide multiple config files, they will be merged so that the settings in the first override the same settings appearing in the second, and so on.</p>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>Workflow configuration
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Understanding the <code>config</code> file of a nextflow pipeline can be slightly daunting at first, especially if you start with a nf-core configuration. For example, if you look at the <a href="https://github.com/nf-core/rnaseq/blob/master/nextflow.config">default config for the nf-core/rnaseq workflow</a>, you can see how many parameters it includes.</p>
+<p>The good news is that normally users won’t need to modify most of these, instead you can just modify the parameters of interest and use <code>-c your_config_profile.config</code> when launching your pipeline.</p>
+<p>You can learn more about configuration in the <a href="../materials/04-nextflow_hpc.html">HPC</a> and <a href="../materials/05-advanced_config.html">advanced configuration</a> chapters.</p>
+</div>
+</div>
+</section>
+<section id="cache-directory" class="level3" data-number="5.3.2">
+<h3 data-number="5.3.2" class="anchored" data-anchor-id="cache-directory"><span class="header-section-number">5.3.2</span> Cache directory</h3>
+<p>When a Nextflow pipeline runs it creates (by default) a <code>work</code> directory when you execute the pipeline for the first time. The <code>work</code> directory stores a variety of intermediate files used during the pipeline run, called a <strong>cache</strong>. The storage of these intermediate files is very important, as it allows the pipeline to resume from a previous state, in case it ran with errors and failed half-way through (more on this below).</p>
+<p>Each task from the pipeline (e.g.&nbsp;a bash command can be considered a task) will have a unique directory name within <code>work</code>. When a task is created, Nextflow stages the task input files, script, and other helper files into the task directory. The task writes any output files to this directory during its execution, and Nextflow uses these output files for downstream tasks and/or publishing. Publishing is when the output of a task is being saved to the output directory specified by the user.</p>
+<p>The <code>-work-dir</code> option can be used to change the name of the cache directory from the default <code>work</code>. This default directory name is fine (and most people just use that), but you may sometimes want to define a different one. For example, if you coincidentally already have a directory called “work” in your project, or if you want to use a separate storage partition to save the intermediate files.</p>
+<p>Regardless, it is important to remember that your final results are not stored in the work directory. They are saved to the output directory you define when you run the pipeline. Therefore, after successfully finishing your pipeline you can safely <strong>remove the work directory</strong>. This is important to save disk space and you should make sure to do it regularly.</p>
+</section>
+<section id="checkpoint-and-resume" class="level3" data-number="5.3.3">
+<h3 data-number="5.3.3" class="anchored" data-anchor-id="checkpoint-and-resume"><span class="header-section-number">5.3.3</span> Checkpoint-and-resume</h3>
+<p>Because Nextflow is keeping track of all the intermediate files it generates, it can re-run the pipeline from a previous step, if it failed half-way through. This is an extremely useful feature of workflow management systems and it can save a lot of compute time, in case a pipeline failed.</p>
+<p>All you have to do is use the option <code>-resume</code> when launching the pipeline and it will always resume where it left off. Note that, if you remove the work cache directory detailed above, then the pipeline will have to start from the beginning, as it doesn’t have any intermediate files saved to resume from.</p>
+<p>More information about this feature can be found in the <a href="https://www.nextflow.io/docs/latest/cache-and-resume.html">Nextflow documentation</a>.</p>
+</section>
+<section id="samplesheet" class="level3" data-number="5.3.4">
+<h3 data-number="5.3.4" class="anchored" data-anchor-id="samplesheet"><span class="header-section-number">5.3.4</span> Samplesheet</h3>
+<p>Most nf-core pipelines use a CSV file as their main input file. These CSV file is often referred to as the “sampleshet”, as it contains <strong>information about each sample to be processed</strong>.</p>
+<p>Although there is no universal format for this CSV file, most pipelines accept at least 3 columns:</p>
+<ul>
+<li><code>sample</code>: a name for the sample, which can be anything of our choice.</li>
+<li><code>fastq_1</code>: the path to the respective read 1 FASTQ file.</li>
+<li><code>fastq_2</code>: the path to the respective read 2 FASTQ file. This value is optional and, if missing it is assumed the sample is from single-end sequencing.</li>
+</ul>
+<p>These are only the most basic columns, however many other columns are often accepted, depending on the specific pipeline being used. The details for the input CSV samplesheet are usually given in the “Usage” tab of the documentation. We will see some practical examples in <span class="citation" data-cites="ex-samplesheet"><a href="#ex-samplesheet"><u>Exercise 1</u></a></span>.</p>
+<p>As FASTQ files are often named using very long identifiers, it’s a good idea to use some command line tricks to save typing and avoid typos. For example, we can create a first version of our file by listing all read 1 files and saving it into a file:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb3"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ls</span> reads/<span class="pp">*</span>_1.downsampled.fastq.gz <span class="op">&gt;</span> samplesheet.csv</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>This will give us a good start to create the samplesheet. We can then open this file in a spreadsheet software such as <em>Excel</em> and create the remaining columns. We can copy-paste the file paths and use the “find and replace” feature to replace “_1” with “_2”. This way we save a lot of time of typing but also reduce the risk of having typos in our file paths.</p>
+</section>
+</section>
+<section id="demo-nf-core-pipeline" class="level2" data-number="5.4">
+<h2 data-number="5.4" class="anchored" data-anchor-id="demo-nf-core-pipeline"><span class="header-section-number">5.4</span> Demo nf-core pipeline</h2>
+<p>To demonstrate the use of standard nf-core pipelines, we will use the aptly named <a href="https://nf-co.re/demo/"><code>nf-core/demo</code> pipeline</a>. This workflow takes a set of FASTQ files as input, runs them through a simple QC step and outputs processed files as well as a MultiQC quality report.</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="https://raw.githubusercontent.com/nf-core/demo/dev//docs/images/nf-core-demo-subway.png" class="img-fluid figure-img"></p>
+<figcaption><a href="https://github.com/nf-core/demo/blob/1.1.0/docs/images/nf-core-demo-subway.png">nf-core/demo workflow diagram</a> by Christopher Hakkaart, licensed under <a href="https://github.com/nf-core/demo/blob/1.1.0/LICENSE">MIT</a></figcaption>
+</figure>
+</div>
+<p>We will run this workflow on a set of files found in the <code>demo</code> directory. We will start by activating a Mamba environment where we installed nextflow:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb4"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="ex">mamba</span> activate nextflow</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>Looking at the pipeline documentation, we are given an example of the samplesheet CSV file. This is how the samplesheet looks like for our samples:</p>
+<pre><code>sample,fastq_1,fastq_2
+drug_rep2,reads/SRR7657872_1.downsampled.fastq.gz,reads/SRR7657872_2.downsampled.fastq.gz
+drug_rep1,reads/SRR7657874_1.downsampled.fastq.gz,reads/SRR7657874_2.downsampled.fastq.gz
+control_rep2,reads/SRR7657876_1.downsampled.fastq.gz,reads/SRR7657876_2.downsampled.fastq.gz
+control_rep1,reads/SRR7657877_1.downsampled.fastq.gz,reads/SRR7657877_2.downsampled.fastq.gz</code></pre>
+<p>We have named our samples using informative names of our choice, and indicate the path to the respective FASTQ input files. We can then run our workflow as follows (this command is available from <code>scripts/02-run_nfcore_demo.sh</code>):</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb6"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="ex">nextflow</span> run nf-core/demo <span class="dt">\</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">-profile</span> <span class="st">"singularity"</span> <span class="at">-revision</span> <span class="st">"1.1.0"</span> <span class="dt">\</span></span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">--input</span> <span class="st">"samplesheet.csv"</span> <span class="dt">\</span></span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">--outdir</span> <span class="st">"results/qc"</span> <span class="dt">\</span></span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">--fasta</span> <span class="st">"genome/Mus_musculus.GRCm38.dna_sm.chr14.fa.gz"</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>In this case we used the following generic options:</p>
+<ul>
+<li><code>-profile "singularity"</code> indicates we want to use Singularity to manage the software. Nextflow will automatically download containers for each step of the pipeline.</li>
+<li><code>-revision "1.1.0"</code> means we are running version 1.1.0 of the pipeline. It’s a good idea to define the specific version of the pipeline you run, so you can reproduce the results in the future, in case the pipeline changes. You can see the latest versions available from the <a href="https://nf-co.re/demo/">workflow documentation page</a>.</li>
+</ul>
+<p>We then have workflow-specific options (all listed <a href="https://nf-co.re/demo/1.1.0/parameters/">in the documentation</a>):</p>
+<ul>
+<li><code>--input</code> is the samplesheet CSV for this pipeline, which we prepared beforehand using a spreadsheet program such as Excel.</li>
+<li><code>--outdir</code> is the name of the output directory for our results.</li>
+<li><code>--fasta</code> is the reference genome to be used by the pipeline.</li>
+</ul>
+<p>When the pipeline starts running, we are given information about its progress, for example:</p>
+<pre><code>executor &gt;  local (6)
+[d1/4efe7b] NFCORE_DEMO:DEMO:FASTQC (control_rep2)  | 4 of 4 ✔
+[4b/caf73e] NFCORE_DEMO:DEMO:SEQTK_TRIM (drug_rep2) | 1 of 4
+[-        ] NFCORE_DEMO:DEMO:MULTIQC                -</code></pre>
+<p>You will also notice that a new directory called <code>work</code> is created. As mentioned above, this is the cache directory, which stores intermediate files and allows the workflow to resume if it fails half-way through (using the <code>-resume</code> option).</p>
+<p>Once the pipeline completes (hopefully successfully), we are given a message:</p>
+<pre><code>-[nf-core/demo] Pipeline completed successfully-
+Completed at: 11-Sep-2024 09:26:05
+Duration    : 11m 59s
+CPU hours   : 0.3
+Succeeded   : 9</code></pre>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>Reference genomes
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Many nf-core pipelines allow you to specific the name of an organism (using the <code>--genome</code> option) and will automatically download the reference genome and annotation files for you. However, many of these workflows rely on iGenomes, which is not always up-to-date. Therefore, <a href="https://nf-co.re/docs/usage/reference_genomes">the use of this option is discouraged</a>, as you may miss the latest annotations or use a version of the genome that is incompatible with the rest of your analysis.</p>
+<p>Instead, you can download the latest version of the genome and annotations for your species, from sources such as ENSEMBL (<a href="https://www.ensembl.org/index.html">vertebrates</a> and <a href="http://ensemblgenomes.org/">non-vertebrates</a>), <a href="https://www.gencodegenes.org/">GENCODE</a> or <a href="https://genome.ucsc.edu/">UCSC</a>.</p>
+<p>Most pipelines then have individual options to use these files as input: <code>--fasta</code> (for the reference genome) and <code>--gff</code>/<code>--gtf</code> (for the transcript annotation).</p>
+</div>
+</div>
+<section id="cleaning-up" class="level3" data-number="5.4.1">
+<h3 data-number="5.4.1" class="anchored" data-anchor-id="cleaning-up"><span class="header-section-number">5.4.1</span> Cleaning up</h3>
+<p>If you are happy with the results, you can clean the <code>work</code> cache directory to save space. Before actually removing anything, you can see what the clean command would do using the <code>-dry-run</code> (or <code>-n</code>) option:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb9"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="ex">nextflow</span> clean <span class="at">-n</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>This will inform you of what the command would remove. If you’re happy with this, you can go ahead and issue to command to <code>-force</code> (or <code>-f</code>) the removal:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb10"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="ex">nextflow</span> clean <span class="at">-f</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>The <code>clean</code> command has several options allowing you finer control over what gets deleted, for example the <code>-before</code> and <code>-after</code> options allow you to clean up cached files before or after the specified date/time.</p>
+<p>While <code>nextflow clean</code> works well, by default it still leaves behind some files. Usually these don’t occupy much space, but if you want to completely remove the cached files and hidden log files, you can do this manually:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb11"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="fu">rm</span> <span class="at">-r</span> .nextflow<span class="pp">*</span> work</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</section>
+</section>
+<section id="troubleshooting" class="level2" data-number="5.5">
+<h2 data-number="5.5" class="anchored" data-anchor-id="troubleshooting"><span class="header-section-number">5.5</span> Troubleshooting</h2>
+<p>Inevitably workflows may fail, which could be due to several reasons. For example, an error in our command, a mis-formatted samplesheet, missing input files or sometimes even a bug in the pipeline.</p>
+<p>When an error occurs, the <code>nextflow</code> command terminates and an error message is printed on the screen (usually in bright red!). The error messages can be quite long and feel difficult to interpret, but often only a small part of the message is relevant, so read it carefully to see if you can spot what the problem is.</p>
+<p>For example, we previously got the following error when running the <code>nf-core/demo</code> pipeline. Can you see what the problem was?</p>
+<pre><code>
+-[nf-core/demo] Pipeline completed with errors-
+<span style="color:#D10000;">
+ERROR ~ Error executing process &gt; 'NFCORE_DEMO:DEMO:FASTP (drug_rep1)'
+
+Caused by:
+  Process requirement exceeds available memory -- req: 36 GB; avail: 23.5 GB
+
+Command executed:
+
+  [ ! -f  drug_rep1_1.fastq.gz ] &amp;&amp; ln -sf SRR7657874_1.downsampled.fastq.gz drug_rep1_1.fastq.gz
+  [ ! -f  drug_rep1_2.fastq.gz ] &amp;&amp; ln -sf SRR7657874_2.downsampled.fastq.gz drug_rep1_2.fastq.gz
+  fastp \
+      --in1 drug_rep1_1.fastq.gz \
+      --in2 drug_rep1_2.fastq.gz \
+      --out1 drug_rep1_1.fastp.fastq.gz \
+      --out2 drug_rep1_2.fastp.fastq.gz \
+      --json drug_rep1.fastp.json \
+      --html drug_rep1.fastp.html \
+       \
+       \
+       \
+      --thread 6 \
+      --detect_adapter_for_pe \
+       \
+      2&gt; &gt;(tee drug_rep1.fastp.log &gt;&amp;2)
+  
+  cat &lt;&lt;-END_VERSIONS &gt; versions.yml
+  "NFCORE_DEMO:DEMO:FASTP":
+      fastp: $(fastp --version 2&gt;&amp;1 | sed -e "s/fastp //g")
+  END_VERSIONS
+</span>
+</code>
+</pre>
+<details>
+<summary>
+Click here for the answer
+</summary>
+<p>Although this is a long message, the cause of the error itself is at the top where we are told “Process requirement exceeds available memory – req: 36 GB; avail: 23.5 GB”.</p>
+This means a step of the pipeline must have requested 36GB by default, but we only had 23.5GB on the computer used to run it. In this case, we could have restricted the memory usage with a custom configuration file, which we will discuss <a href="../materials/04-nextflow_hpc.html">in the next section</a>.
+</details>
+</section>
+<section id="exercises" class="level2" data-number="5.6">
+<h2 data-number="5.6" class="anchored" data-anchor-id="exercises"><span class="header-section-number">5.6</span> Exercises</h2>
+<p>In these exercises, you will explore one (or more, if you have time and interest) of the pipelines from the nf-core community, tailored to different areas of genomic analysis. Start with the version of the exercise that aligns best with your data and interests.</p>
+<p>There are two tasks for you to complete: (1) preparing an input samplesheet for the pipeline and (2) writing the <code>nextflow</code> command to launch the pipeline.</p>
+<p>Note that all of these datasets are downsampled to be small, so they run quickly. They do not represent best practices in experimental design.</p>
+<div class="callout callout-style-default callout-exercise no-icon callout-titled">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-9-contents" aria-controls="callout-9" aria-expanded="true" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Exercise</span>Exercise 1 - Preparing samplesheet
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-9" class="callout-9-contents callout-collapse collapse show">
+<div class="callout-body-container callout-body">
+<div id="ex-samplesheet" class="callout-exercise">
+<p>Most <code>nf-core</code> pipelines require a samplesheet as input, which is essentially a CSV file detailing where to find the sequencing files for each sample. The specific format for the samplesheet is workflow-specific, but always detailed in the respective documentation. Your goal in this exercise is to <strong>find what the required format for the samplesheet is</strong> and <strong>create the CSV file</strong> to use in the next exercise.</p>
+<p>You can create the CSV using a spreadsheet software (such as <a href="https://support.microsoft.com/en-gb/office/import-or-export-text-txt-or-csv-files-5250ac4c-663c-47ce-937b-339e391393ba">Excel</a> or <a href="https://help.libreoffice.org/latest/en-US/text/scalc/guide/csv_files.html">LibreOffice Calc</a>).</p>
+<p>As a bonus, you can try to create the samplesheet in a less manual way using the provided metadata files. You could do this using command line tools (such as <code>awk</code> or <code>perl</code>) or even using R or Python.</p>
+<div class="tabset-margin-container"></div><div class="panel-tabset" data-group="workflow">
+<ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-4-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-4-1" role="tab" aria-controls="tabset-4-1" aria-selected="true" href="">RNA-seq</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-4-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-4-2" role="tab" aria-controls="tabset-4-2" aria-selected="false" href="">ChIP-seq</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-4-3-tab" data-bs-toggle="tab" data-bs-target="#tabset-4-3" role="tab" aria-controls="tabset-4-3" aria-selected="false" href="">Virus - Illumina</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-4-4-tab" data-bs-toggle="tab" data-bs-target="#tabset-4-4" role="tab" aria-controls="tabset-4-4" aria-selected="false" href="">Virus - ONT</a></li></ul>
+<div class="tab-content" data-group="workflow">
+<div id="tabset-4-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-4-1-tab">
+<p>Transcriptome data processing using <code>nf-core/rnaseq</code>. Go into the <code>rnaseq</code> directory for this version of the exercise.</p>
+<ul>
+<li>Samplesheet documentation at <a href="https://nf-co.re/rnaseq/3.22.2/docs/usage/">https://nf-co.re/rnaseq/3.22.2/docs/usage/</a>.</li>
+<li>Input FASTQ files in <code>reads/</code>.</li>
+<li>Metadata for each sample is provided in the <code>sample_info.tsv</code> file, which gives you the name of each sample and their respective FASTQ file prefix name.</li>
+</ul>
+<div class="callout callout-style-default callout-answer no-icon callout-titled">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-5-contents" aria-controls="callout-5" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Answer</span>Answer
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-5" class="callout-5-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<div class="callout-answer">
+<p>Our metadata file contains information about each sample:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb12"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span> sample_info.tsv</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<pre><code>fastq       replicate  status      timepoint  name
+SRR7657874  1          Infected    d33        inf33_rep1
+SRR7657872  3          Infected    d33        inf33_rep3
+SRR7657877  1          Uninfected  d11        un11_rep1
+SRR7657876  2          Uninfected  d11        un11_rep2</code></pre>
+<p>If we look inside our reads directory, we can see the following files:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb14"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ls</span> reads</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<pre><code>SRR7657872_1.downsampled.fastq.gz  SRR7657876_1.downsampled.fastq.gz
+SRR7657872_2.downsampled.fastq.gz  SRR7657876_2.downsampled.fastq.gz
+SRR7657874_1.downsampled.fastq.gz  SRR7657877_1.downsampled.fastq.gz
+SRR7657874_2.downsampled.fastq.gz  SRR7657877_2.downsampled.fastq.gz</code></pre>
+<p>Following <a href="https://nf-co.re/rnaseq/3.22.2/docs/usage/#multiple-runs-of-the-same-sample">the documentation</a> for the pipeline, we could have created our samplesheet in Excel like this (note: the filenames are truncated):</p>
+<table style="border-collapse: collapse; width: auto; font-family: Arial, sans-serif;">
+<tbody><tr>
+<th style="border: 1px solid lightgrey; background-color: #f0f0f0;">
+</th>
+<th style="border: 1px solid lightgrey; background-color: #f0f0f0;">
+A
+</th>
+<th style="border: 1px solid lightgrey; background-color: #f0f0f0;">
+B
+</th>
+<th style="border: 1px solid lightgrey; background-color: #f0f0f0;">
+C
+</th>
+<th style="border: 1px solid lightgrey; background-color: #f0f0f0;">
+D
+</th>
+</tr>
+<tr>
+<td style="border: 1px solid lightgrey; background-color: #f0f0f0;">
+1
+</td>
+<td style="border: 1px solid lightgrey;">
+sample
+</td>
+<td style="border: 1px solid lightgrey;">
+fastq_1
+</td>
+<td style="border: 1px solid lightgrey;">
+fastq_2
+</td>
+<td style="border: 1px solid lightgrey;">
+strandedness
+</td>
+</tr>
+<tr>
+<td style="border: 1px solid lightgrey; background-color: #f0f0f0;">
+2
+</td>
+<td style="border: 1px solid lightgrey;">
+inf33_rep1
+</td>
+<td style="border: 1px solid lightgrey;">
+reads/SRR7657874_1.down …
+</td>
+<td style="border: 1px solid lightgrey;">
+reads/SRR7657874_2.down …
+</td>
+<td style="border: 1px solid lightgrey;">
+auto
+</td>
+</tr>
+<tr>
+<td style="border: 1px solid lightgrey; background-color: #f0f0f0;">
+3
+</td>
+<td style="border: 1px solid lightgrey;">
+inf33_rep3
+</td>
+<td style="border: 1px solid lightgrey;">
+reads/SRR7657872_1.down …
+</td>
+<td style="border: 1px solid lightgrey;">
+reads/SRR7657872_2.down …
+</td>
+<td style="border: 1px solid lightgrey;">
+auto
+</td>
+</tr>
+<tr>
+<td style="border: 1px solid lightgrey; background-color: #f0f0f0;">
+4
+</td>
+<td style="border: 1px solid lightgrey;">
+un11_rep1
+</td>
+<td style="border: 1px solid lightgrey;">
+reads/SRR7657877_1.down …
+</td>
+<td style="border: 1px solid lightgrey;">
+reads/SRR7657877_2.down …
+</td>
+<td style="border: 1px solid lightgrey;">
+auto
+</td>
+</tr>
+<tr>
+<td style="border: 1px solid lightgrey; background-color: #f0f0f0;">
+5
+</td>
+<td style="border: 1px solid lightgrey;">
+un11_rep2
+</td>
+<td style="border: 1px solid lightgrey;">
+reads/SRR7657876_1.down …
+</td>
+<td style="border: 1px solid lightgrey;">
+reads/SRR7657876_2.down …
+</td>
+<td style="border: 1px solid lightgrey;">
+auto
+</td>
+</tr>
+</tbody></table>
+<p>However, for many samples, it can be tedious and error-prone to do this kind of task manually. We can see that the FASTQ file names are essentially the prefix given in the metadata file, along with suffixes “_1.downsampled.fastq.gz” and “_2.downsampled.fastq.gz” for read 1 and read 2, respectively.</p>
+<p>Therefore, we can create the samplesheet based on our metadata TSV file using some programming tools. Here’s 4 different ways of doing it:</p>
+<div class="tabset-margin-container"></div><div class="panel-tabset" data-group="language">
+<ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-1-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-1" role="tab" aria-controls="tabset-1-1" aria-selected="true" href="">Python</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-1-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-2" role="tab" aria-controls="tabset-1-2" aria-selected="false" href="">R</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-1-3-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-3" role="tab" aria-controls="tabset-1-3" aria-selected="false" href="">Perl</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-1-4-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-4" role="tab" aria-controls="tabset-1-4" aria-selected="false" href="">AWK</a></li></ul>
+<div class="tab-content" data-group="language">
+<div id="tabset-1-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-1-1-tab">
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb16"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a><span class="co"># read metadata table, ensuring NA values are correctly imported</span></span>
+<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a>meta <span class="op">=</span> pd.read_csv(<span class="st">"sample_info.tsv"</span>, sep<span class="op">=</span><span class="st">"</span><span class="ch">\t</span><span class="st">"</span>, na_values<span class="op">=</span><span class="st">""</span>)</span>
+<span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-6"><a href="#cb16-6" aria-hidden="true" tabindex="-1"></a><span class="co"># create data frame for output samplesheet</span></span>
+<span id="cb16-7"><a href="#cb16-7" aria-hidden="true" tabindex="-1"></a>out <span class="op">=</span> pd.DataFrame({</span>
+<span id="cb16-8"><a href="#cb16-8" aria-hidden="true" tabindex="-1"></a>    <span class="st">'sample'</span>: meta[<span class="st">'name'</span>],</span>
+<span id="cb16-9"><a href="#cb16-9" aria-hidden="true" tabindex="-1"></a>    <span class="st">'fastq_1'</span>: <span class="st">"reads/"</span> <span class="op">+</span> meta[<span class="st">'fastq'</span>] <span class="op">+</span> <span class="st">"_1.downsampled.fastq.gz"</span>,</span>
+<span id="cb16-10"><a href="#cb16-10" aria-hidden="true" tabindex="-1"></a>    <span class="st">'fastq_2'</span>: <span class="st">"reads/"</span> <span class="op">+</span> meta[<span class="st">'fastq'</span>] <span class="op">+</span> <span class="st">"_2.downsampled.fastq.gz"</span>,</span>
+<span id="cb16-11"><a href="#cb16-11" aria-hidden="true" tabindex="-1"></a>    <span class="st">'strandedness'</span>: <span class="st">"auto"</span></span>
+<span id="cb16-12"><a href="#cb16-12" aria-hidden="true" tabindex="-1"></a>})</span>
+<span id="cb16-13"><a href="#cb16-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-14"><a href="#cb16-14" aria-hidden="true" tabindex="-1"></a><span class="co"># save the samplesheet ensuring NA values are written as empty cells</span></span>
+<span id="cb16-15"><a href="#cb16-15" aria-hidden="true" tabindex="-1"></a>out.to_csv(<span class="st">"samplesheet.csv"</span>, index<span class="op">=</span><span class="va">False</span>, quoting<span class="op">=</span><span class="dv">3</span>, na_rep<span class="op">=</span><span class="st">""</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<div id="tabset-1-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-1-2-tab">
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="co"># read metadata table, ensuring NA values are correctly imported</span></span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>meta <span class="ot">&lt;-</span> <span class="fu">read.table</span>(<span class="st">"sample_info.tsv"</span>, <span class="at">header =</span> <span class="cn">TRUE</span>, </span>
+<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a>                   <span class="at">sep =</span> <span class="st">"</span><span class="sc">\t</span><span class="st">"</span>, <span class="at">na.strings =</span> <span class="st">""</span>)</span>
+<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-5"><a href="#cb17-5" aria-hidden="true" tabindex="-1"></a><span class="co"># create data frame for output samplesheet</span></span>
+<span id="cb17-6"><a href="#cb17-6" aria-hidden="true" tabindex="-1"></a>out <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">sample =</span> meta<span class="sc">$</span>name, </span>
+<span id="cb17-7"><a href="#cb17-7" aria-hidden="true" tabindex="-1"></a>                  <span class="at">fastq_1 =</span> <span class="fu">paste0</span>(<span class="st">"reads/"</span>, meta<span class="sc">$</span>fastq, <span class="st">"_1.downsampled.fastq.gz"</span>), </span>
+<span id="cb17-8"><a href="#cb17-8" aria-hidden="true" tabindex="-1"></a>                  <span class="at">fastq_2 =</span> <span class="fu">paste0</span>(<span class="st">"reads/"</span>, meta<span class="sc">$</span>fastq, <span class="st">"_2.downsampled.fastq.gz"</span>),</span>
+<span id="cb17-9"><a href="#cb17-9" aria-hidden="true" tabindex="-1"></a>                  <span class="at">strandedness =</span> <span class="st">"auto"</span>)</span>
+<span id="cb17-10"><a href="#cb17-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-11"><a href="#cb17-11" aria-hidden="true" tabindex="-1"></a><span class="co"># save the samplesheet ensuring NA values are written as empty cells</span></span>
+<span id="cb17-12"><a href="#cb17-12" aria-hidden="true" tabindex="-1"></a><span class="fu">write.csv</span>(out, <span class="st">"samplesheet.csv"</span>, <span class="at">row.names =</span> <span class="cn">FALSE</span>, <span class="at">quote =</span> <span class="cn">FALSE</span>, <span class="at">na =</span> <span class="st">""</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<div id="tabset-1-3" class="tab-pane" role="tabpanel" aria-labelledby="tabset-1-3-tab">
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb18"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="co"># create new file with the required column names</span></span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a><span class="bu">echo</span> <span class="st">"sample,fastq_1,fastq_2,strandedness"</span> <span class="op">&gt;</span> samplesheet.csv</span>
+<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a><span class="co"># generate file names from metadata</span></span>
+<span id="cb18-5"><a href="#cb18-5" aria-hidden="true" tabindex="-1"></a><span class="fu">tail</span> <span class="at">-n</span> +2 sample_info.tsv <span class="kw">|</span> <span class="fu">perl</span> <span class="at">-ne</span> <span class="st">'chomp;</span></span>
+<span id="cb18-6"><a href="#cb18-6" aria-hidden="true" tabindex="-1"></a><span class="st">@a=split/\t/;</span></span>
+<span id="cb18-7"><a href="#cb18-7" aria-hidden="true" tabindex="-1"></a><span class="st">print "$a[4],reads/$a[0]\_1.downsampled.fastq.gz,reads/$a[0]\_2.downsampled.fastq.gz,auto\n"'</span> <span class="op">&gt;&gt;</span> samplesheet.csv</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<div id="tabset-1-4" class="tab-pane" role="tabpanel" aria-labelledby="tabset-1-4-tab">
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb19"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="co"># create new file with the required column names</span></span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a><span class="bu">echo</span> <span class="st">"sample,fastq_1,fastq_2,strandedness"</span> <span class="op">&gt;</span> samplesheet.csv</span>
+<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a><span class="co"># generate file names from metadata</span></span>
+<span id="cb19-5"><a href="#cb19-5" aria-hidden="true" tabindex="-1"></a><span class="fu">tail</span> <span class="at">-n</span> +2 sample_info.tsv <span class="kw">|</span> <span class="fu">awk</span> <span class="st">'BEGIN { FS="\t"; OFS="," }</span></span>
+<span id="cb19-6"><a href="#cb19-6" aria-hidden="true" tabindex="-1"></a><span class="st">{</span></span>
+<span id="cb19-7"><a href="#cb19-7" aria-hidden="true" tabindex="-1"></a><span class="st">  print $5, "reads/" $1 "_1.downsampled.fastq.gz", "reads/" $1 "_2.downsampled.fastq.gz", "auto"</span></span>
+<span id="cb19-8"><a href="#cb19-8" aria-hidden="true" tabindex="-1"></a><span class="st">}'</span> <span class="op">&gt;&gt;</span> samplesheet.csv</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</div>
+</div>
+<p>Note, if all of the coding suggestions above seem unclear, we reiterate that you can create the samplesheet by hand in a standard spreadsheet software. At the end, our samplesheet should look like this:</p>
+<pre><code>sample,fastq_1,fastq_2,strandedness
+inf33_rep1,reads/SRR7657874_1.downsampled.fastq.gz,reads/SRR7657874_2.downsampled.fastq.gz,auto
+inf33_rep3,reads/SRR7657872_1.downsampled.fastq.gz,reads/SRR7657872_2.downsampled.fastq.gz,auto
+un11_rep1,reads/SRR7657877_1.downsampled.fastq.gz,reads/SRR7657877_2.downsampled.fastq.gz,auto
+un11_rep2,reads/SRR7657876_1.downsampled.fastq.gz,reads/SRR7657876_2.downsampled.fastq.gz,auto</code></pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div id="tabset-4-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-4-2-tab">
+<p>Transcriptome data processing using <code>nf-core/chipseq</code>. Go into the <code>chipseq</code> directory for this version of the exercise.</p>
+<ul>
+<li>Samplesheet documentation at <a href="https://nf-co.re/chipseq/2.1.0/docs/usage/">nf-co.re/chipseq/2.1.0/docs/usage/</a>.</li>
+<li>Input FASTQ files in <code>reads/</code>.</li>
+<li>Metadata for each sample is provided in the <code>sample_info.tsv</code> file, which gives you the name of each sample and their respective FASTQ file prefix name.</li>
+</ul>
+<div class="callout callout-style-default callout-answer no-icon callout-titled">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-6-contents" aria-controls="callout-6" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Answer</span>Answer
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-6" class="callout-6-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<div class="callout-answer">
+<p>Our metadata file contains information about each sample:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb21"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span> sample_info.tsv</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<pre><code>name            fastq       antibody  input_control
+brd4_veh_rep1   SRR1193526  BRD4      mcf7_input_veh
+brd4_veh_rep2   SRR1193527  BRD4      mcf7_input_veh
+brd4_e2_rep1    SRR1193529  BRD4      mcf7_input_e2
+brd4_e2_rep2    SRR1193530  BRD4      mcf7_input_e2
+mcf7_input_veh  SRR1193562            
+mcf7_input_e2   SRR1193563</code></pre>
+<p>If we look inside our reads directory, we can see the following files:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb23"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ls</span> reads</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<pre><code>SRR1193526.fastq.gz  SRR1193530.fastq.gz
+SRR1193527.fastq.gz  SRR1193562.fastq.gz
+SRR1193529.fastq.gz  SRR1193563.fastq.gz</code></pre>
+<p>Following <a href="https://nf-co.re/chipseq/2.1.0/docs/usage/#multiple-runs-of-the-same-library">the documentation</a> for the pipeline, we could have created our samplesheet in Excel like this:</p>
+<table style="border-collapse: collapse; width: auto; font-family: Arial, sans-serif;">
+<tbody><tr>
+<th style="border: 1px solid lightgrey; background-color: #f0f0f0;">
+</th>
+<th style="border: 1px solid lightgrey; background-color: #f0f0f0;">
+A
+</th>
+<th style="border: 1px solid lightgrey; background-color: #f0f0f0;">
+B
+</th>
+<th style="border: 1px solid lightgrey; background-color: #f0f0f0;">
+C
+</th>
+<th style="border: 1px solid lightgrey; background-color: #f0f0f0;">
+D
+</th>
+<th style="border: 1px solid lightgrey; background-color: #f0f0f0;">
+E
+</th>
+<th style="border: 1px solid lightgrey; background-color: #f0f0f0;">
+F
+</th>
+<th style="border: 1px solid lightgrey; background-color: #f0f0f0;">
+G
+</th>
+</tr>
+<tr>
+<td style="border: 1px solid lightgrey; background-color: #f0f0f0;">
+1
+</td>
+<td style="border: 1px solid lightgrey;">
+sample
+</td>
+<td style="border: 1px solid lightgrey;">
+fastq_1
+</td>
+<td style="border: 1px solid lightgrey;">
+fastq_2
+</td>
+<td style="border: 1px solid lightgrey;">
+replicate
+</td>
+<td style="border: 1px solid lightgrey;">
+antibody
+</td>
+<td style="border: 1px solid lightgrey;">
+control
+</td>
+<td style="border: 1px solid lightgrey;">
+control_replicate
+</td>
+</tr>
+<tr>
+<td style="border: 1px solid lightgrey; background-color: #f0f0f0;">
+2
+</td>
+<td style="border: 1px solid lightgrey;">
+brd4_veh
+</td>
+<td style="border: 1px solid lightgrey;">
+reads/SRR1193526.fastq.gz
+</td>
+<td style="border: 1px solid lightgrey;">
+</td>
+<td style="border: 1px solid lightgrey;">
+1
+</td>
+<td style="border: 1px solid lightgrey;">
+BRD4
+</td>
+<td style="border: 1px solid lightgrey;">
+mcf7_input_veh
+</td>
+<td style="border: 1px solid lightgrey;">
+1
+</td>
+</tr>
+<tr>
+<td style="border: 1px solid lightgrey; background-color: #f0f0f0;">
+3
+</td>
+<td style="border: 1px solid lightgrey;">
+brd4_veh
+</td>
+<td style="border: 1px solid lightgrey;">
+reads/SRR1193527.fastq.gz
+</td>
+<td style="border: 1px solid lightgrey;">
+</td>
+<td style="border: 1px solid lightgrey;">
+2
+</td>
+<td style="border: 1px solid lightgrey;">
+BRD4
+</td>
+<td style="border: 1px solid lightgrey;">
+mcf7_input_veh
+</td>
+<td style="border: 1px solid lightgrey;">
+1
+</td>
+</tr>
+<tr>
+<td style="border: 1px solid lightgrey; background-color: #f0f0f0;">
+4
+</td>
+<td style="border: 1px solid lightgrey;">
+brd4_e2
+</td>
+<td style="border: 1px solid lightgrey;">
+reads/SRR1193529.fastq.gz
+</td>
+<td style="border: 1px solid lightgrey;">
+</td>
+<td style="border: 1px solid lightgrey;">
+1
+</td>
+<td style="border: 1px solid lightgrey;">
+BRD4
+</td>
+<td style="border: 1px solid lightgrey;">
+mcf7_input_e2
+</td>
+<td style="border: 1px solid lightgrey;">
+1
+</td>
+</tr>
+<tr>
+<td style="border: 1px solid lightgrey; background-color: #f0f0f0;">
+5
+</td>
+<td style="border: 1px solid lightgrey;">
+brd4_e2
+</td>
+<td style="border: 1px solid lightgrey;">
+reads/SRR1193530.fastq.gz
+</td>
+<td style="border: 1px solid lightgrey;">
+</td>
+<td style="border: 1px solid lightgrey;">
+2
+</td>
+<td style="border: 1px solid lightgrey;">
+BRD4
+</td>
+<td style="border: 1px solid lightgrey;">
+mcf7_input_e2
+</td>
+<td style="border: 1px solid lightgrey;">
+1
+</td>
+</tr>
+<tr>
+<td style="border: 1px solid lightgrey; background-color: #f0f0f0;">
+6
+</td>
+<td style="border: 1px solid lightgrey;">
+mcf7_input_veh
+</td>
+<td style="border: 1px solid lightgrey;">
+reads/SRR1193562.fastq.gz
+</td>
+<td style="border: 1px solid lightgrey;">
+</td>
+<td style="border: 1px solid lightgrey;">
+1
+</td>
+<td style="border: 1px solid lightgrey;">
+</td>
+<td style="border: 1px solid lightgrey;">
+</td>
+<td style="border: 1px solid lightgrey;">
+</td>
+</tr>
+<tr>
+<td style="border: 1px solid lightgrey; background-color: #f0f0f0;">
+7
+</td>
+<td style="border: 1px solid lightgrey;">
+mcf7_input_e2
+</td>
+<td style="border: 1px solid lightgrey;">
+reads/SRR1193563.fastq.gz
+</td>
+<td style="border: 1px solid lightgrey;">
+</td>
+<td style="border: 1px solid lightgrey;">
+1
+</td>
+<td style="border: 1px solid lightgrey;">
+</td>
+<td style="border: 1px solid lightgrey;">
+</td>
+<td style="border: 1px solid lightgrey;">
+</td>
+</tr>
+</tbody></table>
+<p>However, for many samples, it can be tedious and error-prone to do this kind of task manually. We can see that the FASTQ file names are essentially the prefix given in the metadata file, along with the suffix “.fastq.gz” (these are single-end sequencing data, so there’s only one file per sample).</p>
+<p>Therefore, we can create the samplesheet based on our metadata TSV file using some programming tools. Here’s 4 different ways of doing it:</p>
+<div class="tabset-margin-container"></div><div class="panel-tabset" data-group="language">
+<ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-2-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-2-1" role="tab" aria-controls="tabset-2-1" aria-selected="true" href="">Python</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-2-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-2-2" role="tab" aria-controls="tabset-2-2" aria-selected="false" href="">R</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-2-3-tab" data-bs-toggle="tab" data-bs-target="#tabset-2-3" role="tab" aria-controls="tabset-2-3" aria-selected="false" href="">Perl</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-2-4-tab" data-bs-toggle="tab" data-bs-target="#tabset-2-4" role="tab" aria-controls="tabset-2-4" aria-selected="false" href="">AWK</a></li></ul>
+<div class="tab-content" data-group="language">
+<div id="tabset-2-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-2-1-tab">
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb25"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
+<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a><span class="co"># read metadata table, ensuring NA values are correctly imported</span></span>
+<span id="cb25-4"><a href="#cb25-4" aria-hidden="true" tabindex="-1"></a>meta <span class="op">=</span> pd.read_csv(<span class="st">"sample_info.tsv"</span>, sep<span class="op">=</span><span class="st">"</span><span class="ch">\t</span><span class="st">"</span>, na_values<span class="op">=</span><span class="st">""</span>)</span>
+<span id="cb25-5"><a href="#cb25-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-6"><a href="#cb25-6" aria-hidden="true" tabindex="-1"></a><span class="co"># create data frame for output samplesheet</span></span>
+<span id="cb25-7"><a href="#cb25-7" aria-hidden="true" tabindex="-1"></a><span class="co"># "Int64" is used to ensure replicate columns output as integers</span></span>
+<span id="cb25-8"><a href="#cb25-8" aria-hidden="true" tabindex="-1"></a>out <span class="op">=</span> pd.DataFrame({</span>
+<span id="cb25-9"><a href="#cb25-9" aria-hidden="true" tabindex="-1"></a>    <span class="st">"sample"</span>: meta[<span class="st">"name"</span>],</span>
+<span id="cb25-10"><a href="#cb25-10" aria-hidden="true" tabindex="-1"></a>    <span class="st">"fastq_1"</span>: <span class="st">"reads/"</span> <span class="op">+</span> meta[<span class="st">"fastq"</span>] <span class="op">+</span> <span class="st">".fastq.gz"</span>,</span>
+<span id="cb25-11"><a href="#cb25-11" aria-hidden="true" tabindex="-1"></a>    <span class="st">"fastq_2"</span>: pd.NA,</span>
+<span id="cb25-12"><a href="#cb25-12" aria-hidden="true" tabindex="-1"></a>    <span class="st">"replicate"</span>: meta[<span class="st">"rep"</span>].astype(<span class="st">"Int64"</span>),</span>
+<span id="cb25-13"><a href="#cb25-13" aria-hidden="true" tabindex="-1"></a>    <span class="st">"antibody"</span>: meta[<span class="st">"antibody"</span>],</span>
+<span id="cb25-14"><a href="#cb25-14" aria-hidden="true" tabindex="-1"></a>    <span class="st">"control"</span>: meta[<span class="st">"input_control"</span>],</span>
+<span id="cb25-15"><a href="#cb25-15" aria-hidden="true" tabindex="-1"></a>    <span class="st">"control_replicate"</span>: meta[<span class="st">"input_rep"</span>].astype(<span class="st">"Int64"</span>)</span>
+<span id="cb25-16"><a href="#cb25-16" aria-hidden="true" tabindex="-1"></a>})</span>
+<span id="cb25-17"><a href="#cb25-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-18"><a href="#cb25-18" aria-hidden="true" tabindex="-1"></a><span class="co"># save the samplesheet ensuring NA values are written as empty cells</span></span>
+<span id="cb25-19"><a href="#cb25-19" aria-hidden="true" tabindex="-1"></a>out.to_csv(<span class="st">"samplesheet.csv"</span>, index<span class="op">=</span><span class="va">False</span>, quoting<span class="op">=</span><span class="dv">3</span>, na_rep<span class="op">=</span><span class="st">""</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<div id="tabset-2-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-2-2-tab">
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="co"># read metadata table, ensuring NA values are correctly imported</span></span>
+<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a>meta <span class="ot">&lt;-</span> <span class="fu">read.table</span>(<span class="st">"sample_info.tsv"</span>, <span class="at">header =</span> <span class="cn">TRUE</span>, </span>
+<span id="cb26-3"><a href="#cb26-3" aria-hidden="true" tabindex="-1"></a>                   <span class="at">sep =</span> <span class="st">"</span><span class="sc">\t</span><span class="st">"</span>, <span class="at">na.strings =</span> <span class="st">""</span>)</span>
+<span id="cb26-4"><a href="#cb26-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-5"><a href="#cb26-5" aria-hidden="true" tabindex="-1"></a><span class="co"># create data frame for output samplesheet</span></span>
+<span id="cb26-6"><a href="#cb26-6" aria-hidden="true" tabindex="-1"></a>out <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">sample =</span> meta<span class="sc">$</span>name, </span>
+<span id="cb26-7"><a href="#cb26-7" aria-hidden="true" tabindex="-1"></a>                  <span class="at">fastq_1 =</span> <span class="fu">paste0</span>(<span class="st">"reads/"</span>, meta<span class="sc">$</span>fastq, <span class="st">".fastq.gz"</span>), </span>
+<span id="cb26-8"><a href="#cb26-8" aria-hidden="true" tabindex="-1"></a>                  <span class="at">fastq_2 =</span> <span class="cn">NA</span>,</span>
+<span id="cb26-9"><a href="#cb26-9" aria-hidden="true" tabindex="-1"></a>                  <span class="at">replicate =</span> meta<span class="sc">$</span>rep,</span>
+<span id="cb26-10"><a href="#cb26-10" aria-hidden="true" tabindex="-1"></a>                  <span class="at">antibody =</span> meta<span class="sc">$</span>antibody,</span>
+<span id="cb26-11"><a href="#cb26-11" aria-hidden="true" tabindex="-1"></a>                  <span class="at">control =</span> meta<span class="sc">$</span>input_control, </span>
+<span id="cb26-12"><a href="#cb26-12" aria-hidden="true" tabindex="-1"></a>                  <span class="at">control_replicate =</span> meta<span class="sc">$</span>input_rep)</span>
+<span id="cb26-13"><a href="#cb26-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-14"><a href="#cb26-14" aria-hidden="true" tabindex="-1"></a><span class="co"># save the samplesheet ensuring NA values are written as empty cells</span></span>
+<span id="cb26-15"><a href="#cb26-15" aria-hidden="true" tabindex="-1"></a><span class="fu">write.csv</span>(out, <span class="st">"samplesheet.csv"</span>, <span class="at">row.names =</span> <span class="cn">FALSE</span>, <span class="at">quote =</span> <span class="cn">FALSE</span>, <span class="at">na =</span> <span class="st">""</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<div id="tabset-2-3" class="tab-pane" role="tabpanel" aria-labelledby="tabset-2-3-tab">
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb27"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="co"># create new file with the required column names</span></span>
+<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a><span class="bu">echo</span> <span class="st">"sample,fastq_1,fastq_2,replicate,antibody,control,control_replicate"</span> <span class="op">&gt;</span> samplesheet.csv</span>
+<span id="cb27-3"><a href="#cb27-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb27-4"><a href="#cb27-4" aria-hidden="true" tabindex="-1"></a><span class="co"># generate file names from metadata</span></span>
+<span id="cb27-5"><a href="#cb27-5" aria-hidden="true" tabindex="-1"></a><span class="fu">tail</span> <span class="at">-n</span> +2 sample_info.tsv <span class="kw">|</span> <span class="fu">perl</span> <span class="at">-ne</span> <span class="st">'chomp;</span></span>
+<span id="cb27-6"><a href="#cb27-6" aria-hidden="true" tabindex="-1"></a><span class="st">@a=split/\t/;</span></span>
+<span id="cb27-7"><a href="#cb27-7" aria-hidden="true" tabindex="-1"></a><span class="st">print "$a[0],reads/$a[2].fastq.gz,,$a[1],$a[3],$a[4],$a[5]\n"'</span> <span class="op">&gt;&gt;</span> samplesheet.csv</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<div id="tabset-2-4" class="tab-pane" role="tabpanel" aria-labelledby="tabset-2-4-tab">
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb28"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a><span class="co"># create new file with the required column names</span></span>
+<span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a><span class="bu">echo</span> <span class="st">"sample,fastq_1,fastq_2,replicate,antibody,control,control_replicate"</span> <span class="op">&gt;</span> samplesheet.csv</span>
+<span id="cb28-3"><a href="#cb28-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb28-4"><a href="#cb28-4" aria-hidden="true" tabindex="-1"></a><span class="co"># generate file names from metadata</span></span>
+<span id="cb28-5"><a href="#cb28-5" aria-hidden="true" tabindex="-1"></a><span class="fu">tail</span> <span class="at">-n</span> +2 sample_info.tsv <span class="kw">|</span> <span class="fu">awk</span> <span class="st">'BEGIN { FS="\t"; OFS="," }</span></span>
+<span id="cb28-6"><a href="#cb28-6" aria-hidden="true" tabindex="-1"></a><span class="st">{</span></span>
+<span id="cb28-7"><a href="#cb28-7" aria-hidden="true" tabindex="-1"></a><span class="st">  print $1, "reads/" $3 ".fastq.gz", "", $2, $4, $5, $6</span></span>
+<span id="cb28-8"><a href="#cb28-8" aria-hidden="true" tabindex="-1"></a><span class="st">}'</span> <span class="op">&gt;&gt;</span> samplesheet.csv</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</div>
+</div>
+<p>Note, if all of the coding suggestions above seem unclear, we reiterate that you can create the samplesheet by hand in a standard spreadsheet software. At the end, our samplesheet should look like this:</p>
+<pre><code>sample,fastq_1,fastq_2,replicate,antibody,control,control_replicate
+brd4_veh,reads/SRR1193526.fastq.gz,,1,BRD4,mcf7_input_veh,1
+brd4_veh,reads/SRR1193527.fastq.gz,,2,BRD4,mcf7_input_veh,1
+brd4_e2,reads/SRR1193529.fastq.gz,,1,BRD4,mcf7_input_e2,1
+brd4_e2,reads/SRR1193530.fastq.gz,,2,BRD4,mcf7_input_e2,1
+mcf7_input_veh,reads/SRR1193562.fastq.gz,,1,,,
+mcf7_input_e2,reads/SRR1193563.fastq.gz,,1,,,</code></pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div id="tabset-4-3" class="tab-pane" role="tabpanel" aria-labelledby="tabset-4-3-tab">
+<p>Transcriptome data processing using <code>nf-core/viralrecon</code>. Go into the <code>virus_illumina</code> directory for this version of the exercise.</p>
+<ul>
+<li>Samplesheet documentation at <a href="https://nf-co.re/viralrecon/3.0.0/docs/usage/">nf-co.re/viralrecon/3.0.0/docs/usage/</a>.</li>
+<li>Input FASTQ files in <code>reads/</code>.</li>
+<li>Metadata for each sample is provided in the <code>sample_info.tsv</code> file, which gives you the name of each sample and their respective FASTQ file prefix name.</li>
+</ul>
+<div class="callout callout-style-default callout-answer no-icon callout-titled">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-7-contents" aria-controls="callout-7" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Answer</span>Answer
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-7" class="callout-7-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<div class="callout-answer">
+<p>Our metadata file contains information about each sample:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb30"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span> sample_info.tsv</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<pre><code>name    fastq
+ZA01    SRR17051908
+ZA02    SRR17051923
+ZA03    SRR17051916
+ZA04    SRR17051953
+ZA05    SRR17051951
+ZA06    SRR17051935
+ZA07    SRR17051932
+ZA08    SRR17054503</code></pre>
+<p>If we look inside our reads directory, we can see the following files:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb32"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ls</span> reads</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<pre><code>SRR17051908_1.fastq.gz  SRR17051923_1.fastq.gz  SRR17051935_1.fastq.gz  SRR17051953_1.fastq.gz
+SRR17051908_2.fastq.gz  SRR17051923_2.fastq.gz  SRR17051935_2.fastq.gz  SRR17051953_2.fastq.gz
+SRR17051916_1.fastq.gz  SRR17051932_1.fastq.gz  SRR17051951_1.fastq.gz  SRR17054503_1.fastq.gz
+SRR17051916_2.fastq.gz  SRR17051932_2.fastq.gz  SRR17051951_2.fastq.gz  SRR17054503_2.fastq.gz</code></pre>
+<p>Following <a href="https://nf-co.re/viralrecon/3.0.0/docs/usage/#illumina">the documentation</a> for the pipeline, we could have created our samplesheet in Excel like this:</p>
+<table style="border-collapse: collapse; width: auto; font-family: Arial, sans-serif;">
+<tbody><tr>
+<th style="border: 1px solid lightgrey; background-color: #f0f0f0;">
+</th>
+<th style="border: 1px solid lightgrey; background-color: #f0f0f0;">
+A
+</th>
+<th style="border: 1px solid lightgrey; background-color: #f0f0f0;">
+B
+</th>
+<th style="border: 1px solid lightgrey; background-color: #f0f0f0;">
+C
+</th>
+</tr>
+<tr>
+<td style="border: 1px solid lightgrey; background-color: #f0f0f0;">
+1
+</td>
+<td style="border: 1px solid lightgrey;">
+sample
+</td>
+<td style="border: 1px solid lightgrey;">
+fastq_1
+</td>
+<td style="border: 1px solid lightgrey;">
+fastq_2
+</td>
+</tr>
+<tr>
+<td style="border: 1px solid lightgrey; background-color: #f0f0f0;">
+2
+</td>
+<td style="border: 1px solid lightgrey;">
+ZA01
+</td>
+<td style="border: 1px solid lightgrey;">
+SRR17051908_1.fastq.gz
+</td>
+<td style="border: 1px solid lightgrey;">
+SRR17051908_2.fastq.gz
+</td>
+</tr>
+<tr>
+<td style="border: 1px solid lightgrey; background-color: #f0f0f0;">
+3
+</td>
+<td style="border: 1px solid lightgrey;">
+ZA02
+</td>
+<td style="border: 1px solid lightgrey;">
+SRR17051923_1.fastq.gz
+</td>
+<td style="border: 1px solid lightgrey;">
+SRR17051923_2.fastq.gz
+</td>
+</tr>
+<tr>
+<td style="border: 1px solid lightgrey; background-color: #f0f0f0;">
+4
+</td>
+<td style="border: 1px solid lightgrey;">
+ZA03
+</td>
+<td style="border: 1px solid lightgrey;">
+SRR17051916_1.fastq.gz
+</td>
+<td style="border: 1px solid lightgrey;">
+SRR17051916_2.fastq.gz
+</td>
+</tr>
+<tr>
+<td style="border: 1px solid lightgrey; background-color: #f0f0f0;">
+5
+</td>
+<td style="border: 1px solid lightgrey;">
+ZA04
+</td>
+<td style="border: 1px solid lightgrey;">
+SRR17051953_1.fastq.gz
+</td>
+<td style="border: 1px solid lightgrey;">
+SRR17051953_2.fastq.gz
+</td>
+</tr>
+<tr>
+<td style="border: 1px solid lightgrey; background-color: #f0f0f0;">
+6
+</td>
+<td style="border: 1px solid lightgrey;">
+ZA05
+</td>
+<td style="border: 1px solid lightgrey;">
+SRR17051951_1.fastq.gz
+</td>
+<td style="border: 1px solid lightgrey;">
+SRR17051951_2.fastq.gz
+</td>
+</tr>
+<tr>
+<td style="border: 1px solid lightgrey; background-color: #f0f0f0;">
+7
+</td>
+<td style="border: 1px solid lightgrey;">
+ZA06
+</td>
+<td style="border: 1px solid lightgrey;">
+SRR17051935_1.fastq.gz
+</td>
+<td style="border: 1px solid lightgrey;">
+SRR17051935_2.fastq.gz
+</td>
+</tr>
+<tr>
+<td style="border: 1px solid lightgrey; background-color: #f0f0f0;">
+8
+</td>
+<td style="border: 1px solid lightgrey;">
+ZA07
+</td>
+<td style="border: 1px solid lightgrey;">
+SRR17051932_1.fastq.gz
+</td>
+<td style="border: 1px solid lightgrey;">
+SRR17051932_2.fastq.gz
+</td>
+</tr>
+<tr>
+<td style="border: 1px solid lightgrey; background-color: #f0f0f0;">
+9
+</td>
+<td style="border: 1px solid lightgrey;">
+ZA08
+</td>
+<td style="border: 1px solid lightgrey;">
+SRR17054503_1.fastq.gz
+</td>
+<td style="border: 1px solid lightgrey;">
+SRR17054503_2.fastq.gz
+</td>
+</tr>
+</tbody></table>
+<p>However, for many samples, it can be tedious and error-prone to do this kind of task manually. We can see that the FASTQ file names are essentially the prefix given in the metadata file, along with the suffix “_1.fastq.gz” and “_2.fastq.gz” for read 1 and read 2, respectively.</p>
+<p>Therefore, we can create the samplesheet based on our metadata TSV file using some programming tools. Here’s 4 different ways of doing it:</p>
+<div class="tabset-margin-container"></div><div class="panel-tabset" data-group="language">
+<ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-3-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-3-1" role="tab" aria-controls="tabset-3-1" aria-selected="true" href="">Python</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-3-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-3-2" role="tab" aria-controls="tabset-3-2" aria-selected="false" href="">R</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-3-3-tab" data-bs-toggle="tab" data-bs-target="#tabset-3-3" role="tab" aria-controls="tabset-3-3" aria-selected="false" href="">Perl</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-3-4-tab" data-bs-toggle="tab" data-bs-target="#tabset-3-4" role="tab" aria-controls="tabset-3-4" aria-selected="false" href="">AWK</a></li></ul>
+<div class="tab-content" data-group="language">
+<div id="tabset-3-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-3-1-tab">
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb34"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
+<span id="cb34-2"><a href="#cb34-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-3"><a href="#cb34-3" aria-hidden="true" tabindex="-1"></a><span class="co"># read metadata table, ensuring NA values are correctly imported</span></span>
+<span id="cb34-4"><a href="#cb34-4" aria-hidden="true" tabindex="-1"></a>meta <span class="op">=</span> pd.read_csv(<span class="st">"sample_info.tsv"</span>, sep<span class="op">=</span><span class="st">"</span><span class="ch">\t</span><span class="st">"</span>, na_values<span class="op">=</span><span class="st">""</span>)</span>
+<span id="cb34-5"><a href="#cb34-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-6"><a href="#cb34-6" aria-hidden="true" tabindex="-1"></a><span class="co"># create data frame for output samplesheet</span></span>
+<span id="cb34-7"><a href="#cb34-7" aria-hidden="true" tabindex="-1"></a>out <span class="op">=</span> pd.DataFrame({</span>
+<span id="cb34-8"><a href="#cb34-8" aria-hidden="true" tabindex="-1"></a>    <span class="st">'sample'</span>: meta[<span class="st">'name'</span>],</span>
+<span id="cb34-9"><a href="#cb34-9" aria-hidden="true" tabindex="-1"></a>    <span class="st">'fastq_1'</span>: <span class="st">"reads/"</span> <span class="op">+</span> meta[<span class="st">'fastq'</span>] <span class="op">+</span> <span class="st">"_1.fastq.gz"</span>,</span>
+<span id="cb34-10"><a href="#cb34-10" aria-hidden="true" tabindex="-1"></a>    <span class="st">'fastq_2'</span>: <span class="st">"reads/"</span> <span class="op">+</span> meta[<span class="st">'fastq'</span>] <span class="op">+</span> <span class="st">"_2.fastq.gz"</span></span>
+<span id="cb34-11"><a href="#cb34-11" aria-hidden="true" tabindex="-1"></a>})</span>
+<span id="cb34-12"><a href="#cb34-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-13"><a href="#cb34-13" aria-hidden="true" tabindex="-1"></a><span class="co"># save the samplesheet ensuring NA values are written as empty cells</span></span>
+<span id="cb34-14"><a href="#cb34-14" aria-hidden="true" tabindex="-1"></a>out.to_csv(<span class="st">"samplesheet.csv"</span>, index<span class="op">=</span><span class="va">False</span>, quoting<span class="op">=</span><span class="dv">3</span>, na_rep<span class="op">=</span><span class="st">""</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<div id="tabset-3-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-3-2-tab">
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb35"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a><span class="co"># read metadata table, ensuring NA values are correctly imported</span></span>
+<span id="cb35-2"><a href="#cb35-2" aria-hidden="true" tabindex="-1"></a>meta <span class="ot">&lt;-</span> <span class="fu">read.table</span>(<span class="st">"sample_info.tsv"</span>, <span class="at">header =</span> <span class="cn">TRUE</span>, </span>
+<span id="cb35-3"><a href="#cb35-3" aria-hidden="true" tabindex="-1"></a>                   <span class="at">sep =</span> <span class="st">"</span><span class="sc">\t</span><span class="st">"</span>, <span class="at">na.strings =</span> <span class="st">""</span>)</span>
+<span id="cb35-4"><a href="#cb35-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb35-5"><a href="#cb35-5" aria-hidden="true" tabindex="-1"></a><span class="co"># create data frame for output samplesheet</span></span>
+<span id="cb35-6"><a href="#cb35-6" aria-hidden="true" tabindex="-1"></a>out <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">sample =</span> meta<span class="sc">$</span>name, </span>
+<span id="cb35-7"><a href="#cb35-7" aria-hidden="true" tabindex="-1"></a>                  <span class="at">fastq_1 =</span> <span class="fu">paste0</span>(<span class="st">"reads/"</span>, meta<span class="sc">$</span>fastq, <span class="st">"_1.fastq.gz"</span>), </span>
+<span id="cb35-8"><a href="#cb35-8" aria-hidden="true" tabindex="-1"></a>                  <span class="at">fastq_2 =</span> <span class="fu">paste0</span>(<span class="st">"reads/"</span>, meta<span class="sc">$</span>fastq, <span class="st">"_2.fastq.gz"</span>))</span>
+<span id="cb35-9"><a href="#cb35-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb35-10"><a href="#cb35-10" aria-hidden="true" tabindex="-1"></a><span class="co"># save the samplesheet ensuring NA values are written as empty cells</span></span>
+<span id="cb35-11"><a href="#cb35-11" aria-hidden="true" tabindex="-1"></a><span class="fu">write.csv</span>(out, <span class="st">"samplesheet.csv"</span>, <span class="at">row.names =</span> <span class="cn">FALSE</span>, <span class="at">quote =</span> <span class="cn">FALSE</span>, <span class="at">na =</span> <span class="st">""</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<div id="tabset-3-3" class="tab-pane" role="tabpanel" aria-labelledby="tabset-3-3-tab">
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb36"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a><span class="co"># create new file with the required column names</span></span>
+<span id="cb36-2"><a href="#cb36-2" aria-hidden="true" tabindex="-1"></a><span class="bu">echo</span> <span class="st">"sample,fastq_1,fastq_2"</span> <span class="op">&gt;</span> samplesheet.csv</span>
+<span id="cb36-3"><a href="#cb36-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb36-4"><a href="#cb36-4" aria-hidden="true" tabindex="-1"></a><span class="co"># generate file names from metadata</span></span>
+<span id="cb36-5"><a href="#cb36-5" aria-hidden="true" tabindex="-1"></a><span class="fu">tail</span> <span class="at">-n</span> +2 sample_info.tsv <span class="kw">|</span> <span class="fu">perl</span> <span class="at">-ne</span> <span class="st">'chomp;</span></span>
+<span id="cb36-6"><a href="#cb36-6" aria-hidden="true" tabindex="-1"></a><span class="st">@a=split/\t/;</span></span>
+<span id="cb36-7"><a href="#cb36-7" aria-hidden="true" tabindex="-1"></a><span class="st">print "$a[0],reads/$a[1]\_1.fastq.gz,reads/$a[1]\_2.fastq.gz\n"'</span> <span class="op">&gt;&gt;</span> samplesheet.csv</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<div id="tabset-3-4" class="tab-pane" role="tabpanel" aria-labelledby="tabset-3-4-tab">
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb37"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a><span class="co"># create new file with the required column names</span></span>
+<span id="cb37-2"><a href="#cb37-2" aria-hidden="true" tabindex="-1"></a><span class="bu">echo</span> <span class="st">"sample,fastq_1,fastq_2"</span> <span class="op">&gt;</span> samplesheet.csv</span>
+<span id="cb37-3"><a href="#cb37-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb37-4"><a href="#cb37-4" aria-hidden="true" tabindex="-1"></a><span class="co"># generate file names from metadata</span></span>
+<span id="cb37-5"><a href="#cb37-5" aria-hidden="true" tabindex="-1"></a><span class="fu">tail</span> <span class="at">-n</span> +2 sample_info.tsv <span class="kw">|</span> <span class="fu">awk</span> <span class="st">'BEGIN { FS="\t"; OFS="," }</span></span>
+<span id="cb37-6"><a href="#cb37-6" aria-hidden="true" tabindex="-1"></a><span class="st">{</span></span>
+<span id="cb37-7"><a href="#cb37-7" aria-hidden="true" tabindex="-1"></a><span class="st">  print $1, "reads/" $2 "_1.fastq.gz", "reads/" $2 "_2.fastq.gz"</span></span>
+<span id="cb37-8"><a href="#cb37-8" aria-hidden="true" tabindex="-1"></a><span class="st">}'</span> <span class="op">&gt;&gt;</span> samplesheet.csv</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</div>
+</div>
+<p>Note, if all of the coding suggestions above seem unclear, we reiterate that you can create the samplesheet by hand in a standard spreadsheet software. At the end, our samplesheet should look like this:</p>
+<pre><code>sample,fastq_1,fastq_2
+ZA01,reads/SRR17051908_1.fastq.gz,reads/SRR17051908_2.fastq.gz
+ZA02,reads/SRR17051923_1.fastq.gz,reads/SRR17051923_2.fastq.gz
+ZA03,reads/SRR17051916_1.fastq.gz,reads/SRR17051916_2.fastq.gz
+ZA04,reads/SRR17051953_1.fastq.gz,reads/SRR17051953_2.fastq.gz
+ZA05,reads/SRR17051951_1.fastq.gz,reads/SRR17051951_2.fastq.gz
+ZA06,reads/SRR17051935_1.fastq.gz,reads/SRR17051935_2.fastq.gz
+ZA07,reads/SRR17051932_1.fastq.gz,reads/SRR17051932_2.fastq.gz
+ZA08,reads/SRR17054503_1.fastq.gz,reads/SRR17054503_2.fastq.gz</code></pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div id="tabset-4-4" class="tab-pane" role="tabpanel" aria-labelledby="tabset-4-4-tab">
+<p>Transcriptome data processing using <code>nf-core/viralrecon</code>. Go into the <code>virus_ont</code> directory for this version of the exercise.</p>
+<ul>
+<li>Samplesheet documentation at <a href="https://nf-co.re/viralrecon/3.0.0/docs/usage/">nf-co.re/viralrecon/3.0.0/docs/usage/</a>.</li>
+<li>Input barcode directories with FASTQ files in <code>fastq_pass/</code>. This is the directory that is created by standard ONT basecalling software such as Guppy or Dorado.</li>
+<li>Metadata for each sample is provided in the <code>sample_info.tsv</code> file, which gives you the name of each sample and their respective barcode folder.</li>
+</ul>
+<div class="callout callout-style-default callout-answer no-icon callout-titled">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-8-contents" aria-controls="callout-8" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Answer</span>Answer
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-8" class="callout-8-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<div class="callout-answer">
+<p>Our metadata file contains information about each sample:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb39"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span> sample_info.tsv</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<pre><code>name    ont_barcode
+CH01    1
+CH02    2
+CH03    3
+CH04    4
+CH05    5
+CH26    26
+CH27    27
+CH28    28
+CH29    29
+CH30    30</code></pre>
+<p>If we look inside our reads directory, we can see the following directories:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb41"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb41-1"><a href="#cb41-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ls</span> fastq_pass</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<pre><code>barcode01  barcode03  barcode05  barcode27  barcode29
+barcode02  barcode04  barcode26  barcode28  barcode30</code></pre>
+<p>Following <a href="https://nf-co.re/viralrecon/3.0.0/docs/usage/#nanopore">the documentation</a> for the pipeline, we could have created our samplesheet in Excel like this:</p>
+<table style="border-collapse: collapse; width: auto; font-family: Arial, sans-serif;">
+<tbody><tr>
+<th style="border: 1px solid lightgrey; background-color: #f0f0f0;">
+</th>
+<th style="border: 1px solid lightgrey; background-color: #f0f0f0;">
+A
+</th>
+<th style="border: 1px solid lightgrey; background-color: #f0f0f0;">
+B
+</th>
+</tr>
+<tr>
+<td style="border: 1px solid lightgrey; background-color: #f0f0f0;">
+1
+</td>
+<td style="border: 1px solid lightgrey;">
+sample
+</td>
+<td style="border: 1px solid lightgrey;">
+barcode
+</td>
+</tr>
+<tr>
+<td style="border: 1px solid lightgrey; background-color: #f0f0f0;">
+2
+</td>
+<td style="border: 1px solid lightgrey;">
+CH01
+</td>
+<td style="border: 1px solid lightgrey;">
+1
+</td>
+</tr>
+<tr>
+<td style="border: 1px solid lightgrey; background-color: #f0f0f0;">
+3
+</td>
+<td style="border: 1px solid lightgrey;">
+CH02
+</td>
+<td style="border: 1px solid lightgrey;">
+2
+</td>
+</tr>
+<tr>
+<td style="border: 1px solid lightgrey; background-color: #f0f0f0;">
+4
+</td>
+<td style="border: 1px solid lightgrey;">
+CH03
+</td>
+<td style="border: 1px solid lightgrey;">
+3
+</td>
+</tr>
+<tr>
+<td style="border: 1px solid lightgrey; background-color: #f0f0f0;">
+5
+</td>
+<td style="border: 1px solid lightgrey;">
+CH04
+</td>
+<td style="border: 1px solid lightgrey;">
+4
+</td>
+</tr>
+<tr>
+<td style="border: 1px solid lightgrey; background-color: #f0f0f0;">
+6
+</td>
+<td style="border: 1px solid lightgrey;">
+CH05
+</td>
+<td style="border: 1px solid lightgrey;">
+5
+</td>
+</tr>
+<tr>
+<td style="border: 1px solid lightgrey; background-color: #f0f0f0;">
+7
+</td>
+<td style="border: 1px solid lightgrey;">
+CH26
+</td>
+<td style="border: 1px solid lightgrey;">
+26
+</td>
+</tr>
+<tr>
+<td style="border: 1px solid lightgrey; background-color: #f0f0f0;">
+8
+</td>
+<td style="border: 1px solid lightgrey;">
+CH27
+</td>
+<td style="border: 1px solid lightgrey;">
+27
+</td>
+</tr>
+<tr>
+<td style="border: 1px solid lightgrey; background-color: #f0f0f0;">
+9
+</td>
+<td style="border: 1px solid lightgrey;">
+CH28
+</td>
+<td style="border: 1px solid lightgrey;">
+28
+</td>
+</tr>
+<tr>
+<td style="border: 1px solid lightgrey; background-color: #f0f0f0;">
+10
+</td>
+<td style="border: 1px solid lightgrey;">
+CH29
+</td>
+<td style="border: 1px solid lightgrey;">
+29
+</td>
+</tr>
+<tr>
+<td style="border: 1px solid lightgrey; background-color: #f0f0f0;">
+11
+</td>
+<td style="border: 1px solid lightgrey;">
+CH30
+</td>
+<td style="border: 1px solid lightgrey;">
+30
+</td>
+</tr>
+</tbody></table>
+<p>Compared to the other workflows, this one is a relatively simple format, so given our metadata table, it would be easy to create the required samplesheet in Excel. However, for completeness we also show how to do this using the command line to replace tabs for commas using the <code>sed</code> command:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb43"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb43-1"><a href="#cb43-1" aria-hidden="true" tabindex="-1"></a><span class="co"># create new file with the required column names</span></span>
+<span id="cb43-2"><a href="#cb43-2" aria-hidden="true" tabindex="-1"></a><span class="bu">echo</span> <span class="st">"sample,barcode"</span> <span class="op">&gt;</span> samplesheet.csv</span>
+<span id="cb43-3"><a href="#cb43-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb43-4"><a href="#cb43-4" aria-hidden="true" tabindex="-1"></a><span class="co"># generate file names from metadata</span></span>
+<span id="cb43-5"><a href="#cb43-5" aria-hidden="true" tabindex="-1"></a><span class="fu">tail</span> <span class="at">-n</span> +2 sample_info.tsv <span class="kw">|</span> <span class="fu">sed</span> <span class="st">'s/\t/,/'</span> <span class="op">&gt;&gt;</span> samplesheet.csv</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>At the end, our samplesheet should look like this:</p>
+<pre><code>sample,barcode
+CH01,1
+CH02,2
+CH03,3
+CH04,4
+CH05,5
+CH26,26
+CH27,27
+CH28,28
+CH29,29
+CH30,30</code></pre>
+</div>
+</div>
+</div>
+</div>
+<!-- #### Variant calling
+
+Identifying genetic variants using `nf-core/sarek`.
+Go into the `variants` directory for this version of the exercise. 
+
+- Documentation at [nf-co.re/sarek/](https://nf-co.re/sarek/). Note this workflow allows for quite complex experimental designs, but we will use the "minimal config" shown on that page.
+- Input FASTQ files in `reads/`.
+- Metadata for each sample is provided in the `sample_info.tsv` file, which gives you the name of each sample and their respective FASTQ file prefix name.
+
+:::{.callout-answer}
+TODO
+::: -->
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="callout callout-style-default callout-exercise no-icon callout-titled">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-15-contents" aria-controls="callout-15" aria-expanded="true" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Exercise</span>Exercise 2 - Running the pipeline
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-15" class="callout-15-contents callout-collapse collapse show">
+<div class="callout-body-container callout-body">
+<div id="ex-nextflow" class="callout-exercise">
+<p>Now that you have a samplesheet, you should be ready to write the command to run the pipeline. Then, you can launch the pipeline and watch how Nextflow orchestrates the different steps of the analysis.</p>
+<p>Given the complexity of some of these pipelines, we give a skeleton of a command to get you started in each case. However, a few things to remember to do in every case:</p>
+<ul>
+<li>Add the <code>-r</code> option to specify the version of the workflow to be used (use the latest available on the respective documentation page).</li>
+<li>Include the option to use <code>singularity</code> to manage the software.</li>
+<li>Check the parameters being used in the respective documentation page.</li>
+</ul>
+<p>To make your code editing easier, make sure to include your command in a shell script and then run it using <code>bash</code>. Also, make sure to activate the Nextflow mamba environment (<code>mamba activate nextflow</code>) before you run the script.</p>
+<p><strong>Note:</strong> some of these pipelines take a long time to run. Once you initiate the pipeline and it seems to be running successfully, you can indicate to the trainers that you have completed the exercise.</p>
+<div class="tabset-margin-container"></div><div class="panel-tabset" data-group="workflow">
+<ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-5-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-5-1" role="tab" aria-controls="tabset-5-1" aria-selected="true" href="">RNA-seq</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-5-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-5-2" role="tab" aria-controls="tabset-5-2" aria-selected="false" href="">ChIP-seq</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-5-3-tab" data-bs-toggle="tab" data-bs-target="#tabset-5-3" role="tab" aria-controls="tabset-5-3" aria-selected="false" href="">Virus - Illumina</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-5-4-tab" data-bs-toggle="tab" data-bs-target="#tabset-5-4" role="tab" aria-controls="tabset-5-4" aria-selected="false" href="">Virus - ONT</a></li></ul>
+<div class="tab-content" data-group="workflow">
+<div id="tabset-5-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-5-1-tab">
+<p>Transcriptome data processing using <code>nf-core/rnaseq</code>. Go into the <code>rnaseq</code> directory for this version of the exercise.</p>
+<ul>
+<li>Parameter documentation at <a href="https://nf-co.re/rnaseq/3.22.2/parameters">nf-co.re/rnaseq/3.22.2/parameters</a>.</li>
+<li>Use the samplesheet created in the previous exercise as input.</li>
+<li>The reference genome and annotation are in the <code>genome/</code> directory.
+<ul>
+<li>Note that the options to specify these input files require the <strong>full path</strong> to the file to be specified. In the code skeleton below we show the trick of using the <code>$PWD</code> environment variable to specify the path relative to the current working directory.</li>
+</ul></li>
+</ul>
+<p>We provide a skeleton of what your command should look like in the script <code>scripts/run_rnaseq.sh</code>. Open that script in a text editor (for example, <code>nano</code> or <code>vim</code>) to fix the code and then run the script using <code>bash</code>.</p>
+<div class="callout callout-style-default callout-answer no-icon callout-titled">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-11-contents" aria-controls="callout-11" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Answer</span>Answer
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-11" class="callout-11-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<div class="callout-answer">
+<p>Here is the fixed nextflow command in our script:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb45"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb45-1"><a href="#cb45-1" aria-hidden="true" tabindex="-1"></a><span class="ex">nextflow</span> run nf-core/rnaseq <span class="dt">\</span></span>
+<span id="cb45-2"><a href="#cb45-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">-r</span> <span class="st">"3.22.2"</span> <span class="dt">\</span></span>
+<span id="cb45-3"><a href="#cb45-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">-profile</span> <span class="st">"singularity"</span> <span class="dt">\</span></span>
+<span id="cb45-4"><a href="#cb45-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">--input</span> <span class="st">"samplesheet.csv"</span> <span class="dt">\</span></span>
+<span id="cb45-5"><a href="#cb45-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">--outdir</span> <span class="st">"results/rnaseq"</span> <span class="dt">\</span></span>
+<span id="cb45-6"><a href="#cb45-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">--gtf</span> <span class="st">"</span><span class="va">$PWD</span><span class="st">/genome/Mus_musculus.GRCm38.102.chr14.gtf.gz"</span> <span class="dt">\</span></span>
+<span id="cb45-7"><a href="#cb45-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">--fasta</span> <span class="st">"</span><span class="va">$PWD</span><span class="st">/genome/Mus_musculus.GRCm38.dna_sm.chr14.fa.gz"</span>  <span class="dt">\</span></span>
+<span id="cb45-8"><a href="#cb45-8" aria-hidden="true" tabindex="-1"></a>  <span class="at">--igenomes_ignore</span> <span class="dt">\</span></span>
+<span id="cb45-9"><a href="#cb45-9" aria-hidden="true" tabindex="-1"></a>  <span class="at">--skip_alignment</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>We then ran our script with <code>bash scripts/run_rnaseq.sh</code>. While running, we got the progress of the pipeline printed on the screen.</p>
+<p>At the end of the pipeline we could see the results in the <code>results/rnaseq</code> folder. For example, we can open the file <code>results/rnaseq/multiqc/star_salmon/multiqc_report.html</code> to look at a quality control report for the pipeline.</p>
+<div class="callout callout-style-default callout-warning callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Warning
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>In the code above we’ve used the option <code>--skip_alignment</code>. In real-world analysis we would not recommend doing this by default, as the alignment provides many useful QC metrics for RNA-seq (e.g.&nbsp;gene body coverage, PCR duplication issues, etc.).</p>
+<p>Skipping the alignment does result in a much faster run, so it may be justified, for example, if you are processing a very large number of samples and need to save compute resources.</p>
+<p>In this case, we used it to save time, as our purpose is to show how to set and run an nf-core pipeline, not to get precise results.</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div id="tabset-5-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-5-2-tab">
+<p>Chromatin immunoprecipitation sequencing analysis using <code>nf-core/chipseq</code>. Go into the <code>chipseq</code> directory for this version of the exercise.</p>
+<ul>
+<li>Parameter documentation at <a href="https://nf-co.re/chipseq/2.1.0/parameters">nf-co.re/chipseq/2.1.0/parameters</a>.</li>
+<li>Use the samplesheet created in the previous exercise as input.</li>
+<li>The reference genome and annotation are in the <code>genome/</code> directory.
+<ul>
+<li>Note that the options to specify these input files require the <strong>full path</strong> to the file to be specified. In the code skeleton below we show the trick of using the <code>$PWD</code> environment variable to specify the path relative to the current working directory.</li>
+</ul></li>
+</ul>
+<p>We provide a skeleton of what your command should look like in the script <code>scripts/run_chipseq.sh</code>. Open that script in a text editor (for example, <code>nano</code> or <code>vim</code>) to fix the code and then run the script using <code>bash</code>.</p>
+<div class="callout callout-style-default callout-answer no-icon callout-titled">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-12-contents" aria-controls="callout-12" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Answer</span>Answer
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-12" class="callout-12-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<div class="callout-answer">
+<p>Here is the fixed nextflow command in our script:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb46"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb46-1"><a href="#cb46-1" aria-hidden="true" tabindex="-1"></a><span class="ex">nextflow</span> run nf-core/chipseq <span class="dt">\</span></span>
+<span id="cb46-2"><a href="#cb46-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">-r</span> <span class="st">"2.1.0"</span> <span class="dt">\</span></span>
+<span id="cb46-3"><a href="#cb46-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">-profile</span> <span class="st">"singularity"</span> <span class="dt">\</span></span>
+<span id="cb46-4"><a href="#cb46-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">--input</span> <span class="st">"samplesheet.csv"</span> <span class="dt">\</span></span>
+<span id="cb46-5"><a href="#cb46-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">--outdir</span> <span class="st">"results/chipseq"</span> <span class="dt">\</span></span>
+<span id="cb46-6"><a href="#cb46-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">--gtf</span> <span class="st">"</span><span class="va">$PWD</span><span class="st">/genome/GRCh38.109.chr21.gtf.gz"</span> <span class="dt">\</span></span>
+<span id="cb46-7"><a href="#cb46-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">--fasta</span> <span class="st">"</span><span class="va">$PWD</span><span class="st">/genome/GRCh38.109.chr21.fasta.gz"</span> <span class="dt">\</span></span>
+<span id="cb46-8"><a href="#cb46-8" aria-hidden="true" tabindex="-1"></a>  <span class="at">--blacklist</span> <span class="st">"</span><span class="va">$PWD</span><span class="st">/genome/ENCFF356LFX_exclusion_lists.chr21.bed.gz"</span> <span class="dt">\</span></span>
+<span id="cb46-9"><a href="#cb46-9" aria-hidden="true" tabindex="-1"></a>  <span class="at">--read_length</span> 100 <span class="dt">\</span></span>
+<span id="cb46-10"><a href="#cb46-10" aria-hidden="true" tabindex="-1"></a>  <span class="at">--skip_preseq</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>We then ran our script with <code>bash scripts/run_chipseq.sh</code>. While running, we got the progress of the pipeline printed on the screen.</p>
+<p>At the end of the pipeline we could see the results in the <code>results/chipseq</code> folder. For example, we can open the file <code>results/chipseq/multiqc/broadPeak/multiqc_report.html</code> to look at a quality control report for the pipeline.</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div id="tabset-5-3" class="tab-pane" role="tabpanel" aria-labelledby="tabset-5-3-tab">
+<p>Analysis of viral genomes using <code>nf-core/viralrecon</code>. Go into the <code>virus_illumina</code> directory for this version of the exercise.</p>
+<ul>
+<li>Parameter documentation at <a href="https://nf-co.re/viralrecon/3.0.0/parameters">nf-co.re/viralrecon/3.0.0/parameters</a>.</li>
+<li>Use the samplesheet created in the previous exercise as input.</li>
+<li>The reference genome, gene annotation and primer locations are in the <code>genome/</code> directory.
+<ul>
+<li>Note that the options to specify these input files require the <strong>full path</strong> to the file to be specified. In the code skeleton below we show the trick of using the <code>$PWD</code> environment variable to specify the path relative to the current working directory.</li>
+</ul></li>
+</ul>
+<p>We provide a skeleton of what your command should look like in the script <code>scripts/run_viralrecon_illumina.sh</code>. Open that script in a text editor (for example, <code>nano</code> or <code>vim</code>) to fix the code and then run the script using <code>bash</code>.</p>
+<div class="callout callout-style-default callout-answer no-icon callout-titled">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-13-contents" aria-controls="callout-13" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Answer</span>Answer
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-13" class="callout-13-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<div class="callout-answer">
+<p>Here is the fixed nextflow command in our script:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb47"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb47-1"><a href="#cb47-1" aria-hidden="true" tabindex="-1"></a><span class="ex">nextflow</span> run nf-core/viralrecon <span class="dt">\</span></span>
+<span id="cb47-2"><a href="#cb47-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">-r</span> <span class="st">"3.0.0"</span> <span class="dt">\</span></span>
+<span id="cb47-3"><a href="#cb47-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">-profile</span> <span class="st">"singularity"</span> <span class="dt">\</span></span>
+<span id="cb47-4"><a href="#cb47-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">--input</span> <span class="st">"samplesheet.csv"</span> <span class="dt">\</span></span>
+<span id="cb47-5"><a href="#cb47-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">--outdir</span> <span class="st">"results/viralrecon"</span> <span class="dt">\</span></span>
+<span id="cb47-6"><a href="#cb47-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">--platform</span> <span class="st">"illumina"</span> <span class="dt">\</span></span>
+<span id="cb47-7"><a href="#cb47-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">--protocol</span> <span class="st">"amplicon"</span> <span class="dt">\</span></span>
+<span id="cb47-8"><a href="#cb47-8" aria-hidden="true" tabindex="-1"></a>  <span class="at">--gff</span> <span class="st">"</span><span class="va">$PWD</span><span class="st">/genome/nCoV-2019.annotation.gff.gz"</span> <span class="dt">\</span></span>
+<span id="cb47-9"><a href="#cb47-9" aria-hidden="true" tabindex="-1"></a>  <span class="at">--fasta</span> <span class="st">"</span><span class="va">$PWD</span><span class="st">/genome/nCoV-2019.reference.fasta"</span> <span class="dt">\</span></span>
+<span id="cb47-10"><a href="#cb47-10" aria-hidden="true" tabindex="-1"></a>  <span class="at">--primer_bed</span> <span class="st">"</span><span class="va">$PWD</span><span class="st">/genome/nCoV-2019.V3.primer.bed"</span> <span class="dt">\</span></span>
+<span id="cb47-11"><a href="#cb47-11" aria-hidden="true" tabindex="-1"></a>  <span class="at">--skip_assembly</span> <span class="at">--skip_freyja</span> <span class="dt">\</span></span>
+<span id="cb47-12"><a href="#cb47-12" aria-hidden="true" tabindex="-1"></a>  <span class="at">--skip_pangolin</span> <span class="at">--skip_nextclade</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>We then ran our script with <code>bash scripts/run_viralrecon.sh</code>. While running, we got the progress of the pipeline printed on the screen.</p>
+<p>At the end of the pipeline we could see the results in the <code>results/viralrecon</code> folder. For example, we can open the file <code>results/viralrecon/multiqc/multiqc_report.html</code> to look at a quality control report for the pipeline.</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div id="tabset-5-4" class="tab-pane" role="tabpanel" aria-labelledby="tabset-5-4-tab">
+<p>Analysis of viral genomes using <code>nf-core/viralrecon</code>. Go into the <code>virus_ont</code> directory for this version of the exercise.</p>
+<ul>
+<li>Parameter documentation at <a href="https://nf-co.re/viralrecon/3.0.0/parameters">nf-co.re/viralrecon/3.0.0/parameters</a>.</li>
+<li>Use the samplesheet created in the previous exercise as input.</li>
+<li>The reference genome, gene annotation and primer locations are in the <code>genome/</code> directory.
+<ul>
+<li>Note that the options to specify these input files require the <strong>full path</strong> to the file to be specified. In the code skeleton below we show the trick of using the <code>$PWD</code> environment variable to specify the path relative to the current working directory.</li>
+</ul></li>
+</ul>
+<p>We provide a skeleton of what your command should look like in the script <code>scripts/run_viralrecon_ont.sh</code>. Open that script in a text editor (for example, <code>nano</code> or <code>vim</code>) to fix the code and then run the script using <code>bash</code>.</p>
+<div class="callout callout-style-default callout-answer no-icon callout-titled">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-14-contents" aria-controls="callout-14" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Answer</span>Answer
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-14" class="callout-14-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<div class="callout-answer">
+<p>The nanopore sub-workflow of the viralrecon pipeline is based on the <a href="https://artic.network/ncov-2019/ncov2019-bioinformatics-sop.html">ARTIC bioinformatics protocol</a> and uses several of the tools from the accompanying <a href="https://artic.readthedocs.io/en/latest/"><code>artic</code> software package</a>.</p>
+<p>Here is the fixed nextflow command in our script:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb48"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb48-1"><a href="#cb48-1" aria-hidden="true" tabindex="-1"></a><span class="ex">nextflow</span> run nf-core/viralrecon <span class="dt">\</span></span>
+<span id="cb48-2"><a href="#cb48-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">-r</span> <span class="st">"3.0.0"</span> <span class="dt">\</span></span>
+<span id="cb48-3"><a href="#cb48-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">-profile</span> <span class="st">"singularity"</span> <span class="dt">\</span></span>
+<span id="cb48-4"><a href="#cb48-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">--input</span> <span class="st">"samplesheet.csv"</span> <span class="dt">\</span></span>
+<span id="cb48-5"><a href="#cb48-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">--fastq_dir</span> <span class="st">"fastq_pass/"</span> <span class="dt">\</span></span>
+<span id="cb48-6"><a href="#cb48-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">--outdir</span> <span class="st">"results/viralrecon"</span> <span class="dt">\</span></span>
+<span id="cb48-7"><a href="#cb48-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">--platform</span> <span class="st">"nanopore"</span> <span class="dt">\</span></span>
+<span id="cb48-8"><a href="#cb48-8" aria-hidden="true" tabindex="-1"></a>  <span class="at">--protocol</span> <span class="st">"amplicon"</span> <span class="dt">\</span></span>
+<span id="cb48-9"><a href="#cb48-9" aria-hidden="true" tabindex="-1"></a>  <span class="at">--genome</span> <span class="st">"MN908947.3"</span> <span class="dt">\</span></span>
+<span id="cb48-10"><a href="#cb48-10" aria-hidden="true" tabindex="-1"></a>  <span class="at">--primer_set</span> <span class="st">"artic"</span> <span class="dt">\</span></span>
+<span id="cb48-11"><a href="#cb48-11" aria-hidden="true" tabindex="-1"></a>  <span class="at">--primer_set_version</span> <span class="st">"3"</span> <span class="dt">\</span></span>
+<span id="cb48-12"><a href="#cb48-12" aria-hidden="true" tabindex="-1"></a>  <span class="at">--artic_minion_model</span> <span class="st">"r941_prom_sup_g5014"</span> <span class="dt">\</span></span>
+<span id="cb48-13"><a href="#cb48-13" aria-hidden="true" tabindex="-1"></a>  <span class="at">--skip_assembly</span> <span class="at">--skip_freyja</span> <span class="dt">\</span></span>
+<span id="cb48-14"><a href="#cb48-14" aria-hidden="true" tabindex="-1"></a>  <span class="at">--skip_pangolin</span> <span class="at">--skip_nextclade</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>We then ran our script with <code>bash scripts/run_viralrecon.sh</code>. While running, we got the progress of the pipeline printed on the screen.</p>
+<p>At the end of the pipeline we could see the results in the <code>results/viralrecon</code> folder. For example, we can open the file <code>results/viralrecon/multiqc/medaka/multiqc_report.html</code> to look at a quality control report for the pipeline.</p>
+</div>
+</div>
+</div>
+</div>
+<!-- #### Variant calling
+
+Identifying genetic variants using `nf-core/sarek`.
+Go into the `variants` directory for this version of the exercise. 
+
+- Documentation at [nf-co.re/sarek/](https://nf-co.re/sarek/).
+- Input FASTQ files in `reads/`.
+- FASTA file for the reference genome in `genome/`.
+- Sample metadata in `sample_info.tsv` (tab-delimited).
+
+::: callout-answer
+TODO
+::: -->
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section id="summary" class="level2" data-number="5.7">
+<h2 data-number="5.7" class="anchored" data-anchor-id="summary"><span class="header-section-number">5.7</span> Summary</h2>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Tip</span>Key points
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<ul>
+<li>WfMS define, automate and monitor the execution of a series of tasks in a specific order. They improve efficiency, reduce errors, can be easily scaled (from a local computer to a HPC cluster) and increase reproducibility.</li>
+<li>Popular WfMS in bioinformatics include Nextflow and Snakemake. Both of these projects have associated community-maintained workflows, with excellent documentation for their use: <a href="https://nf-co.re/">nf-core</a> and the <a href="https://snakemake.github.io/snakemake-workflow-catalog/">snakemake workflow catalog</a>.</li>
+<li>Nextflow pipelines have configuration profiles available to indicate how software should be managed by the pipeline. For example the option <code>-profile singularity</code> uses Singularity images to deploy the software (other options include <code>docker</code> and <code>conda</code>).</li>
+<li>Nextflow keeps track of the current status of the pipeline by storing intermediate files in a <strong>cache directory</strong> (by default called “work”). This enables the workflow to <strong>resume from a previous run</strong>, in case of failure.</li>
+<li>Pipelines from the nf-core community commonly take as an input a CSV file detailing the input files for the workflow. This CSV file is commonly referred to as a samplesheet.</li>
+<li>Nf-core pipelines have extensive documentation at <a href="https://nf-co.re/pipelines">nf-co.re/pipelines</a>, allowing the user to configure many aspects of the run.</li>
+</ul>
+</div>
+</div>
+
+
+</section>
+<section id="footnotes" class="footnotes footnotes-end-of-document" role="doc-endnotes">
+<hr>
+<ol>
+<li id="fn1"><p>To learn how to build your own pipelines, there are many tutorials available on <a href="https://training.nextflow.io/">training.nextflow.io</a>, including <a href="https://training.nextflow.io/basic_training/rnaseq_pipeline/">how to build a simple RNA-Seq workflow</a>. <em>Snakemake</em> also provides an <a href="https://snakemake.readthedocs.io/en/stable/tutorial/tutorial.html">excellent tutorial</a> covering both basic and advanced features to build custom pipelines.<a href="#fnref1" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+</ol>
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp('/' + window.location.host + '/');
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+<nav class="page-navigation">
+  <div class="nav-page nav-page-previous">
+      <a href="../materials/02-containers.html" class="pagination-link" aria-label="Container Virtualisation">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Container Virtualisation</span></span>
+      </a>          
+  </div>
+  <div class="nav-page nav-page-next">
+      <a href="../materials/04-nextflow_hpc.html" class="pagination-link" aria-label="Nextflow on HPC">
+        <span class="nav-page-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Nextflow on HPC</span></span> <i class="bi bi-arrow-right-short"></i>
+      </a>
+  </div>
+</nav>
+</div> <!-- /content -->
+<footer class="footer">
+  <div class="nav-footer">
+    <div class="nav-footer-left">
+      &nbsp;
+    </div>   
+    <div class="nav-footer-center">
+<p>Licensed <a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a> <img src="https://creativecommons.org/images/deed/cc_icon_black_x2.png" class="img-fluid" width="25"> Cambridge Research Informatics Training</p>
+</div>
+    <div class="nav-footer-right">
+      &nbsp;
+    </div>
+  </div>
+</footer>
+
+
+
+
+</body></html>
