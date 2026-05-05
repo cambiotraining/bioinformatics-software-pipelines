@@ -3,8 +3,8 @@
 # see https://quarto.org/docs/authoring/variables.html
 version:
   demo: 1.1.0
-  rnaseq: 3.22.2
+  rnaseq: 3.25.0
   chipseq: 2.1.0
   viralrecon: 3.0.0
-  nextflow: 25.10.3.10983 
-  snakemake: 9.15.0
+  nextflow: 25.10.4 
+  snakemake: 9.20.0
