@@ -2,9 +2,9 @@
 # these can be used as dynamic variables in the markdown documents
 # see https://quarto.org/docs/authoring/variables.html
 version:
-  demo: 1.1.0
-  rnaseq: 3.25.0
+  demo: 1.2.0
+  rnaseq: 3.26.0
   chipseq: 2.1.0
   viralrecon: 3.0.0
   nextflow: 25.10.4 
-  snakemake: 9.20.0
+  snakemake: 9.23.1
