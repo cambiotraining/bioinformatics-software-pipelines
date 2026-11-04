@@ -1,10 +1,6 @@
----
-title: "Data & Setup"
-pagetitle: "Software & Pipelines"
-number-sections: false
----
+# Data & Setup {.unnumbered}
 
-<!-- 
+<!--
 Note for Training Developers:
 We provide instructions for commonly-used software as commented sections below.
 Uncomment the sections relevant for your materials, and add additional instructions where needed (e.g. specific packages used).
@@ -14,20 +10,20 @@ Note that we use tabsets to provide instructions for all three major operating s
 ::: {.callout-tip level=2}
 ## Workshop Attendees
 
-If you are attending one of our workshops, we will provide a training environment with all of the required software and data.  
+If you are attending one of our workshops, we will provide a training environment with all of the required software and data.
 If you want to setup your own computer to run the analysis demonstrated on this course, you can follow the instructions below.
 :::
 
 ## Data
 
-You can download the data used in these materials as a zip file from dropbox. 
+You can download the data used in these materials as a zip file from dropbox.
 
 <!-- Note for Training Developers: add the link to 'href' -->
 <a href="https://www.dropbox.com/scl/fo/hof2gmftr8iq1744jkwnd/AOE_vgyKxphI63OAA5dCzqM?rlkey=k929x9ipitvuexrf72u7hbth9&st=muryirlr&dl=0" target="_blank">
   <button class="btn"><i class="fab fa-dropbox"></i> Download</button>
 </a>
 
-Alternatively, using the command line (from within a directory of your choice, e.g. `~/Desktop`): 
+Alternatively, using the command line (from within a directory of your choice, e.g. `~/Desktop`):
 
 ```bash
 wget -O biopipelines.zip "https://www.dropbox.com/scl/fo/hof2gmftr8iq1744jkwnd/AOE_vgyKxphI63OAA5dCzqM?rlkey=k929x9ipitvuexrf72u7hbth9&st=muryirlr&dl=1"
@@ -40,10 +36,10 @@ rm biopipelines.zip
 
 ### Conda
 
-We recommend using the _Conda_ package manager to install your software. 
-In particular, the newest implementation called _Mamba_. 
+We recommend using the _Conda_ package manager to install your software.
+In particular, the newest implementation called _Mamba_.
 
-To install _Mamba_, run the following commands from the terminal: 
+To install _Mamba_, run the following commands from the terminal:
 
 ```bash
 wget "https://github.com/conda-forge/miniforge/releases/latest/download/Miniforge3-$(uname)-$(uname -m).sh"
@@ -53,7 +49,7 @@ $HOME/miniforge3/bin/mamba shell init
 ```
 
 Restart your terminal (or open a new one).
-Then run the following commands: 
+Then run the following commands:
 
 ```bash
 conda config --add channels nodefaults
@@ -73,13 +69,13 @@ You can do that with the following command:
 mamba create -n nextflow -y nextflow
 ```
 
-When you want to use _Nextflow_ make sure to activate this software environment by running `mamba activate nextflow`. 
+When you want to use _Nextflow_ make sure to activate this software environment by running `mamba activate nextflow`.
 
 
 ### Singularity
 
-We recommend that you install _Singularity_ and use the `-profile singularity` option when running _Nextflow_ pipelines. 
-On Ubuntu/WSL2, you can install _Singularity_ using the following commands: 
+We recommend that you install _Singularity_ and use the `-profile singularity` option when running _Nextflow_ pipelines.
+On Ubuntu/WSL2, you can install _Singularity_ using the following commands:
 
 ```bash
 sudo apt install -y libfuse2t64 runc fuse2fs uidmap
@@ -88,21 +84,21 @@ sudo dpkg -i singularity.deb
 rm singularity.deb
 ```
 
-If you have a different Linux distribution, you can find more detailed instructions on the [_Singularity_ documentation page](https://docs.sylabs.io/guides/3.0/user-guide/installation.html#install-on-linux). 
+If you have a different Linux distribution, you can find more detailed instructions on the [_Singularity_ documentation page](https://docs.sylabs.io/guides/3.0/user-guide/installation.html#install-on-linux).
 
-If you have issues running _Nextflow_ pipelines with _Singularity_, then you can follow the instructions below for _Docker_ instead. 
+If you have issues running _Nextflow_ pipelines with _Singularity_, then you can follow the instructions below for _Docker_ instead.
 
 
 
-<!-- 
+<!--
 ### Quarto
 
 To develop and render the course materials website, you will need to install _Quarto_:
 
-- Download and install [Quarto](https://quarto.org/docs/get-started/) (available for all major OS). 
+- Download and install [Quarto](https://quarto.org/docs/get-started/) (available for all major OS).
 - If you are developing materials using executable `.qmd` documents, it is recommended that you also install the extensions for your favourite IDE (e.g. RStudio, VS Code).
 - If you are developing materials using **JupyterLab** or **Jupyter Notebooks**, please install [Jupytext](https://jupytext.readthedocs.io/en/latest/install.html).
-  - Use the [paired notebook](https://jupytext.readthedocs.io/en/latest/paired-notebooks.html) feature to have synchronised `.ipynb`/`.qmd` files. Only `.qmd` files should be pushed to the repository (`.ipynb` files have been added to `.gitignore`). 
+  - Use the [paired notebook](https://jupytext.readthedocs.io/en/latest/paired-notebooks.html) feature to have synchronised `.ipynb`/`.qmd` files. Only `.qmd` files should be pushed to the repository (`.ipynb` files have been added to `.gitignore`).
 -->
 
 <!--
@@ -158,7 +154,7 @@ Note: Windows users can use WSL2 (see @wsl).
 
 #### Windows
 
-You can use _Singularity_ from the _Windows Subsystem for Linux_ (see @wsl).  
+You can use _Singularity_ from the _Windows Subsystem for Linux_ (see @wsl).
 Once you setup WSL, you can follow the instructions for Linux.
 
 #### Mac OS
@@ -183,22 +179,22 @@ rm singularity.deb
 -->
 
 
-<!-- 
+<!--
 ### Visual Studio Code
 
 ::: {.panel-tabset group="os"}
 
 #### Windows
 
-- Go to the [Visual Studio Code download page](https://code.visualstudio.com/Download) and download the installer for your operating system. 
-  Double-click the downloaded file to install the software, accepting all the default options. 
-- After completing the installation, go to your Windows Menu, search for "Visual Studio Code" and launch the application. 
+- Go to the [Visual Studio Code download page](https://code.visualstudio.com/Download) and download the installer for your operating system.
+  Double-click the downloaded file to install the software, accepting all the default options.
+- After completing the installation, go to your Windows Menu, search for "Visual Studio Code" and launch the application.
 - Go to "_File > Preferences > Settings_", then select "_Text Editor > Files_" on the drop-down menu on the left. Scroll down to the section named "_EOL_" and choose "_\\n_" (this will ensure that the files you edit on Windows are compatible with the Linux operating system).
 
 #### Mac OS
 
 - Go to the [Visual Studio Code download page](https://code.visualstudio.com/Download) and download the installer for Mac.
-- Go to the Downloads folder and double-click the file you just downloaded to extract the application. Drag-and-drop the "Visual Studio Code" file to your "Applications" folder. 
+- Go to the Downloads folder and double-click the file you just downloaded to extract the application. Drag-and-drop the "Visual Studio Code" file to your "Applications" folder.
 - You can now open the installed application to check that it was installed successfully (the first time you launch the application you will get a warning that this is an application downloaded from the internet - you can go ahead and click "Open").
 
 #### Linux (Ubuntu)
