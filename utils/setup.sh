@@ -61,8 +61,6 @@ singularity {
 EOF
 
 # cache nextflow images
-mamba activate nextflow
-
 export NXF_SINGULARITY_CACHEDIR="$HOME/.nextflow-singularity-cache"
 
 # cache singularity images and pull workflows
@@ -71,7 +69,7 @@ do
   version=$(get_version "$wf")
 
   # download images
-  nf-core pipelines download "$wf" \
+  mamba run -n nextflow nf-core pipelines download "$wf" \
     --revision "$version" \
     --outdir "/tmp/$wf" \
     --force \
@@ -84,7 +82,7 @@ do
   rm -r "/tmp/$wf"
 
   # pull the workflow to its standard directory
-  nextflow pull -r "$version" "nf-core/$wf"
+  mamba run -n nextflow nextflow pull -r "$version" "nf-core/$wf"
 done
 
-bash "$script_dir/test_setup.sh"
+mamba run -n nextflow bash "$script_dir/test_setup.sh"
