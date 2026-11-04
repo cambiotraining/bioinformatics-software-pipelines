@@ -15,13 +15,13 @@ pagetitle: "Software & Pipelines"
 
 ## Overview
 
-Bioinformatic analyses always involve multiple steps where data is gathered, cleaned and integrated to give a final set of processed files of interest to the user. 
-These sequences of steps are called a **workflow** or **pipeline**. 
-As analyses become more complex, pipelines may include the use of many different software tools, each requiring a specific set of inputs and options to be defined. 
-Furthermore, as we want to chain multiple tools together, the inputs of one tool may be the output of another, which can become challenging to manage. 
+Bioinformatic analyses always involve multiple steps where data is gathered, cleaned and integrated to give a final set of processed files of interest to the user.
+These sequences of steps are called a **workflow** or **pipeline**.
+As analyses become more complex, pipelines may include the use of many different software tools, each requiring a specific set of inputs and options to be defined.
+Furthermore, as we want to chain multiple tools together, the inputs of one tool may be the output of another, which can become challenging to manage.
 
-Although it is possible to code such workflows using _shell_ scripts, these often don't scale well across different users and compute setups. 
-To overcome these limitations, dedicated [**workflow/pipeline management software**](https://en.wikipedia.org/wiki/Bioinformatics_workflow_management_system) packages have been developed to help standardise pipelines and make it easier for the user to process their data. 
+Although it is possible to code such workflows using *shell* scripts, these often don't scale well across different users and compute setups.
+To overcome these limitations, dedicated [**workflow/pipeline management software**](https://en.wikipedia.org/wiki/Bioinformatics_workflow_management_system) packages have been developed to help standardise pipelines and make it easier for the user to process their data.
 These dedicated packages are designed to streamline and automate the process of coordinating complex sequences of tasks and data processing (for instance an RNA-seq analysis).
 In this way, researchers can focus on their scientific questions instead of the nitty-gritty of data processing.
 
@@ -31,78 +31,82 @@ Here are some of the key advantages of using a standardised workflow for our ana
 
 - **Fewer errors** - because the workflow automates the process of managing input/output files, there are less chances for errors or bugs in the code to occur.
 - **Consistency and reproducibility** - analysis ran by different people should result in the same output, regardless of their computational setup.
-- **Software installation** - all software dependencies are automatically installed for the user using solutions such as _Conda/Mamba_, _Docker_ and _Singularity_.
-- **Scalability** - workflows can run on a local desktop or scale up to run on _high performance compute (HPC) clusters_.
+- **Software installation** - all software dependencies are automatically installed for the user using solutions such as *Conda/Mamba*, *Docker* and *Singularity*.
+- **Scalability** - workflows can run on a local desktop or scale up to run on *high performance compute (HPC) clusters*.
 - **Checkpoint and resume** - if a workflow fails in one of the tasks, it can be resumed at a later time.
-
 
 ## Nextflow and Snakemake
 
-Two of the most popular _workflow software_ packages are [_Snakemake_](https://snakemake.readthedocs.io/en/stable/) and [_Nextflow_](https://www.nextflow.io/). 
-We will not cover how to develop workflows with these packages, but rather **how to use existing workflows developed by the community**.[^1]
-Both Snakemake and Nextflow offer similar functionality and can work on different computer systems, from personal laptops to large cloud-based platforms, making them very versatile.
+Two of the most popular *workflow software* packages are [_Snakemake_](https://snakemake.readthedocs.io/en/stable/) and [_Nextflow_](https://www.nextflow.io/).
+We will not cover how to develop workflows with these packages, but rather **how to use existing workflows developed by the community**.[^1] Both Snakemake and Nextflow offer similar functionality and can work on different computer systems, from personal laptops to large cloud-based platforms, making them very versatile.
 One of the main noticeable difference to those developing pipelines with these tools is that Snakemake syntax is based on [Python](https://www.python.org/), whereas Nextflow is based on [Groovy](https://groovy-lang.org/).
-The choice between one of the other is really down to individual preference. 
+The choice between one of the other is really down to individual preference.
 
 <!-- footnote -->
-[^1]: To learn how to build your own pipelines, there are many tutorials available on [training.nextflow.io](https://training.nextflow.io/), including [how to build a simple RNA-Seq workflow](https://training.nextflow.io/basic_training/rnaseq_pipeline/). _Snakemake_ also provides an [excellent tutorial](https://snakemake.readthedocs.io/en/stable/tutorial/tutorial.html) covering both basic and advanced features to build custom pipelines.
+[^1]: To learn how to build your own pipelines, there are many tutorials available on [training.nextflow.io](https://training.nextflow.io/), including [how to build a simple RNA-Seq workflow](https://training.nextflow.io/basic_training/rnaseq_pipeline/).
+    *Snakemake* also provides an [excellent tutorial](https://snakemake.readthedocs.io/en/stable/tutorial/tutorial.html) covering both basic and advanced features to build custom pipelines.
 
-Another important aspect of these projects are the workflows and modules provided by the community: 
+Another important aspect of these projects are the workflows and modules provided by the community:
 
-- [**nf-core**](https://nf-co.re/): a community project where scientists contribute ready-to-use, high-quality analysis pipelines. This means you don’t have to start from scratch if someone else has already created a workflow for a similar analysis. It’s all about making data analysis more accessible, standardized, and reproducible across the globe​​​​.
-- [**Snakemake workflow catalog**](https://snakemake.github.io/snakemake-workflow-catalog/): a searcheable catalog of workflows developed by the community, with instructions and details on how to use them. Although there is some standardisation of these pipelines, they are not as well curated as the ones from nf-core. 
+- [**nf-core**](https://nf-co.re/): a community project where scientists contribute ready-to-use, high-quality analysis pipelines.
+  This means you don't have to start from scratch if someone else has already created a workflow for a similar analysis.
+  It's all about making data analysis more accessible, standardized, and reproducible across the globe​​​​.
+- [**Snakemake workflow catalog**](https://snakemake.github.io/snakemake-workflow-catalog/): a searcheable catalog of workflows developed by the community, with instructions and details on how to use them.
+  Although there is some standardisation of these pipelines, they are not as well curated as the ones from nf-core.
 
 These materials will focus on Nextflow, due to the standarised and ready-to-use pipelines available through nf-core.
 
-:::{.callout-note}
+::: {.callout-note}
 #### How do I install Nextflow and Snakemake?
 
-You can install both of these packages using Mamba: 
+You can install both of these packages using Mamba:
 
 ```bash
 mamba create -n nextflow bioconda::nextflow=={{< var version.nextflow >}}
 mamba create -n snakemake bioconda::snakemake=={{< var version.snakemake >}}
 ```
 
-You may want to check the latest versions available ([here](https://anaconda.org/bioconda/nextflow) and [here](https://anaconda.org/bioconda/snakemake)), which may be different from the ones in the command above. 
+You may want to check the latest versions available ([here](https://anaconda.org/bioconda/nextflow) and [here](https://anaconda.org/bioconda/snakemake)), which may be different from the ones in the command above.
 :::
-
 
 ## Nextflow command line interface
 
-Nextflow has an array of subcommands for the command line interface to manage and execute pipelines. To see all options you can simply run `nextflow -h` and a list of available top-level options will appear in your terminal'. here we highlight the three we will be using:
+Nextflow has an array of subcommands for the command line interface to manage and execute pipelines.
+To see all options you can simply run `nextflow -h` and a list of available top-level options will appear in your terminal'.
+here we highlight the three we will be using:
 
 - `nextflow run [options] [pipeline]`: will execute a nextflow pipeline
 - `nextflow log`: will print the execution history and log information of a pipeline
-- `nextflow clean`: will clean up **cache** and **work** directories. 
+- `nextflow clean`: will clean up **cache** and **work** directories.
 
-The command `nextflow run` has some useful options: 
+The command `nextflow run` has some useful options:
 
 - `-profile`: defines which configuration profile(s) to use.
 - `-resume`: restarts the pipeline where it last stopped (using cached results).
 - `-work-dir`: defines the directory where intermediate result files (cache) are stored.
 
-We detail each of these below. 
-
+We detail each of these below.
 
 ### Configuration profile
 
-There are several ways to **configure how our Nextflow workflow runs**. 
+There are several ways to **configure how our Nextflow workflow runs**.
 All nf-core workflows come with some default profiles that we can choose from:
 
-- `singularity` uses _Singularity_ images for software management. This is the recommended (including on HPC systems).
-- `docker` uses _Docker_ images for software management. 
-- `mamba` uses Mamba for software management. This is not recommended as it is known to be slow and buggy. 
+- `singularity` uses *Singularity* images for software management.
+  This is the recommended (including on HPC systems).
+- `docker` uses *Docker* images for software management.
+- `mamba` uses Mamba for software management.
+  This is not recommended as it is known to be slow and buggy.
 
-More details about these in the [nf-core documentation](https://nf-co.re/docs/usage/configuration). 
+More details about these in the [nf-core documentation](https://nf-co.re/docs/usage/configuration).
 
-To use one of these profiles we use the option `-profile` followed by the name of the configuration profile we wish to use. 
-For example, `-profile singularity` will use _Singularity_ to manage and run the software. 
+To use one of these profiles we use the option `-profile` followed by the name of the configuration profile we wish to use.
+For example, `-profile singularity` will use *Singularity* to manage and run the software.
 
-Sometimes you may want to use custom profiles, or the pipeline you are using is not from the nf-core community. 
-In that case, you can define your own profile. 
-The easiest may be to look at one of the [nf-core configuration files](https://github.com/nf-core/rnaseq/blob/{{< var version.rnaseq >}}/nextflow.config) and set your own based on that. 
-For example, to set a profile for _Singularity_, we create a file with the following: 
+Sometimes you may want to use custom profiles, or the pipeline you are using is not from the nf-core community.
+In that case, you can define your own profile.
+The easiest may be to look at one of the [nf-core configuration files](https://github.com/nf-core/rnaseq/blob/{{< var version.rnaseq >}}/nextflow.config) and set your own based on that.
+For example, to set a profile for *Singularity*, we create a file with the following:
 
 ```groovy
 profiles {
@@ -113,98 +117,95 @@ profiles {
 ```
 
 Let's say we saved this file as `nextflow.config`.
-We can then use this profile by running our pipeline with the options `-profile singularity -c nextflow.config`. 
+We can then use this profile by running our pipeline with the options `-profile singularity -c nextflow.config`.
 You can also specify more than one configuration file in your command as `-c myconfig1 -c myconfig2`.
 If you provide multiple config files, they will be merged so that the settings in the first override the same settings appearing in the second, and so on.
-
 
 ::: {.callout-note}
 #### Workflow configuration
 
 Understanding the `config` file of a nextflow pipeline can be slightly daunting at first, especially if you start with a nf-core configuration.
-For example, if you look at the [default config for the nf-core/rnaseq workflow](https://github.com/nf-core/rnaseq/blob/master/nextflow.config), you can see how many parameters it includes. 
+For example, if you look at the [default config for the nf-core/rnaseq workflow](https://github.com/nf-core/rnaseq/blob/master/nextflow.config), you can see how many parameters it includes.
 
-The good news is that normally users won't need to modify most of these, instead you can just modify the parameters of interest and use `-c your_config_profile.config` when launching your pipeline. 
+The good news is that normally users won't need to modify most of these, instead you can just modify the parameters of interest and use `-c your_config_profile.config` when launching your pipeline.
 
 You can learn more about configuration in the [HPC](04-nextflow_hpc.md) and [advanced configuration](05-advanced_config.md) chapters.
 :::
 
 ### Cache directory
 
-When a Nextflow pipeline runs it creates (by default) a `work` directory when you execute the pipeline for the first time. 
-The `work` directory stores a variety of intermediate files used during the pipeline run, called a **cache**. 
+When a Nextflow pipeline runs it creates (by default) a `work` directory when you execute the pipeline for the first time.
+The `work` directory stores a variety of intermediate files used during the pipeline run, called a **cache**.
 The storage of these intermediate files is very important, as it allows the pipeline to resume from a previous state, in case it ran with errors and failed half-way through (more on this below).
 
-Each task from the pipeline (e.g. a bash command can be considered a task) will have a unique directory name within `work`. 
-When a task is created, Nextflow stages the task input files, script, and other helper files into the task directory. 
-The task writes any output files to this directory during its execution, and Nextflow uses these output files for downstream tasks and/or publishing. 
-Publishing is when the output of a task is being saved to the output directory specified by the user. 
+Each task from the pipeline (e.g. a bash command can be considered a task) will have a unique directory name within `work`.
+When a task is created, Nextflow stages the task input files, script, and other helper files into the task directory.
+The task writes any output files to this directory during its execution, and Nextflow uses these output files for downstream tasks and/or publishing.
+Publishing is when the output of a task is being saved to the output directory specified by the user.
 
-The `-work-dir` option can be used to change the name of the cache directory from the default `work`. 
+The `-work-dir` option can be used to change the name of the cache directory from the default `work`.
 This default directory name is fine (and most people just use that), but you may sometimes want to define a different one.
 For example, if you coincidentally already have a directory called "work" in your project, or if you want to use a separate storage partition to save the intermediate files.
 
-Regardless, it is important to remember that your final results are not stored in the work directory. 
-They are saved to the output directory you define when you run the pipeline. 
-Therefore, after successfully finishing your pipeline you can safely **remove the work directory**. 
-This is important to save disk space and you should make sure to do it regularly. 
-
+Regardless, it is important to remember that your final results are not stored in the work directory.
+They are saved to the output directory you define when you run the pipeline.
+Therefore, after successfully finishing your pipeline you can safely **remove the work directory**.
+This is important to save disk space and you should make sure to do it regularly.
 
 ### Checkpoint-and-resume
 
-Because Nextflow is keeping track of all the intermediate files it generates, it can re-run the pipeline from a previous step, if it failed half-way through. 
-This is an extremely useful feature of workflow management systems and it can save a lot of compute time, in case a pipeline failed. 
+Because Nextflow is keeping track of all the intermediate files it generates, it can re-run the pipeline from a previous step, if it failed half-way through.
+This is an extremely useful feature of workflow management systems and it can save a lot of compute time, in case a pipeline failed.
 
-All you have to do is use the option `-resume` when launching the pipeline and it will always resume where it left off. 
-Note that, if you remove the work cache directory detailed above, then the pipeline will have to start from the beginning, as it doesn't have any intermediate files saved to resume from. 
+All you have to do is use the option `-resume` when launching the pipeline and it will always resume where it left off.
+Note that, if you remove the work cache directory detailed above, then the pipeline will have to start from the beginning, as it doesn't have any intermediate files saved to resume from.
 
 More information about this feature can be found in the [Nextflow documentation](https://www.nextflow.io/docs/latest/cache-and-resume.html).
 
-
 ### Samplesheet
 
-Most nf-core pipelines use a CSV file as their main input file. 
-These CSV file is often referred to as the "sampleshet", as it contains **information about each sample to be processed**. 
+Most nf-core pipelines use a CSV file as their main input file.
+These CSV file is often referred to as the "sampleshet", as it contains **information about each sample to be processed**.
 
-Although there is no universal format for this CSV file, most pipelines accept at least 3 columns: 
+Although there is no universal format for this CSV file, most pipelines accept at least 3 columns:
 
 - `sample`: a name for the sample, which can be anything of our choice.
 - `fastq_1`: the path to the respective read 1 FASTQ file.
-- `fastq_2`: the path to the respective read 2 FASTQ file. This value is optional and, if missing it is assumed the sample is from single-end sequencing. 
+- `fastq_2`: the path to the respective read 2 FASTQ file.
+  This value is optional and, if missing it is assumed the sample is from single-end sequencing.
 
-These are only the most basic columns, however many other columns are often accepted, depending on the specific pipeline being used. 
-The details for the input CSV samplesheet are usually given in the "Usage" tab of the documentation. 
+These are only the most basic columns, however many other columns are often accepted, depending on the specific pipeline being used.
+The details for the input CSV samplesheet are usually given in the "Usage" tab of the documentation.
 We will see some practical examples in @ex-samplesheet.
 
-As FASTQ files are often named using very long identifiers, it's a good idea to use some command line tricks to save typing and avoid typos. 
-For example, we can create a first version of our file by listing all read 1 files and saving it into a file: 
+As FASTQ files are often named using very long identifiers, it's a good idea to use some command line tricks to save typing and avoid typos.
+For example, we can create a first version of our file by listing all read 1 files and saving it into a file:
 
 ```bash
 ls reads/*_1.downsampled.fastq.gz > samplesheet.csv
 ```
 
-This will give us a good start to create the samplesheet. 
-We can then open this file in a spreadsheet software such as _Excel_ and create the remaining columns. 
-We can copy-paste the file paths and use the "find and replace" feature to replace "_1" with "_2". 
-This way we save a lot of time of typing but also reduce the risk of having typos in our file paths. 
-
+This will give us a good start to create the samplesheet.
+We can then open this file in a spreadsheet software such as *Excel* and create the remaining columns.
+We can copy-paste the file paths and use the "find and replace" feature to replace "\_1" with "\_2".
+This way we save a lot of time of typing but also reduce the risk of having typos in our file paths.
 
 ## Demo nf-core pipeline
 
-To demonstrate the use of standard nf-core pipelines, we will use the aptly named [`nf-core/demo` pipeline](https://nf-co.re/demo/). 
+To demonstrate the use of standard nf-core pipelines, we will use the aptly named [`nf-core/demo` pipeline](https://nf-co.re/demo/).
 This workflow takes a set of FASTQ files as input, runs them through a simple QC step and outputs processed files as well as a MultiQC quality report.
 
 ![[nf-core/demo workflow diagram](https://github.com/nf-core/demo/blob/{{< var version.demo >}}/docs/images/nf-core-demo-subway.png) by Christopher Hakkaart, licensed under [MIT](https://github.com/nf-core/demo/blob/{{< var version.demo >}}/LICENSE)](https://raw.githubusercontent.com/nf-core/demo/dev//docs/images/nf-core-demo-subway.png)
 
 We will run this workflow on a set of files found in the `demo` directory.
-We will start by activating a Mamba environment where we installed nextflow: 
+We will start by activating a Mamba environment where we installed nextflow:
 
 ```bash
 mamba activate nextflow
 ```
 
 Looking at the pipeline documentation, we are given an example of the samplesheet CSV file.
-This is how the samplesheet looks like for our samples: 
+This is how the samplesheet looks like for our samples:
 
 ```
 sample,fastq_1,fastq_2
@@ -225,18 +226,21 @@ nextflow run nf-core/demo \
   --fasta "genome/Mus_musculus.GRCm38.dna_sm.chr14.fa.gz"
 ```
 
-In this case we used the following generic options: 
+In this case we used the following generic options:
 
-- `-profile "singularity"` indicates we want to use Singularity to manage the software. Nextflow will automatically download containers for each step of the pipeline. 
-- `-revision "{{< var version.demo >}}"` means we are running version {{< var version.demo >}} of the pipeline. It's a good idea to define the specific version of the pipeline you run, so you can reproduce the results in the future, in case the pipeline changes. You can see the latest versions available from the [workflow documentation page](https://nf-co.re/demo/).
+- `-profile "singularity"` indicates we want to use Singularity to manage the software.
+  Nextflow will automatically download containers for each step of the pipeline.
+- `-revision "{{< var version.demo >}}"` means we are running version {{< var version.demo >}} of the pipeline.
+  It's a good idea to define the specific version of the pipeline you run, so you can reproduce the results in the future, in case the pipeline changes.
+  You can see the latest versions available from the [workflow documentation page](https://nf-co.re/demo/).
 
-We then have workflow-specific options (all listed [in the documentation](https://nf-co.re/demo/{{< var version.demo >}}/parameters/)): 
+We then have workflow-specific options (all listed [in the documentation](https://nf-co.re/demo/{{< var version.demo >}}/parameters/)):
 
-- `--input` is the samplesheet CSV for this pipeline, which we prepared beforehand using a spreadsheet program such as Excel. 
-- `--outdir` is the name of the output directory for our results. 
+- `--input` is the samplesheet CSV for this pipeline, which we prepared beforehand using a spreadsheet program such as Excel.
+- `--outdir` is the name of the output directory for our results.
 - `--fasta` is the reference genome to be used by the pipeline.
 
-When the pipeline starts running, we are given information about its progress, for example: 
+When the pipeline starts running, we are given information about its progress, for example:
 
 ```
 executor >  local (6)
@@ -245,10 +249,10 @@ executor >  local (6)
 [-        ] NFCORE_DEMO:DEMO:MULTIQC                -
 ```
 
-You will also notice that a new directory called `work` is created. 
+You will also notice that a new directory called `work` is created.
 As mentioned above, this is the cache directory, which stores intermediate files and allows the workflow to resume if it fails half-way through (using the `-resume` option).
 
-Once the pipeline completes (hopefully successfully), we are given a message: 
+Once the pipeline completes (hopefully successfully), we are given a message:
 
 ```
 -[nf-core/demo] Pipeline completed successfully-
@@ -261,27 +265,26 @@ Succeeded   : 9
 ::: callout-note
 #### Reference genomes
 
-Many nf-core pipelines allow you to specific the name of an organism (using the `--genome` option) and will automatically download the reference genome and annotation files for you. 
-However, many of these workflows rely on iGenomes, which is not always up-to-date. 
-Therefore, [the use of this option is discouraged](https://nf-co.re/docs/usage/reference_genomes), as you may miss the latest annotations or use a version of the genome that is incompatible with the rest of your analysis. 
+Many nf-core pipelines allow you to specific the name of an organism (using the `--genome` option) and will automatically download the reference genome and annotation files for you.
+However, many of these workflows rely on iGenomes, which is not always up-to-date.
+Therefore, [the use of this option is discouraged](https://nf-co.re/docs/usage/reference_genomes), as you may miss the latest annotations or use a version of the genome that is incompatible with the rest of your analysis.
 
-Instead, you can download the latest version of the genome and annotations for your species, from sources such as ENSEMBL ([vertebrates](https://www.ensembl.org/index.html) and [non-vertebrates](http://ensemblgenomes.org/)), [GENCODE](https://www.gencodegenes.org/) or [UCSC](https://genome.ucsc.edu/). 
+Instead, you can download the latest version of the genome and annotations for your species, from sources such as ENSEMBL ([vertebrates](https://www.ensembl.org/index.html) and [non-vertebrates](http://ensemblgenomes.org/)), [GENCODE](https://www.gencodegenes.org/) or [UCSC](https://genome.ucsc.edu/).
 
 Most pipelines then have individual options to use these files as input: `--fasta` (for the reference genome) and `--gff`/`--gtf` (for the transcript annotation).
 :::
 
-
 ### Cleaning up
 
-If you are happy with the results, you can clean the `work` cache directory to save space. 
+If you are happy with the results, you can clean the `work` cache directory to save space.
 Before actually removing anything, you can see what the clean command would do using the `-dry-run` (or `-n`) option:
 
 ```bash
 nextflow clean -n
 ```
 
-This will inform you of what the command would remove. 
-If you're happy with this, you can go ahead and issue to command to `-force` (or `-f`) the removal: 
+This will inform you of what the command would remove.
+If you're happy with this, you can go ahead and issue to command to `-force` (or `-f`) the removal:
 
 ```bash
 nextflow clean -f
@@ -290,22 +293,21 @@ nextflow clean -f
 The `clean` command has several options allowing you finer control over what gets deleted, for example the `-before` and `-after` options allow you to clean up cached files before or after the specified date/time.
 
 While `nextflow clean` works well, by default it still leaves behind some files.
-Usually these don't occupy much space, but if you want to completely remove the cached files and hidden log files, you can do this manually: 
+Usually these don't occupy much space, but if you want to completely remove the cached files and hidden log files, you can do this manually:
 
 ```bash
 rm -r .nextflow* work
 ```
 
-
 ## Troubleshooting
 
-Inevitably workflows may fail, which could be due to several reasons. 
-For example, an error in our command, a mis-formatted samplesheet, missing input files or sometimes even a bug in the pipeline. 
+Inevitably workflows may fail, which could be due to several reasons.
+For example, an error in our command, a mis-formatted samplesheet, missing input files or sometimes even a bug in the pipeline.
 
-When an error occurs, the `nextflow` command terminates and an error message is printed on the screen (usually in bright red!). 
-The error messages can be quite long and feel difficult to interpret, but often only a small part of the message is relevant, so read it carefully to see if you can spot what the problem is. 
- 
-For example, we previously got the following error when running the `nf-core/demo` pipeline. 
+When an error occurs, the `nextflow` command terminates and an error message is printed on the screen (usually in bright red!).
+The error messages can be quite long and feel difficult to interpret, but often only a small part of the message is relevant, so read it carefully to see if you can spot what the problem is.
+
+For example, we previously got the following error when running the `nf-core/demo` pipeline.
 Can you see what the problem was?
 
 <pre>
@@ -351,41 +353,40 @@ This means a step of the pipeline must have requested 36GB by default, but we on
 In this case, we could have restricted the memory usage with a custom configuration file, which we will discuss [in the next section](04-nextflow_hpc.md).
 </details>
 
-
 ## Exercises
 
-In these exercises, you will explore one (or more, if you have time and interest) of the pipelines from the nf-core community, tailored to different areas of genomic analysis. 
-Start with the version of the exercise that aligns best with your data and interests. 
+In these exercises, you will explore one (or more, if you have time and interest) of the pipelines from the nf-core community, tailored to different areas of genomic analysis.
+Start with the version of the exercise that aligns best with your data and interests.
 
-There are two tasks for you to complete: (1) preparing an input samplesheet for the pipeline and (2) writing the `nextflow` command to launch the pipeline. 
+There are two tasks for you to complete: (1) preparing an input samplesheet for the pipeline and (2) writing the `nextflow` command to launch the pipeline.
 
-Note that all of these datasets are downsampled to be small, so they run quickly. 
-They do not represent best practices in experimental design. 
+Note that all of these datasets are downsampled to be small, so they run quickly.
+They do not represent best practices in experimental design.
 
-:::{.callout-exercise #ex-samplesheet}
+::: {.callout-exercise #ex-samplesheet}
 ### Preparing samplesheet
 
-Most `nf-core` pipelines require a samplesheet as input, which is essentially a CSV file detailing where to find the sequencing files for each sample. 
+Most `nf-core` pipelines require a samplesheet as input, which is essentially a CSV file detailing where to find the sequencing files for each sample.
 The specific format for the samplesheet is workflow-specific, but always detailed in the respective documentation.
-Your goal in this exercise is to **find what the required format for the samplesheet is** and **create the CSV file** to use in the next exercise. 
+Your goal in this exercise is to **find what the required format for the samplesheet is** and **create the CSV file** to use in the next exercise.
 
 You can create the CSV using a spreadsheet software (such as [Excel](https://support.microsoft.com/en-gb/office/import-or-export-text-txt-or-csv-files-5250ac4c-663c-47ce-937b-339e391393ba) or [LibreOffice Calc](https://help.libreoffice.org/latest/en-US/text/scalc/guide/csv_files.html)).
 
 As a bonus, you can try to create the samplesheet in a less manual way using the provided metadata files.
-You could do this using command line tools (such as `awk` or `perl`) or even using R or Python. 
+You could do this using command line tools (such as `awk` or `perl`) or even using R or Python.
 
-:::{.panel-tabset group=workflow}
+::::: {.panel-tabset group=workflow}
 #### RNA-seq
 
-Transcriptome data processing using `nf-core/rnaseq`. 
+Transcriptome data processing using `nf-core/rnaseq`.
 Go into the `rnaseq` directory for this version of the exercise.
 
 - Samplesheet documentation at [https://nf-co.re/rnaseq/{{< var version.rnaseq >}}/docs/usage/](https://nf-co.re/rnaseq/{{< var version.rnaseq >}}/docs/usage/).
 - Input FASTQ files in `reads/`.
 - Metadata for each sample is provided in the `sample_info.tsv` file, which gives you the name of each sample and their respective FASTQ file prefix name.
 
-:::{.callout-answer}
-Our metadata file contains information about each sample: 
+::::::: {.callout-answer}
+Our metadata file contains information about each sample:
 
 ```bash
 cat sample_info.tsv
@@ -399,7 +400,7 @@ SRR7657877  1          Uninfected  d11        un11_rep1
 SRR7657876  2          Uninfected  d11        un11_rep2
 ```
 
-If we look inside our reads directory, we can see the following files: 
+If we look inside our reads directory, we can see the following files:
 
 ```bash
 ls reads
@@ -412,7 +413,7 @@ SRR7657874_1.downsampled.fastq.gz  SRR7657877_1.downsampled.fastq.gz
 SRR7657874_2.downsampled.fastq.gz  SRR7657877_2.downsampled.fastq.gz
 ```
 
-Following [the documentation](https://nf-co.re/rnaseq/{{< var version.rnaseq >}}/docs/usage/#multiple-runs-of-the-same-sample) for the pipeline, we could have created our samplesheet in Excel like this (note: the filenames are truncated): 
+Following [the documentation](https://nf-co.re/rnaseq/{{< var version.rnaseq >}}/docs/usage/#multiple-runs-of-the-same-sample) for the pipeline, we could have created our samplesheet in Excel like this (note: the filenames are truncated):
 
 <table style="border-collapse: collapse; width: auto; font-family: Arial, sans-serif;">
   <tr>
@@ -460,12 +461,12 @@ Following [the documentation](https://nf-co.re/rnaseq/{{< var version.rnaseq >}}
 </table>
 
 However, for many samples, it can be tedious and error-prone to do this kind of task manually.
-We can see that the FASTQ file names are essentially the prefix given in the metadata file, along with suffixes "_1.downsampled.fastq.gz" and "_2.downsampled.fastq.gz" for read 1 and read 2, respectively. 
+We can see that the FASTQ file names are essentially the prefix given in the metadata file, along with suffixes "\_1.downsampled.fastq.gz" and "\_2.downsampled.fastq.gz" for read 1 and read 2, respectively.
 
-Therefore, we can create the samplesheet based on our metadata TSV file using some programming tools. 
+Therefore, we can create the samplesheet based on our metadata TSV file using some programming tools.
 Here's 4 different ways of doing it:
 
-:::{.panel-tabset group=language}
+::::::::: {.panel-tabset group=language}
 ##### Python
 
 ```python
@@ -475,12 +476,14 @@ import pandas as pd
 meta = pd.read_csv("sample_info.tsv", sep="\t", na_values="")
 
 # create data frame for output samplesheet
-out = pd.DataFrame({
-    'sample': meta['name'],
-    'fastq_1': "reads/" + meta['fastq'] + "_1.downsampled.fastq.gz",
-    'fastq_2': "reads/" + meta['fastq'] + "_2.downsampled.fastq.gz",
-    'strandedness': "auto"
-})
+out = pd.DataFrame(
+    {
+        "sample": meta["name"],
+        "fastq_1": "reads/" + meta["fastq"] + "_1.downsampled.fastq.gz",
+        "fastq_2": "reads/" + meta["fastq"] + "_2.downsampled.fastq.gz",
+        "strandedness": "auto",
+    }
+)
 
 # save the samplesheet ensuring NA values are written as empty cells
 out.to_csv("samplesheet.csv", index=False, quoting=3, na_rep="")
@@ -527,11 +530,10 @@ tail -n +2 sample_info.tsv | awk 'BEGIN { FS="\t"; OFS="," }
   print $5, "reads/" $1 "_1.downsampled.fastq.gz", "reads/" $1 "_2.downsampled.fastq.gz", "auto"
 }' >> samplesheet.csv
 ```
+:::::::::
 
-:::
-
-Note, if all of the coding suggestions above seem unclear, we reiterate that you can create the samplesheet by hand in a standard spreadsheet software. 
-At the end, our samplesheet should look like this: 
+Note, if all of the coding suggestions above seem unclear, we reiterate that you can create the samplesheet by hand in a standard spreadsheet software.
+At the end, our samplesheet should look like this:
 
 ```
 sample,fastq_1,fastq_2,strandedness
@@ -540,19 +542,19 @@ inf33_rep3,reads/SRR7657872_1.downsampled.fastq.gz,reads/SRR7657872_2.downsample
 un11_rep1,reads/SRR7657877_1.downsampled.fastq.gz,reads/SRR7657877_2.downsampled.fastq.gz,auto
 un11_rep2,reads/SRR7657876_1.downsampled.fastq.gz,reads/SRR7657876_2.downsampled.fastq.gz,auto
 ```
-:::
+:::::::
 
 #### ChIP-seq
 
-Transcriptome data processing using `nf-core/chipseq`. 
+Transcriptome data processing using `nf-core/chipseq`.
 Go into the `chipseq` directory for this version of the exercise.
 
 - Samplesheet documentation at [nf-co.re/chipseq/{{< var version.chipseq >}}/docs/usage/](https://nf-co.re/chipseq/{{< var version.chipseq >}}/docs/usage/).
 - Input FASTQ files in `reads/`.
 - Metadata for each sample is provided in the `sample_info.tsv` file, which gives you the name of each sample and their respective FASTQ file prefix name.
 
-:::{.callout-answer}
-Our metadata file contains information about each sample: 
+::::::: {.callout-answer}
+Our metadata file contains information about each sample:
 
 ```bash
 cat sample_info.tsv
@@ -568,7 +570,7 @@ mcf7_input_veh  SRR1193562
 mcf7_input_e2   SRR1193563
 ```
 
-If we look inside our reads directory, we can see the following files: 
+If we look inside our reads directory, we can see the following files:
 
 ```bash
 ls reads
@@ -580,7 +582,7 @@ SRR1193527.fastq.gz  SRR1193562.fastq.gz
 SRR1193529.fastq.gz  SRR1193563.fastq.gz
 ```
 
-Following [the documentation](https://nf-co.re/chipseq/{{< var version.chipseq >}}/docs/usage/#multiple-runs-of-the-same-library) for the pipeline, we could have created our samplesheet in Excel like this: 
+Following [the documentation](https://nf-co.re/chipseq/{{< var version.chipseq >}}/docs/usage/#multiple-runs-of-the-same-library) for the pipeline, we could have created our samplesheet in Excel like this:
 
 <table style="border-collapse: collapse; width: auto; font-family: Arial, sans-serif;">
   <tr>
@@ -666,12 +668,12 @@ Following [the documentation](https://nf-co.re/chipseq/{{< var version.chipseq >
 </table>
 
 However, for many samples, it can be tedious and error-prone to do this kind of task manually.
-We can see that the FASTQ file names are essentially the prefix given in the metadata file, along with the suffix ".fastq.gz" (these are single-end sequencing data, so there's only one file per sample). 
+We can see that the FASTQ file names are essentially the prefix given in the metadata file, along with the suffix ".fastq.gz" (these are single-end sequencing data, so there's only one file per sample).
 
-Therefore, we can create the samplesheet based on our metadata TSV file using some programming tools. 
+Therefore, we can create the samplesheet based on our metadata TSV file using some programming tools.
 Here's 4 different ways of doing it:
 
-:::{.panel-tabset group=language}
+::::::::: {.panel-tabset group=language}
 ##### Python
 
 ```python
@@ -682,15 +684,17 @@ meta = pd.read_csv("sample_info.tsv", sep="\t", na_values="")
 
 # create data frame for output samplesheet
 # "Int64" is used to ensure replicate columns output as integers
-out = pd.DataFrame({
-    "sample": meta["name"],
-    "fastq_1": "reads/" + meta["fastq"] + ".fastq.gz",
-    "fastq_2": pd.NA,
-    "replicate": meta["rep"].astype("Int64"),
-    "antibody": meta["antibody"],
-    "control": meta["input_control"],
-    "control_replicate": meta["input_rep"].astype("Int64")
-})
+out = pd.DataFrame(
+    {
+        "sample": meta["name"],
+        "fastq_1": "reads/" + meta["fastq"] + ".fastq.gz",
+        "fastq_2": pd.NA,
+        "replicate": meta["rep"].astype("Int64"),
+        "antibody": meta["antibody"],
+        "control": meta["input_control"],
+        "control_replicate": meta["input_rep"].astype("Int64"),
+    }
+)
 
 # save the samplesheet ensuring NA values are written as empty cells
 out.to_csv("samplesheet.csv", index=False, quoting=3, na_rep="")
@@ -740,11 +744,10 @@ tail -n +2 sample_info.tsv | awk 'BEGIN { FS="\t"; OFS="," }
   print $1, "reads/" $3 ".fastq.gz", "", $2, $4, $5, $6
 }' >> samplesheet.csv
 ```
+:::::::::
 
-:::
-    
-Note, if all of the coding suggestions above seem unclear, we reiterate that you can create the samplesheet by hand in a standard spreadsheet software. 
-At the end, our samplesheet should look like this: 
+Note, if all of the coding suggestions above seem unclear, we reiterate that you can create the samplesheet by hand in a standard spreadsheet software.
+At the end, our samplesheet should look like this:
 
 ```
 sample,fastq_1,fastq_2,replicate,antibody,control,control_replicate
@@ -755,20 +758,19 @@ brd4_e2,reads/SRR1193530.fastq.gz,,2,BRD4,mcf7_input_e2,1
 mcf7_input_veh,reads/SRR1193562.fastq.gz,,1,,,
 mcf7_input_e2,reads/SRR1193563.fastq.gz,,1,,,
 ```
-:::
-
+:::::::
 
 #### Virus - Illumina
 
-Transcriptome data processing using `nf-core/viralrecon`. 
+Transcriptome data processing using `nf-core/viralrecon`.
 Go into the `virus_illumina` directory for this version of the exercise.
 
 - Samplesheet documentation at [nf-co.re/viralrecon/{{< var version.viralrecon >}}/docs/usage/](https://nf-co.re/viralrecon/{{< var version.viralrecon >}}/docs/usage/).
 - Input FASTQ files in `reads/`.
 - Metadata for each sample is provided in the `sample_info.tsv` file, which gives you the name of each sample and their respective FASTQ file prefix name.
 
-:::{.callout-answer}
-Our metadata file contains information about each sample: 
+::::::: {.callout-answer}
+Our metadata file contains information about each sample:
 
 ```bash
 cat sample_info.tsv
@@ -786,7 +788,7 @@ ZA07    SRR17051932
 ZA08    SRR17054503
 ```
 
-If we look inside our reads directory, we can see the following files: 
+If we look inside our reads directory, we can see the following files:
 
 ```bash
 ls reads
@@ -799,7 +801,7 @@ SRR17051916_1.fastq.gz  SRR17051932_1.fastq.gz  SRR17051951_1.fastq.gz  SRR17054
 SRR17051916_2.fastq.gz  SRR17051932_2.fastq.gz  SRR17051951_2.fastq.gz  SRR17054503_2.fastq.gz
 ```
 
-Following [the documentation](https://nf-co.re/viralrecon/{{< var version.viralrecon >}}/docs/usage/#illumina) for the pipeline, we could have created our samplesheet in Excel like this: 
+Following [the documentation](https://nf-co.re/viralrecon/{{< var version.viralrecon >}}/docs/usage/#illumina) for the pipeline, we could have created our samplesheet in Excel like this:
 
 <table style="border-collapse: collapse; width: auto; font-family: Arial, sans-serif;">
   <tr>
@@ -865,12 +867,12 @@ Following [the documentation](https://nf-co.re/viralrecon/{{< var version.viralr
 </table>
 
 However, for many samples, it can be tedious and error-prone to do this kind of task manually.
-We can see that the FASTQ file names are essentially the prefix given in the metadata file, along with the suffix "_1.fastq.gz" and "_2.fastq.gz" for read 1 and read 2, respectively. 
+We can see that the FASTQ file names are essentially the prefix given in the metadata file, along with the suffix "\_1.fastq.gz" and "\_2.fastq.gz" for read 1 and read 2, respectively.
 
-Therefore, we can create the samplesheet based on our metadata TSV file using some programming tools. 
+Therefore, we can create the samplesheet based on our metadata TSV file using some programming tools.
 Here's 4 different ways of doing it:
 
-:::{.panel-tabset group=language}
+::::::::: {.panel-tabset group=language}
 ##### Python
 
 ```python
@@ -880,11 +882,13 @@ import pandas as pd
 meta = pd.read_csv("sample_info.tsv", sep="\t", na_values="")
 
 # create data frame for output samplesheet
-out = pd.DataFrame({
-    'sample': meta['name'],
-    'fastq_1': "reads/" + meta['fastq'] + "_1.fastq.gz",
-    'fastq_2': "reads/" + meta['fastq'] + "_2.fastq.gz"
-})
+out = pd.DataFrame(
+    {
+        "sample": meta["name"],
+        "fastq_1": "reads/" + meta["fastq"] + "_1.fastq.gz",
+        "fastq_2": "reads/" + meta["fastq"] + "_2.fastq.gz",
+    }
+)
 
 # save the samplesheet ensuring NA values are written as empty cells
 out.to_csv("samplesheet.csv", index=False, quoting=3, na_rep="")
@@ -930,11 +934,10 @@ tail -n +2 sample_info.tsv | awk 'BEGIN { FS="\t"; OFS="," }
   print $1, "reads/" $2 "_1.fastq.gz", "reads/" $2 "_2.fastq.gz"
 }' >> samplesheet.csv
 ```
+:::::::::
 
-:::
-
-Note, if all of the coding suggestions above seem unclear, we reiterate that you can create the samplesheet by hand in a standard spreadsheet software. 
-At the end, our samplesheet should look like this: 
+Note, if all of the coding suggestions above seem unclear, we reiterate that you can create the samplesheet by hand in a standard spreadsheet software.
+At the end, our samplesheet should look like this:
 
 ```
 sample,fastq_1,fastq_2
@@ -947,20 +950,20 @@ ZA06,reads/SRR17051935_1.fastq.gz,reads/SRR17051935_2.fastq.gz
 ZA07,reads/SRR17051932_1.fastq.gz,reads/SRR17051932_2.fastq.gz
 ZA08,reads/SRR17054503_1.fastq.gz,reads/SRR17054503_2.fastq.gz
 ```
-:::
-
+:::::::
 
 #### Virus - ONT
 
-Transcriptome data processing using `nf-core/viralrecon`. 
+Transcriptome data processing using `nf-core/viralrecon`.
 Go into the `virus_ont` directory for this version of the exercise.
 
 - Samplesheet documentation at [nf-co.re/viralrecon/{{< var version.viralrecon >}}/docs/usage/](https://nf-co.re/viralrecon/{{< var version.viralrecon >}}/docs/usage/).
-- Input barcode directories with FASTQ files in `fastq_pass/`. This is the directory that is created by standard ONT basecalling software such as Guppy or Dorado.
+- Input barcode directories with FASTQ files in `fastq_pass/`.
+  This is the directory that is created by standard ONT basecalling software such as Guppy or Dorado.
 - Metadata for each sample is provided in the `sample_info.tsv` file, which gives you the name of each sample and their respective barcode folder.
 
-:::{.callout-answer}
-Our metadata file contains information about each sample: 
+::::::: {.callout-answer}
+Our metadata file contains information about each sample:
 
 ```bash
 cat sample_info.tsv
@@ -980,7 +983,7 @@ CH29    29
 CH30    30
 ```
 
-If we look inside our reads directory, we can see the following directories: 
+If we look inside our reads directory, we can see the following directories:
 
 ```bash
 ls fastq_pass
@@ -991,7 +994,7 @@ barcode01  barcode03  barcode05  barcode27  barcode29
 barcode02  barcode04  barcode26  barcode28  barcode30
 ```
 
-Following [the documentation](https://nf-co.re/viralrecon/{{< var version.viralrecon >}}/docs/usage/#nanopore) for the pipeline, we could have created our samplesheet in Excel like this: 
+Following [the documentation](https://nf-co.re/viralrecon/{{< var version.viralrecon >}}/docs/usage/#nanopore) for the pipeline, we could have created our samplesheet in Excel like this:
 
 <table style="border-collapse: collapse; width: auto; font-family: Arial, sans-serif;">
   <tr>
@@ -1067,7 +1070,7 @@ echo "sample,barcode" > samplesheet.csv
 tail -n +2 sample_info.tsv | sed 's/\t/,/' >> samplesheet.csv
 ```
 
-At the end, our samplesheet should look like this: 
+At the end, our samplesheet should look like this:
 
 ```
 sample,barcode
@@ -1082,8 +1085,7 @@ CH28,28
 CH29,29
 CH30,30
 ```
-:::
-
+:::::::
 
 <!-- #### Variant calling
 
@@ -1097,46 +1099,45 @@ Go into the `variants` directory for this version of the exercise.
 :::{.callout-answer}
 TODO
 ::: -->
-
+:::::
 :::
-:::
 
-:::{.callout-exercise #ex-nextflow}
+::: {.callout-exercise #ex-nextflow}
 ### Running the pipeline
 
-Now that you have a samplesheet, you should be ready to write the command to run the pipeline. 
+Now that you have a samplesheet, you should be ready to write the command to run the pipeline.
 Then, you can launch the pipeline and watch how Nextflow orchestrates the different steps of the analysis.
 
-Given the complexity of some of these pipelines, we give a skeleton of a command to get you started in each case. 
-However, a few things to remember to do in every case: 
+Given the complexity of some of these pipelines, we give a skeleton of a command to get you started in each case.
+However, a few things to remember to do in every case:
 
 - Add the `-r` option to specify the version of the workflow to be used (use the latest available on the respective documentation page).
 - Include the option to use `singularity` to manage the software.
-- Check the parameters being used in the respective documentation page. 
+- Check the parameters being used in the respective documentation page.
 
-To make your code editing easier, make sure to include your command in a shell script and then run it using `bash`. 
-Also, make sure to activate the Nextflow mamba environment (`mamba activate nextflow`) before you run the script. 
+To make your code editing easier, make sure to include your command in a shell script and then run it using `bash`.
+Also, make sure to activate the Nextflow mamba environment (`mamba activate nextflow`) before you run the script.
 
-**Note:** some of these pipelines take a long time to run. 
-Once you initiate the pipeline and it seems to be running successfully, you can indicate to the trainers that you have completed the exercise. 
+**Note:** some of these pipelines take a long time to run.
+Once you initiate the pipeline and it seems to be running successfully, you can indicate to the trainers that you have completed the exercise.
 
-:::{.panel-tabset group=workflow}
+::::: {.panel-tabset group=workflow}
 #### RNA-seq
 
-Transcriptome data processing using `nf-core/rnaseq`. 
-Go into the `rnaseq` directory for this version of the exercise. 
+Transcriptome data processing using `nf-core/rnaseq`.
+Go into the `rnaseq` directory for this version of the exercise.
 
 - Parameter documentation at [nf-co.re/rnaseq/{{< var version.rnaseq >}}/parameters](https://nf-co.re/rnaseq/{{< var version.rnaseq >}}/parameters).
 - Use the samplesheet created in the previous exercise as input.
 - The reference genome and annotation are in the `genome/` directory.
-  - Note that the options to specify these input files require the **full path** to the file to be specified. In the code skeleton below we show the trick of using the `$PWD` environment variable to specify the path relative to the current working directory. 
+  - Note that the options to specify these input files require the **full path** to the file to be specified.
+    In the code skeleton below we show the trick of using the `$PWD` environment variable to specify the path relative to the current working directory.
 
-We provide a skeleton of what your command should look like in the script `scripts/run_rnaseq.sh`. 
-Open that script in a text editor (for example, `nano` or `vim`) to fix the code and then run the script using `bash`. 
+We provide a skeleton of what your command should look like in the script `scripts/run_rnaseq.sh`.
+Open that script in a text editor (for example, `nano` or `vim`) to fix the code and then run the script using `bash`.
 
-:::{.callout-answer}
-
-Here is the fixed nextflow command in our script: 
+::::::: {.callout-answer}
+Here is the fixed nextflow command in our script:
 
 ```bash
 nextflow run nf-core/rnaseq \
@@ -1150,40 +1151,38 @@ nextflow run nf-core/rnaseq \
   --skip_alignment
 ```
 
-We then ran our script with `bash scripts/run_rnaseq.sh`. 
-While running, we got the progress of the pipeline printed on the screen. 
+We then ran our script with `bash scripts/run_rnaseq.sh`.
+While running, we got the progress of the pipeline printed on the screen.
 
-At the end of the pipeline we could see the results in the `results/rnaseq` folder. 
-For example, we can open the file `results/rnaseq/multiqc/star_salmon/multiqc_report.html` to look at a quality control report for the pipeline. 
+At the end of the pipeline we could see the results in the `results/rnaseq` folder.
+For example, we can open the file `results/rnaseq/multiqc/star_salmon/multiqc_report.html` to look at a quality control report for the pipeline.
 
-:::{.callout-warning}
-In the code above we've used the option `--skip_alignment`. 
-In real-world analysis we would not recommend doing this by default, as the alignment provides many useful QC metrics for RNA-seq (e.g. gene body coverage, PCR duplication issues, etc.). 
+::::::::: {.callout-warning}
+In the code above we've used the option `--skip_alignment`.
+In real-world analysis we would not recommend doing this by default, as the alignment provides many useful QC metrics for RNA-seq (e.g. gene body coverage, PCR duplication issues, etc.).
 
-Skipping the alignment does result in a much faster run, so it may be justified, for example, if you are processing a very large number of samples and need to save compute resources. 
+Skipping the alignment does result in a much faster run, so it may be justified, for example, if you are processing a very large number of samples and need to save compute resources.
 
-In this case, we used it to save time, as our purpose is to show how to set and run an nf-core pipeline, not to get precise results. 
-:::
-
-:::
-
+In this case, we used it to save time, as our purpose is to show how to set and run an nf-core pipeline, not to get precise results.
+:::::::::
+:::::::
 
 #### ChIP-seq
 
 Chromatin immunoprecipitation sequencing analysis using `nf-core/chipseq`.
-Go into the `chipseq` directory for this version of the exercise. 
+Go into the `chipseq` directory for this version of the exercise.
 
 - Parameter documentation at [nf-co.re/chipseq/{{< var version.chipseq >}}/parameters](https://nf-co.re/chipseq/{{< var version.chipseq >}}/parameters).
 - Use the samplesheet created in the previous exercise as input.
-- The reference genome and annotation are in the `genome/` directory. 
-  - Note that the options to specify these input files require the **full path** to the file to be specified. In the code skeleton below we show the trick of using the `$PWD` environment variable to specify the path relative to the current working directory. 
+- The reference genome and annotation are in the `genome/` directory.
+  - Note that the options to specify these input files require the **full path** to the file to be specified.
+    In the code skeleton below we show the trick of using the `$PWD` environment variable to specify the path relative to the current working directory.
 
-We provide a skeleton of what your command should look like in the script `scripts/run_chipseq.sh`. 
-Open that script in a text editor (for example, `nano` or `vim`) to fix the code and then run the script using `bash`. 
+We provide a skeleton of what your command should look like in the script `scripts/run_chipseq.sh`.
+Open that script in a text editor (for example, `nano` or `vim`) to fix the code and then run the script using `bash`.
 
-::: callout-answer
-
-Here is the fixed nextflow command in our script: 
+::::::: callout-answer
+Here is the fixed nextflow command in our script:
 
 ```bash
 nextflow run nf-core/chipseq \
@@ -1198,30 +1197,29 @@ nextflow run nf-core/chipseq \
   --skip_preseq
 ```
 
-We then ran our script with `bash scripts/run_chipseq.sh`. 
-While running, we got the progress of the pipeline printed on the screen. 
+We then ran our script with `bash scripts/run_chipseq.sh`.
+While running, we got the progress of the pipeline printed on the screen.
 
-At the end of the pipeline we could see the results in the `results/chipseq` folder. 
-For example, we can open the file `results/chipseq/multiqc/broadPeak/multiqc_report.html` to look at a quality control report for the pipeline. 
-:::
-
+At the end of the pipeline we could see the results in the `results/chipseq` folder.
+For example, we can open the file `results/chipseq/multiqc/broadPeak/multiqc_report.html` to look at a quality control report for the pipeline.
+:::::::
 
 #### Virus - Illumina
 
 Analysis of viral genomes using `nf-core/viralrecon`.
-Go into the `virus_illumina` directory for this version of the exercise. 
+Go into the `virus_illumina` directory for this version of the exercise.
 
 - Parameter documentation at [nf-co.re/viralrecon/{{< var version.viralrecon >}}/parameters](https://nf-co.re/viralrecon/{{< var version.viralrecon >}}/parameters).
 - Use the samplesheet created in the previous exercise as input.
-- The reference genome, gene annotation and primer locations are in the `genome/` directory. 
-  - Note that the options to specify these input files require the **full path** to the file to be specified. In the code skeleton below we show the trick of using the `$PWD` environment variable to specify the path relative to the current working directory. 
+- The reference genome, gene annotation and primer locations are in the `genome/` directory.
+  - Note that the options to specify these input files require the **full path** to the file to be specified.
+    In the code skeleton below we show the trick of using the `$PWD` environment variable to specify the path relative to the current working directory.
 
-We provide a skeleton of what your command should look like in the script `scripts/run_viralrecon_illumina.sh`. 
-Open that script in a text editor (for example, `nano` or `vim`) to fix the code and then run the script using `bash`. 
+We provide a skeleton of what your command should look like in the script `scripts/run_viralrecon_illumina.sh`.
+Open that script in a text editor (for example, `nano` or `vim`) to fix the code and then run the script using `bash`.
 
-:::{.callout-answer}
-
-Here is the fixed nextflow command in our script: 
+::::::: {.callout-answer}
+Here is the fixed nextflow command in our script:
 
 ```bash
 nextflow run nf-core/viralrecon \
@@ -1238,32 +1236,31 @@ nextflow run nf-core/viralrecon \
   --skip_pangolin --skip_nextclade
 ```
 
-We then ran our script with `bash scripts/run_viralrecon.sh`. 
-While running, we got the progress of the pipeline printed on the screen. 
+We then ran our script with `bash scripts/run_viralrecon.sh`.
+While running, we got the progress of the pipeline printed on the screen.
 
-At the end of the pipeline we could see the results in the `results/viralrecon` folder. 
-For example, we can open the file `results/viralrecon/multiqc/multiqc_report.html` to look at a quality control report for the pipeline. 
-
-:::
+At the end of the pipeline we could see the results in the `results/viralrecon` folder.
+For example, we can open the file `results/viralrecon/multiqc/multiqc_report.html` to look at a quality control report for the pipeline.
+:::::::
 
 #### Virus - ONT
 
 Analysis of viral genomes using `nf-core/viralrecon`.
-Go into the `virus_ont` directory for this version of the exercise. 
+Go into the `virus_ont` directory for this version of the exercise.
 
 - Parameter documentation at [nf-co.re/viralrecon/{{< var version.viralrecon >}}/parameters](https://nf-co.re/viralrecon/{{< var version.viralrecon >}}/parameters).
 - Use the samplesheet created in the previous exercise as input.
-- The reference genome, gene annotation and primer locations are in the `genome/` directory. 
-  - Note that the options to specify these input files require the **full path** to the file to be specified. In the code skeleton below we show the trick of using the `$PWD` environment variable to specify the path relative to the current working directory. 
+- The reference genome, gene annotation and primer locations are in the `genome/` directory.
+  - Note that the options to specify these input files require the **full path** to the file to be specified.
+    In the code skeleton below we show the trick of using the `$PWD` environment variable to specify the path relative to the current working directory.
 
-We provide a skeleton of what your command should look like in the script `scripts/run_viralrecon_ont.sh`. 
-Open that script in a text editor (for example, `nano` or `vim`) to fix the code and then run the script using `bash`. 
+We provide a skeleton of what your command should look like in the script `scripts/run_viralrecon_ont.sh`.
+Open that script in a text editor (for example, `nano` or `vim`) to fix the code and then run the script using `bash`.
 
-:::{.callout-answer}
+::::::: {.callout-answer}
+The nanopore sub-workflow of the viralrecon pipeline is based on the [ARTIC bioinformatics protocol](https://artic.network/ncov-2019/ncov2019-bioinformatics-sop.html) and uses several of the tools from the accompanying [`artic` software package](https://artic.readthedocs.io/en/latest/).
 
-The nanopore sub-workflow of the viralrecon pipeline is based on the [ARTIC bioinformatics protocol](https://artic.network/ncov-2019/ncov2019-bioinformatics-sop.html) and uses several of the tools from the accompanying [`artic` software package](https://artic.readthedocs.io/en/latest/). 
-
-Here is the fixed nextflow command in our script: 
+Here is the fixed nextflow command in our script:
 
 ```bash
 nextflow run nf-core/viralrecon \
@@ -1282,14 +1279,12 @@ nextflow run nf-core/viralrecon \
   --skip_pangolin --skip_nextclade
 ```
 
-We then ran our script with `bash scripts/run_viralrecon.sh`. 
-While running, we got the progress of the pipeline printed on the screen. 
+We then ran our script with `bash scripts/run_viralrecon.sh`.
+While running, we got the progress of the pipeline printed on the screen.
 
-At the end of the pipeline we could see the results in the `results/viralrecon` folder. 
-For example, we can open the file `results/viralrecon/multiqc/medaka/multiqc_report.html` to look at a quality control report for the pipeline. 
-
-:::
-
+At the end of the pipeline we could see the results in the `results/viralrecon` folder.
+For example, we can open the file `results/viralrecon/multiqc/medaka/multiqc_report.html` to look at a quality control report for the pipeline.
+:::::::
 
 <!-- #### Variant calling
 
@@ -1304,20 +1299,23 @@ Go into the `variants` directory for this version of the exercise.
 ::: callout-answer
 TODO
 ::: -->
-
+:::::
 :::
-:::
-
 
 ## Summary
 
 ::: callout-tip
 #### Key points
 
-- WfMS define, automate and monitor the execution of a series of tasks in a specific order. They improve efficiency, reduce errors, can be easily scaled (from a local computer to a HPC cluster) and increase reproducibility.
-- Popular WfMS in bioinformatics include Nextflow and Snakemake. Both of these projects have associated community-maintained workflows, with excellent documentation for their use: [nf-core](https://nf-co.re/) and the [snakemake workflow catalog](https://snakemake.github.io/snakemake-workflow-catalog/).
-- Nextflow pipelines have configuration profiles available to indicate how software should be managed by the pipeline. For example the option `-profile singularity` uses Singularity images to deploy the software (other options include `docker` and `conda`).
-- Nextflow keeps track of the current status of the pipeline by storing intermediate files in a **cache directory** (by default called "work"). This enables the workflow to **resume from a previous run**, in case of failure. 
-- Pipelines from the nf-core community commonly take as an input a CSV file detailing the input files for the workflow. This CSV file is commonly referred to as a samplesheet. 
-- Nf-core pipelines have extensive documentation at [nf-co.re/pipelines](https://nf-co.re/pipelines), allowing the user to configure many aspects of the run. 
+- WfMS define, automate and monitor the execution of a series of tasks in a specific order.
+  They improve efficiency, reduce errors, can be easily scaled (from a local computer to a HPC cluster) and increase reproducibility.
+- Popular WfMS in bioinformatics include Nextflow and Snakemake.
+  Both of these projects have associated community-maintained workflows, with excellent documentation for their use: [nf-core](https://nf-co.re/) and the [snakemake workflow catalog](https://snakemake.github.io/snakemake-workflow-catalog/).
+- Nextflow pipelines have configuration profiles available to indicate how software should be managed by the pipeline.
+  For example the option `-profile singularity` uses Singularity images to deploy the software (other options include `docker` and `conda`).
+- Nextflow keeps track of the current status of the pipeline by storing intermediate files in a **cache directory** (by default called "work").
+  This enables the workflow to **resume from a previous run**, in case of failure.
+- Pipelines from the nf-core community commonly take as an input a CSV file detailing the input files for the workflow.
+  This CSV file is commonly referred to as a samplesheet.
+- Nf-core pipelines have extensive documentation at [nf-co.re/pipelines](https://nf-co.re/pipelines), allowing the user to configure many aspects of the run.
 :::

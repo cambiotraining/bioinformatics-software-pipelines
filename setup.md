@@ -19,9 +19,7 @@ If you want to setup your own computer to run the analysis demonstrated on this 
 You can download the data used in these materials as a zip file from dropbox.
 
 <!-- Note for Training Developers: add the link to 'href' -->
-<a href="https://www.dropbox.com/scl/fo/hof2gmftr8iq1744jkwnd/AOE_vgyKxphI63OAA5dCzqM?rlkey=k929x9ipitvuexrf72u7hbth9&st=muryirlr&dl=0" target="_blank">
-  <button class="btn"><i class="fab fa-dropbox"></i> Download</button>
-</a>
+<a href="https://www.dropbox.com/scl/fo/hof2gmftr8iq1744jkwnd/AOE_vgyKxphI63OAA5dCzqM?rlkey=k929x9ipitvuexrf72u7hbth9&st=muryirlr&dl=0" target="_blank"> <button class="btn"><i class="fab fa-dropbox"></i> Download</button> </a>
 
 Alternatively, using the command line (from within a directory of your choice, e.g. `~/Desktop`):
 
@@ -31,15 +29,14 @@ unzip biopipelines.zip -d biopipelines_course
 rm biopipelines.zip
 ```
 
-
 ## Setup
 
 ### Conda
 
-We recommend using the _Conda_ package manager to install your software.
-In particular, the newest implementation called _Mamba_.
+We recommend using the *Conda* package manager to install your software.
+In particular, the newest implementation called *Mamba*.
 
-To install _Mamba_, run the following commands from the terminal:
+To install *Mamba*, run the following commands from the terminal:
 
 ```bash
 wget "https://github.com/conda-forge/miniforge/releases/latest/download/Miniforge3-$(uname)-$(uname -m).sh"
@@ -59,23 +56,21 @@ conda config --set channel_priority strict
 conda config --set remote_read_timeout_secs 1000
 ```
 
-
 ### Nextflow
 
-We recommend that you install _Nextflow_ within a conda environment.
+We recommend that you install *Nextflow* within a conda environment.
 You can do that with the following command:
 
 ```bash
 mamba create -n nextflow -y nextflow
 ```
 
-When you want to use _Nextflow_ make sure to activate this software environment by running `mamba activate nextflow`.
-
+When you want to use *Nextflow* make sure to activate this software environment by running `mamba activate nextflow`.
 
 ### Singularity
 
-We recommend that you install _Singularity_ and use the `-profile singularity` option when running _Nextflow_ pipelines.
-On Ubuntu/WSL2, you can install _Singularity_ using the following commands:
+We recommend that you install *Singularity* and use the `-profile singularity` option when running *Nextflow* pipelines.
+On Ubuntu/WSL2, you can install *Singularity* using the following commands:
 
 ```bash
 sudo apt install -y libfuse2t64 runc fuse2fs uidmap
@@ -86,9 +81,7 @@ rm singularity.deb
 
 If you have a different Linux distribution, you can find more detailed instructions on the [_Singularity_ documentation page](https://docs.sylabs.io/guides/3.0/user-guide/installation.html#install-on-linux).
 
-If you have issues running _Nextflow_ pipelines with _Singularity_, then you can follow the instructions below for _Docker_ instead.
-
-
+If you have issues running *Nextflow* pipelines with *Singularity*, then you can follow the instructions below for *Docker* instead.
 
 <!--
 ### Quarto
@@ -128,7 +121,6 @@ Download and install all these using default options:
 
 :::
 -->
-
 
 <!--
 ### Conda
@@ -177,7 +169,6 @@ rm singularity.deb
 
 :::
 -->
-
 
 <!--
 ### Visual Studio Code
