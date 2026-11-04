@@ -3,8 +3,21 @@
 # see https://quarto.org/docs/authoring/variables.html
 version:
   demo: 1.2.0
-  rnaseq: 3.26.0
+  rnaseq: 3.27.0
   chipseq: 2.1.0
   viralrecon: 3.0.0
-  nextflow: 25.10.4 
-  snakemake: 9.23.1
+  nextflow: 26.10.4
+  nf-core: 4.2.1
+  snakemake: 9.27.1
+  iqtree: 3.1.4
+  mafft: 7.525
+  treetime: 0.12.1
+  multiqc: 1.21
+  gtdbtk: 2.4.0
+  fastqc: 0.12.1
+  scipy: 1.12.0
+  numpy: 1.26.4
+  matplotlib: 3.8.3
+  multiqc_conflict: 1.28
+  tensorflow_conflict: 2.17.0
+  pytorch_conflict: 1.13.0

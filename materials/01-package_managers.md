@@ -107,7 +107,7 @@ If we wanted to install packages for phylogenetic analysis, we could do:
 mamba create -n phylo
 
 # install some software in that environment
-mamba install -n phylo iqtree==2.3.3 mafft==7.525
+mamba install -n phylo iqtree=={{< var version.iqtree >}} mafft=={{< var version.mafft >}}
 ```
 
 If we run the command:
@@ -139,8 +139,8 @@ channels:
   - conda-forge
   - bioconda
 dependencies:
-  - iqtree==2.3.3
-  - mafft==7.525
+  - iqtree=={{< var version.iqtree >}}
+  - mafft=={{< var version.mafft >}}
 ```
 
 We have included this example in the file `demo/envs/phylo.yml`.
@@ -195,10 +195,10 @@ It requires Numpy version 1, so we may specify our environment like this:
 
 ```yaml
 name: massspec
-channels: 
+channels:
   - conda-forge
   - bioconda
-depedencies: 
+depedencies:
   - numpy=1.22.4
   - pip:
     - nomspectra
@@ -230,7 +230,7 @@ name: qtl
 channels:
   - conda-forge
   - bioconda
-dependencies: 
+dependencies:
   - r-qtl2=0.36
   - r-tidyverse=2.0.0
   - r-remotes=2.5.0
@@ -257,7 +257,7 @@ One thing to be very careful about is how Conda/Mamba manages the dependency gra
 If you don't specify the version of the software you want, in theory Mamba will pick the latest version available on the channel.
 However, this is conditional on the other packages that are installed alongside it, as some versions may be incompatible with each other, it may downgrade some packages without you realising.
 
-<!-- 
+<!--
 mamba install -n metagen fastqc==0.12.1 multiqc==1.24.1 cutadapt==4.9 trimmomatic==0.39 bowtie2==2.5.4 samtools==1.21 metaphlan==4.1.1 mash==2.3 spades==4.0.0 bbmap==39.08 flash==1.2.11 maxbin2==2.2.7 prokka==1.14.6 gtdbtk==2.4.0 abricate==1.0.1 checkm-genome==1.2.3
 -->
 
@@ -271,12 +271,12 @@ mamba create -n metagen multiqc gtdbtk
 When you run this command, Mamba will ask if you want to proceed with the installation.
 Before proceeding, it's always a good idea to **check which versions of the packages we are interested in are being installed**.
 
-At the time of writing, the [latest version of GTDB-tk on anaconda.org](https://anaconda.org/bioconda/gtdbtk) is 2.4.0, however as we run this command we can see that Mamba is installing version 2.3.0, which is a version behind the latest.
+At the time of writing, the [latest version of GTDB-tk on anaconda.org](https://anaconda.org/bioconda/gtdbtk) is {{< var version.gtdbtk >}}, however as we run this command we can see that Mamba is installing version 2.3.0, which is a version behind this release.
 
 Let's be more explicit and specify we want the latest versions available for both packages (at the time of writing):
 
 ```bash
-mamba create -n metagen multiqc==1.28 gtdbtk==2.4.0
+mamba create -n metagen multiqc=={{< var version.multiqc_conflict >}} gtdbtk=={{< var version.gtdbtk >}}
 ```
 
 By running this command, we get an error message informing us that Mamba could not find a fully compatible environment for these software versions.
@@ -313,10 +313,10 @@ For example, let's say that GTDB-tk was the most critical software for which we 
 We could find what is the latest version of MultiQC compatible with it, by forcing the GTDB-tk version, but not the other one:
 
 ```bash
-mamba create -n metagen multiqc gtdbtk==2.4.0
+mamba create -n metagen multiqc gtdbtk=={{< var version.gtdbtk >}}
 ```
 
-Running this command, we can see that we would get `multiqc==1.21`.
+Running this command, we can see that we would get `multiqc=={{< var version.multiqc >}}`.
 So, MultiQC would be a slightly older version than currently available, but for our purposes this might not be a problem.
 If we were happy with this choice, then we could proceed.
 For reproducibility, we could save all this information in a YAML file specifying our environment:
@@ -327,8 +327,8 @@ channels:
   - conda-forge
   - bioconda
 dependencies:
-  - multiqc==1.21
-  - gtdbtk==2.4.0
+  - multiqc=={{< var version.multiqc >}}
+  - gtdbtk=={{< var version.gtdbtk >}}
 ```
 
 ### Package availability {.unnumbered .unlisted}
@@ -390,8 +390,8 @@ channels:
   - conda-forge
   - bioconda
 dependencies:
-  - fastqc==0.12.1
-  - multiqc==1.21
+  - fastqc=={{< var version.fastqc >}}
+  - multiqc=={{< var version.multiqc >}}
 ```
 
 We then created our environment with the command:
@@ -428,7 +428,7 @@ Going back to the `envs/phylo.yml` environment (in the `demo` folder), update th
 
 ::::: callout-answer
 We can see the software is available from https://anaconda.org/bioconda/treetime, provided from the bioconda channel.
-The latest version at the time of writing is 0.11.3, so it is the one we demonstrate below.
+The latest version at the time of writing is {{< var version.treetime >}}, so it is the one we demonstrate below.
 
 Using a text editor of our choice, we update our YAML file:
 
@@ -438,9 +438,9 @@ channels:
   - conda-forge
   - bioconda
 dependencies:
-  - iqtree==2.3.3
-  - mafft==7.525
-  - treetime==0.11.3
+  - iqtree=={{< var version.iqtree >}}
+  - mafft=={{< var version.mafft >}}
+  - treetime=={{< var version.treetime >}}
 ```
 
 After saving the changes, we update our environment:
@@ -456,7 +456,7 @@ treetime --version
 ```
 
 ```
-treetime 0.11.3
+treetime {{< var version.treetime >}}
 ```
 
 The command runs successfully, with the expected version printed, indicating it is successfully installed.
@@ -468,9 +468,9 @@ The command runs successfully, with the expected version printed, indicating it 
 
 A PhD student working on a machine learning project is trying to improve a classification model from a previous publication.
 
-For benchmarking purposes, the student wants to reproduce the previous analysis and therefore use the same version of the package used by the authors: **PyTorch version 1.13.0**.
+For benchmarking purposes, the student wants to reproduce the previous analysis and therefore use the same version of the package used by the authors: **PyTorch version {{< var version.pytorch_conflict >}}**.
 
-For their own improved model, they will use a recent version of a different library: **TensorFlow version 2.17.0**.
+For their own improved model, they will use a recent version of a different library: **TensorFlow version {{< var version.tensorflow_conflict >}}**.
 
 The student came to you for advice: they've heard of Mamba and would like to create an environment for their project.
 What would you recommend to them?
@@ -479,7 +479,7 @@ What would you recommend to them?
 We can start by running a command to create an environment with both packages, making sure we pin the specific versions required (we call the environment `ml` in this example, but you could name it anything you want):
 
 ```bash
-mamba create -n ml tensorflow==2.17.0 pytorch==1.13.0
+mamba create -n ml tensorflow=={{< var version.tensorflow_conflict >}} pytorch=={{< var version.pytorch_conflict >}}
 ```
 
 However, we get a package dependency error:
@@ -510,8 +510,8 @@ In fact, TensorFlow itself depends on PyTorch, but version 2.17 requires more re
 As there is no easy way to install both of these packages in the same environment, our best recommendation to the student would be to create two separate environments for these packages:
 
 ```bash
-mamba create -n pytorch pytorch==1.13.0
-mamba create -n tensorflow tensorflow==2.17.0
+mamba create -n pytorch pytorch=={{< var version.pytorch_conflict >}}
+mamba create -n tensorflow tensorflow=={{< var version.tensorflow_conflict >}}
 ```
 
 In this case we simply named the environments after the main package we're installing, but again you could choose different names.

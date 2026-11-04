@@ -1,14 +1,22 @@
 # Checklist for updating materials
 
-## Nextflow version
+## Version manifest
 
-Check the latest versions of [Nextflow](https://anaconda.org/bioconda/nextflow) and [nf-core tools](https://anaconda.org/search?q=nf-core) are being installed with the `utils/setup.sh` script. 
+All pinned workflow and software versions are defined in `_variables.yml`.
+Update this file when preparing a new course release. The setup scripts,
+pipeline tests, and versioned material shortcodes read their versions from this
+manifest.
 
+Check the latest versions of [Nextflow](https://anaconda.org/bioconda/nextflow)
+and [nf-core tools](https://anaconda.org/channels/bioconda/packages/nf-core/overview)
+before updating their manifest entries.
 
 ## Workflow versions
 
-Check the latest versions of the nf-core workflows are being used in the materials and setup scripts.
-The latest version of the workflows can be checked using nf-core tools: 
+Check for suitable new nf-core workflow releases before updating their
+manifest entries. The following command is a discovery aid only; `setup.sh`
+uses the revisions pinned in `_variables.yml`, rather than the latest
+available versions:
 
 ```bash
 for wf in demo rnaseq chipseq viralrecon
@@ -19,13 +27,8 @@ do
 done
 ```
 
-The files to update are:
-
-- `utils/setup.sh` script to setup training machines
-- `_variables.yml` containing variables used in the markdowns
-- `utils/test_nfcore.sh` script to test pipelines
-
-
 ## Mamba
 
-Check that the mamba software versions used in the `utils/setup.sh` script match those in the materials. 
+Check the pinned Mamba packages are still appropriate for the course. Some
+values intentionally demonstrate dependency conflicts, so do not update a
+version merely because a newer release is available.

@@ -6,15 +6,43 @@
 # ~/.singularity
 # ~/.nextflow
 
+set -euo pipefail
+
+script_dir="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)"
+source "$script_dir/version_utils.sh"
+
+iqtree_version=$(get_version iqtree)
+mafft_version=$(get_version mafft)
+treetime_version=$(get_version treetime)
+multiqc_version=$(get_version multiqc)
+gtdbtk_version=$(get_version gtdbtk)
+fastqc_version=$(get_version fastqc)
+scipy_version=$(get_version scipy)
+numpy_version=$(get_version numpy)
+matplotlib_version=$(get_version matplotlib)
+nextflow_version=$(get_version nextflow)
+nf_core_version=$(get_version nf-core)
+
 # create an environment to cache some packages used in the course
-mamba create -y -n btf iqtree==2.3.3 mafft==7.525 treetime==0.11.3 multiqc==1.21 gtdbtk==2.4.0 fastqc==0.12.1
-mamba create -y -n scipy scipy==1.12.0 numpy==1.26.4 matplotlib==3.8.3
+mamba create -y -n btf \
+  "iqtree==$iqtree_version" \
+  "mafft==$mafft_version" \
+  "treetime==$treetime_version" \
+  "multiqc==$multiqc_version" \
+  "gtdbtk==$gtdbtk_version" \
+  "fastqc==$fastqc_version"
+mamba create -y -n scipy \
+  "scipy==$scipy_version" \
+  "numpy==$numpy_version" \
+  "matplotlib==$matplotlib_version"
 
 # create nextflow environment
-mamba create -y -n nextflow bioconda::nextflow bioconda::nf-core
+mamba create -y -n nextflow \
+  "bioconda::nextflow==$nextflow_version" \
+  "bioconda::nf-core==$nf_core_version"
 
 # nextflow config
-mkdir -p /home/participant/.nextflow 
+mkdir -p /home/participant/.nextflow
 cat <<EOF >> /home/participant/.nextflow/config
 process {
   resourceLimits = [
@@ -23,12 +51,12 @@ process {
     time: 12.h
   ]
 }
-singularity { 
-  singularity.enabled = true 
-  conda.enabled = false 
-  docker.enabled = false 
-  pullTimeout = '4 h' 
-  cacheDir = '/home/participant/.nextflow-singularity-cache/' 
+singularity {
+  singularity.enabled = true
+  conda.enabled = false
+  docker.enabled = false
+  pullTimeout = '4 h'
+  cacheDir = '/home/participant/.nextflow-singularity-cache/'
 }
 EOF
 
@@ -37,35 +65,26 @@ mamba activate nextflow
 
 export NXF_SINGULARITY_CACHEDIR="$HOME/.nextflow-singularity-cache"
 
-# initialise yaml file with workflow versions
-echo "version:" > setup_versions.yml
-echo "  nextflow: $(nextflow -v | sed 's/.* //')" >> setup_versions.yml
-
 # cache singularity images and pull workflows
 for wf in demo rnaseq chipseq viralrecon
 do
-  # grab latest version of the workflow
-  version=$(nf-core pipelines list 2> /dev/null | grep " $wf " | awk -F'│' '{print $4}' | sed 's/ //g' 2> /dev/null)
-
-  # print the workflow name and version
-  echo "  $wf: $version" >> setup_versions.yml
+  version=$(get_version "$wf")
 
   # download images
-  nf-core pipelines download $wf \
-    --revision $version \
-    --outdir /tmp/$wf \
+  nf-core pipelines download "$wf" \
+    --revision "$version" \
+    --outdir "/tmp/$wf" \
     --force \
     --compress none \
     --download-configuration yes \
     --container-system singularity \
     --container-cache-utilisation amend
-  
+
   # remove temporary dir
-  rm -r /tmp/$wf 
-  
+  rm -r "/tmp/$wf"
+
   # pull the workflow to its standard directory
-  nextflow pull -r $version nf-core/$wf
+  nextflow pull -r "$version" "nf-core/$wf"
 done
 
-# run the test script?
-bash test_setup.sh setup_versions.yml
+bash "$script_dir/test_setup.sh"

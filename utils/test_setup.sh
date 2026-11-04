@@ -2,18 +2,15 @@
 
 set -euxo pipefail
 
-# Check if setup_versions.yml was given as argument
-if [ "$#" -ne 1 ]; then
-    echo "Usage: $0 <path/to/setup_versions.yml>"
-    exit 1
-fi
-
-versions="$PWD/$(basename $1)"
+script_dir="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)"
+source "$script_dir/version_utils.sh"
 
 ## nf-core/demo
 
-# get workflow version from yml
-demo_version=$(grep "demo:" "$versions" | sed 's/.* //')
+demo_version=$(get_version demo)
+rnaseq_version=$(get_version rnaseq)
+chipseq_version=$(get_version chipseq)
+viralrecon_version=$(get_version viralrecon)
 
 cd demo
 nextflow run -profile "singularity" -revision "$demo_version" nf-core/demo \
@@ -25,9 +22,6 @@ nextflow run -profile "singularity" -revision "$demo_version" nf-core/demo \
 ## nf-core/rnaseq
 
 cd ../rnaseq
-
-# get workflow version from yml
-rnaseq_version=$(grep "rnaseq:" "$versions" | sed 's/.* //')
 
 echo "sample,fastq_1,fastq_2,strandedness" > samplesheet.csv
 tail -n +2 sample_info.tsv | awk 'BEGIN { FS="\t"; OFS="," }
@@ -49,9 +43,6 @@ nextflow run nf-core/rnaseq \
 
 cd ../chipseq
 
-# get workflow version from yml
-chipseq_version=$(grep "chipseq:" "$versions" | sed 's/.* //')
-
 echo "sample,fastq_1,fastq_2,replicate,antibody,control,control_replicate" > samplesheet.csv
 tail -n +2 sample_info.tsv | awk 'BEGIN { FS="\t"; OFS="," }
 {
@@ -59,7 +50,7 @@ tail -n +2 sample_info.tsv | awk 'BEGIN { FS="\t"; OFS="," }
 }' >> samplesheet.csv
 
 nextflow run nf-core/chipseq \
-  -r "2.1.0" \
+  -r "$chipseq_version" \
   -profile "singularity" \
   --input "samplesheet.csv" \
   --outdir "results/chipseq" \
@@ -73,9 +64,6 @@ nextflow run nf-core/chipseq \
 ## nf-core/viralrecon illumina
 
 cd ../virus_illumina
-
-# get workflow version from yml
-viralrecon_version=$(grep "viralrecon:" "$versions" | sed 's/.* //')
 
 echo "sample,fastq_1,fastq_2" > samplesheet.csv
 tail -n +2 sample_info.tsv | awk 'BEGIN { FS="\t"; OFS="," }
@@ -118,4 +106,3 @@ nextflow run nf-core/viralrecon \
   --artic_minion_model "r941_prom_sup_g5014" \
   --skip_assembly --skip_freyja \
   --skip_pangolin --skip_nextclade
-
