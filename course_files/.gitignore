@@ -2,3 +2,4 @@
 */
 !README*
 !.gitignore
+!download_data.sh
