@@ -42,8 +42,8 @@ mamba create -y -n nextflow \
   "bioconda::nf-core==$nf_core_version"
 
 # nextflow config
-mkdir -p /home/participant/.nextflow
-cat <<EOF >> /home/participant/.nextflow/config
+mkdir -p $HOME/.nextflow
+cat <<EOF >> "$HOME/.nextflow/config"
 process {
   resourceLimits = [
     cpus: 8,
@@ -52,16 +52,14 @@ process {
   ]
 }
 singularity {
-  singularity.enabled = true
-  conda.enabled = false
-  docker.enabled = false
   pullTimeout = '4 h'
-  cacheDir = '/home/participant/.nextflow-singularity-cache/'
+  cacheDir = '${HOME}/.nextflow-singularity-cache/'
 }
 EOF
 
 # cache nextflow images
 export NXF_SINGULARITY_CACHEDIR="$HOME/.nextflow-singularity-cache"
+export NXF_SYNTAX_PARSER=v1
 
 # cache singularity images and pull workflows
 for wf in demo rnaseq chipseq viralrecon
@@ -85,4 +83,11 @@ do
   mamba run -n nextflow nextflow pull -r "$version" "nf-core/$wf"
 done
 
-mamba run -n nextflow bash "$script_dir/test_setup.sh"
+# Export nextflow env variables
+cat <<EOF >> $HOME/.bashrc
+export NXF_SINGULARITY_CACHEDIR='${HOME}/.nextflow-singularity-cache'
+export NXF_SYNTAX_PARSER=v1
+EOF
+
+# Test script
+# mamba run -n nextflow bash "$script_dir/test_setup.sh"

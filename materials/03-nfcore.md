@@ -269,9 +269,10 @@ Many nf-core pipelines allow you to specific the name of an organism (using the 
 However, many of these workflows rely on iGenomes, which is not always up-to-date.
 Therefore, [the use of this option is discouraged](https://nf-co.re/docs/usage/reference_genomes), as you may miss the latest annotations or use a version of the genome that is incompatible with the rest of your analysis.
 
-Instead, you can download the latest version of the genome and annotations for your species, from sources such as ENSEMBL ([vertebrates](https://www.ensembl.org/index.html) and [non-vertebrates](http://ensemblgenomes.org/)), [GENCODE](https://www.gencodegenes.org/) or [UCSC](https://genome.ucsc.edu/).
+Instead, you can download the latest version of the genome and annotations for your species, from sources such as [ENSEMBL](https://www.ensembl.org/), [GENCODE](https://www.gencodegenes.org/) or [UCSC](https://genome.ucsc.edu/).
 
 Most pipelines then have individual options to use these files as input: `--fasta` (for the reference genome) and `--gff`/`--gtf` (for the transcript annotation).
+They also provide the option `--igenomes-ignore` to ignore any other iGenomes annotations specified in the default workflow configuration files.
 :::
 
 ### Cleaning up
@@ -337,7 +338,7 @@ Command executed:
       --detect_adapter_for_pe \
        \
       2> >(tee drug_rep1.fastp.log >&2)
-  
+
   cat <<-END_VERSIONS > versions.yml
   "NFCORE_DEMO:DEMO:FASTP":
       fastp: $(fastp --version 2>&1 | sed -e "s/fastp //g")
@@ -349,7 +350,7 @@ Command executed:
 <details><summary>Click here for the answer</summary>
 Although this is a long message, the cause of the error itself is at the top where we are told "Process requirement exceeds available memory -- req: 36 GB; avail: 23.5 GB".
 
-This means a step of the pipeline must have requested 36GB by default, but we only had 23.5GB on the computer used to run it. 
+This means a step of the pipeline must have requested 36GB by default, but we only had 23.5GB on the computer used to run it.
 In this case, we could have restricted the memory usage with a custom configuration file, which we will discuss [in the next section](04-nextflow_hpc.md).
 </details>
 
@@ -493,12 +494,12 @@ out.to_csv("samplesheet.csv", index=False, quoting=3, na_rep="")
 
 ```r
 # read metadata table, ensuring NA values are correctly imported
-meta <- read.table("sample_info.tsv", header = TRUE, 
+meta <- read.table("sample_info.tsv", header = TRUE,
                    sep = "\t", na.strings = "")
 
 # create data frame for output samplesheet
-out <- data.frame(sample = meta$name, 
-                  fastq_1 = paste0("reads/", meta$fastq, "_1.downsampled.fastq.gz"), 
+out <- data.frame(sample = meta$name,
+                  fastq_1 = paste0("reads/", meta$fastq, "_1.downsampled.fastq.gz"),
                   fastq_2 = paste0("reads/", meta$fastq, "_2.downsampled.fastq.gz"),
                   strandedness = "auto")
 
@@ -566,7 +567,7 @@ brd4_veh_rep1   SRR1193526  BRD4      mcf7_input_veh
 brd4_veh_rep2   SRR1193527  BRD4      mcf7_input_veh
 brd4_e2_rep1    SRR1193529  BRD4      mcf7_input_e2
 brd4_e2_rep2    SRR1193530  BRD4      mcf7_input_e2
-mcf7_input_veh  SRR1193562            
+mcf7_input_veh  SRR1193562
 mcf7_input_e2   SRR1193563
 ```
 
@@ -704,16 +705,16 @@ out.to_csv("samplesheet.csv", index=False, quoting=3, na_rep="")
 
 ```r
 # read metadata table, ensuring NA values are correctly imported
-meta <- read.table("sample_info.tsv", header = TRUE, 
+meta <- read.table("sample_info.tsv", header = TRUE,
                    sep = "\t", na.strings = "")
 
 # create data frame for output samplesheet
-out <- data.frame(sample = meta$name, 
-                  fastq_1 = paste0("reads/", meta$fastq, ".fastq.gz"), 
+out <- data.frame(sample = meta$name,
+                  fastq_1 = paste0("reads/", meta$fastq, ".fastq.gz"),
                   fastq_2 = NA,
                   replicate = meta$rep,
                   antibody = meta$antibody,
-                  control = meta$input_control, 
+                  control = meta$input_control,
                   control_replicate = meta$input_rep)
 
 # save the samplesheet ensuring NA values are written as empty cells
@@ -898,12 +899,12 @@ out.to_csv("samplesheet.csv", index=False, quoting=3, na_rep="")
 
 ```r
 # read metadata table, ensuring NA values are correctly imported
-meta <- read.table("sample_info.tsv", header = TRUE, 
+meta <- read.table("sample_info.tsv", header = TRUE,
                    sep = "\t", na.strings = "")
 
 # create data frame for output samplesheet
-out <- data.frame(sample = meta$name, 
-                  fastq_1 = paste0("reads/", meta$fastq, "_1.fastq.gz"), 
+out <- data.frame(sample = meta$name,
+                  fastq_1 = paste0("reads/", meta$fastq, "_1.fastq.gz"),
                   fastq_2 = paste0("reads/", meta$fastq, "_2.fastq.gz"))
 
 # save the samplesheet ensuring NA values are written as empty cells
@@ -1090,7 +1091,7 @@ CH30,30
 <!-- #### Variant calling
 
 Identifying genetic variants using `nf-core/sarek`.
-Go into the `variants` directory for this version of the exercise. 
+Go into the `variants` directory for this version of the exercise.
 
 - Documentation at [nf-co.re/sarek/](https://nf-co.re/sarek/). Note this workflow allows for quite complex experimental designs, but we will use the "minimal config" shown on that page.
 - Input FASTQ files in `reads/`.
@@ -1111,7 +1112,7 @@ Then, you can launch the pipeline and watch how Nextflow orchestrates the differ
 Given the complexity of some of these pipelines, we give a skeleton of a command to get you started in each case.
 However, a few things to remember to do in every case:
 
-- Add the `-r` option to specify the version of the workflow to be used (use the latest available on the respective documentation page).
+- Add the `-r` option to specify the version of the workflow to be used. During the live course, we recommend that you use the specific versions indicated below. However, in your own work you'll usually want to look for the latest version available for your workflow.
 - Include the option to use `singularity` to manage the software.
 - Check the parameters being used in the respective documentation page.
 
@@ -1127,7 +1128,7 @@ Once you initiate the pipeline and it seems to be running successfully, you can 
 Transcriptome data processing using `nf-core/rnaseq`.
 Go into the `rnaseq` directory for this version of the exercise.
 
-- Parameter documentation at [nf-co.re/rnaseq/{{< var version.rnaseq >}}/parameters](https://nf-co.re/rnaseq/{{< var version.rnaseq >}}/parameters).
+- Use version {{< var version.rnaseq >}}. Parameter documentation at [nf-co.re/rnaseq/{{< var version.rnaseq >}}/parameters](https://nf-co.re/rnaseq/{{< var version.rnaseq >}}/parameters).
 - Use the samplesheet created in the previous exercise as input.
 - The reference genome and annotation are in the `genome/` directory.
   - Note that the options to specify these input files require the **full path** to the file to be specified.
@@ -1172,7 +1173,7 @@ In this case, we used it to save time, as our purpose is to show how to set and 
 Chromatin immunoprecipitation sequencing analysis using `nf-core/chipseq`.
 Go into the `chipseq` directory for this version of the exercise.
 
-- Parameter documentation at [nf-co.re/chipseq/{{< var version.chipseq >}}/parameters](https://nf-co.re/chipseq/{{< var version.chipseq >}}/parameters).
+- Use version {{< var version.chipseq >}}. Parameter documentation at [nf-co.re/chipseq/{{< var version.chipseq >}}/parameters](https://nf-co.re/chipseq/{{< var version.chipseq >}}/parameters).
 - Use the samplesheet created in the previous exercise as input.
 - The reference genome and annotation are in the `genome/` directory.
   - Note that the options to specify these input files require the **full path** to the file to be specified.
@@ -1209,7 +1210,7 @@ For example, we can open the file `results/chipseq/multiqc/broadPeak/multiqc_rep
 Analysis of viral genomes using `nf-core/viralrecon`.
 Go into the `virus_illumina` directory for this version of the exercise.
 
-- Parameter documentation at [nf-co.re/viralrecon/{{< var version.viralrecon >}}/parameters](https://nf-co.re/viralrecon/{{< var version.viralrecon >}}/parameters).
+- Use version {{< var version.viralrecon >}}. Parameter documentation at [nf-co.re/viralrecon/{{< var version.viralrecon >}}/parameters](https://nf-co.re/viralrecon/{{< var version.viralrecon >}}/parameters).
 - Use the samplesheet created in the previous exercise as input.
 - The reference genome, gene annotation and primer locations are in the `genome/` directory.
   - Note that the options to specify these input files require the **full path** to the file to be specified.
@@ -1248,7 +1249,7 @@ For example, we can open the file `results/viralrecon/multiqc/multiqc_report.htm
 Analysis of viral genomes using `nf-core/viralrecon`.
 Go into the `virus_ont` directory for this version of the exercise.
 
-- Parameter documentation at [nf-co.re/viralrecon/{{< var version.viralrecon >}}/parameters](https://nf-co.re/viralrecon/{{< var version.viralrecon >}}/parameters).
+- Use version {{< var version.viralrecon >}}. Parameter documentation at [nf-co.re/viralrecon/{{< var version.viralrecon >}}/parameters](https://nf-co.re/viralrecon/{{< var version.viralrecon >}}/parameters).
 - Use the samplesheet created in the previous exercise as input.
 - The reference genome, gene annotation and primer locations are in the `genome/` directory.
   - Note that the options to specify these input files require the **full path** to the file to be specified.
@@ -1289,7 +1290,7 @@ For example, we can open the file `results/viralrecon/multiqc/medaka/multiqc_rep
 <!-- #### Variant calling
 
 Identifying genetic variants using `nf-core/sarek`.
-Go into the `variants` directory for this version of the exercise. 
+Go into the `variants` directory for this version of the exercise.
 
 - Documentation at [nf-co.re/sarek/](https://nf-co.re/sarek/).
 - Input FASTQ files in `reads/`.
@@ -1307,9 +1308,9 @@ TODO
 ::: callout-tip
 #### Key points
 
-- WfMS define, automate and monitor the execution of a series of tasks in a specific order.
+- Workflow managers define, automate and monitor the execution of a series of tasks in a specific order.
   They improve efficiency, reduce errors, can be easily scaled (from a local computer to a HPC cluster) and increase reproducibility.
-- Popular WfMS in bioinformatics include Nextflow and Snakemake.
+- Popular workflow managers in bioinformatics include Nextflow and Snakemake.
   Both of these projects have associated community-maintained workflows, with excellent documentation for their use: [nf-core](https://nf-co.re/) and the [snakemake workflow catalog](https://snakemake.github.io/snakemake-workflow-catalog/).
 - Nextflow pipelines have configuration profiles available to indicate how software should be managed by the pipeline.
   For example the option `-profile singularity` uses Singularity images to deploy the software (other options include `docker` and `conda`).
