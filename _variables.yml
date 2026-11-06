@@ -13,11 +13,12 @@ version:
   mafft: 7.525
   treetime: 0.12.1
   multiqc: 1.21
-  gtdbtk: 2.4.0
+  gtdbtk: 2.8.0
   fastqc: 0.12.1
   scipy: 1.12.0
   numpy: 1.26.4
   matplotlib: 3.8.3
+  gtdbtk_old: 2.6.1
   multiqc_conflict: 1.28
   tensorflow_conflict: 2.17.0
   pytorch_conflict: 1.13.0

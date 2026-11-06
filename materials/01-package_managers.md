@@ -256,53 +256,36 @@ However, it may sometimes be necessary to setup R environments on HPC servers, i
 One thing to be very careful about is how Conda/Mamba manages the dependency graph of packages to install.
 If you don't specify the version of the software you want, in theory Mamba will pick the latest version available on the channel.
 However, this is conditional on the other packages that are installed alongside it, as some versions may be incompatible with each other, it may downgrade some packages without you realising.
-
-<!--
-mamba install -n metagen fastqc==0.12.1 multiqc==1.24.1 cutadapt==4.9 trimmomatic==0.39 bowtie2==2.5.4 samtools==1.21 metaphlan==4.1.1 mash==2.3 spades==4.0.0 bbmap==39.08 flash==1.2.11 maxbin2==2.2.7 prokka==1.14.6 gtdbtk==2.4.0 abricate==1.0.1 checkm-genome==1.2.3
--->
+So, before you create an environment with multiple packages, it's always a good idea to **check which versions of the packages are installed**.
 
 Take this example, where we create a new environment called `metagen` for a metagenomics project.
 We initiate the environment with only two packages: GTDB-tk (taxonomic classification of genomes) and MultiQC (quality control reporting tool):
 
 ```bash
-mamba create -n metagen multiqc gtdbtk
+mamba create --dry-run -n metagen multiqc gtdbtk
 ```
 
-When you run this command, Mamba will ask if you want to proceed with the installation.
-Before proceeding, it's always a good idea to **check which versions of the packages we are interested in are being installed**.
+In this case we use the `--dry-run` option, as we only want to see what Mamba would install, without actually doing so.
 
-At the time of writing, the [latest version of GTDB-tk on anaconda.org](https://anaconda.org/bioconda/gtdbtk) is {{< var version.gtdbtk >}}, however as we run this command we can see that Mamba is installing version 2.3.0, which is a version behind this release.
+At the time of writing, the latest version of GTDB-tk is {{< var version.gtdbtk >}} and of MultiQC is {{< var version.multiqc_conflict >}}.
+However, Mamba is opting to install older versions of both packages: GTDB-tk {{< var version.gtdbtk_old >}} and MultiQC {{< var version.multiqc >}}.
 
-Let's be more explicit and specify we want the latest versions available for both packages (at the time of writing):
+Let's be more explicit and specify we want the newer versions for both packages:
 
 ```bash
 mamba create -n metagen multiqc=={{< var version.multiqc_conflict >}} gtdbtk=={{< var version.gtdbtk >}}
 ```
 
-By running this command, we get an error message informing us that Mamba could not find a fully compatible environment for these software versions.
-The message is very long, we only show the top few lines:
+<pre><font color="#EF2929"><b>error    libmamba</b></font> Could not solve for environment specs
+    The following packages are incompatible
+    ├─ <font color="#4E9A06">gtdbtk ==2.8.0 *</font> is installable and it requires
+    │  └─ <font color="#4E9A06">pydantic &gt;=1.9.2,&lt;2 *</font>, which can be installed;
+    └─ <font color="#CC0000">multiqc ==1.35 *</font> is not installable because it requires
+       └─ <font color="#CC0000">pydantic &gt;=2.7.1 *</font>, which conflicts with any installable versions previously reported.
+</pre>
 
-```
-Could not solve for environment specs
-The following packages are incompatible
-├─ gtdbtk 2.4.0  is installable with the potential options
-│  ├─ gtdbtk 2.4.0 would require
-│  │  ├─ fastani 1.32.* , which requires
-│  │  │  └─ boost >=1.70.0,<1.70.1.0a0  with the potential options
-│  │  │     ├─ boost 1.70.0 would require
-│  │  │     │  └─ python >=2.7,<2.8.0a0 , which can be installed;
-│  │  │     ├─ boost 1.70.0 would require
-│  │  │     │  └─ python >=3.6,<3.7.0a0 , which can be installed;
-│  │  │     ├─ boost 1.70.0 would require
-│  │  │     │  └─ python >=3.7,<3.8.0a0  with the potential options
-│  │  │     │     ├─ python [3.7.0|3.7.1|...|3.7.9], which can be installed;
-│  │  │     │     └─ python [3.7.10|3.7.12] would require
-│  │  │     │        └─ python_abi 3.7.* *_cp37m, which can be installed;
-
-... etc ...
-```
-
-The message is a bit hard to interpret, but generally we can see that the issue seems to be related to the Python versions required by these two packages.
+Now we get an error message informing us that Mamba could not find a fully compatible environment for these software versions.
+In this case, the issue seems to be related to a Python package incompatibility between these two packages.
 
 How could we solve this problem?
 One possibility is to **install each software in a separate environment**.
@@ -313,7 +296,7 @@ For example, let's say that GTDB-tk was the most critical software for which we 
 We could find what is the latest version of MultiQC compatible with it, by forcing the GTDB-tk version, but not the other one:
 
 ```bash
-mamba create -n metagen multiqc gtdbtk=={{< var version.gtdbtk >}}
+mamba create --dry-run -n metagen multiqc gtdbtk=={{< var version.gtdbtk >}}
 ```
 
 Running this command, we can see that we would get `multiqc=={{< var version.multiqc >}}`.
