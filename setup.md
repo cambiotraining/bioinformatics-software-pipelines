@@ -19,12 +19,12 @@ If you want to setup your own computer to run the analysis demonstrated on this 
 You can download the data used in these materials as a zip file from dropbox.
 
 <!-- Note for Training Developers: add the link to 'href' -->
-<a href="https://www.dropbox.com/scl/fo/hof2gmftr8iq1744jkwnd/AOE_vgyKxphI63OAA5dCzqM?rlkey=k929x9ipitvuexrf72u7hbth9&st=muryirlr&dl=0" target="_blank"> <button class="btn"><i class="fab fa-dropbox"></i> Download</button> </a>
+<a href="https://www.dropbox.com/scl/fo/9gj9fvm3phlgz8jf27atw/ACM3JSA5IqPnjnEIcLTSx0w?rlkey=jfn2qgequjtdazand89ytoary&st=oysvdj11&dl=0" target="_blank"> <button class="btn"><i class="fab fa-dropbox"></i> Download</button> </a>
 
 Alternatively, using the command line (from within a directory of your choice, e.g. `~/Desktop`):
 
 ```bash
-wget -O biopipelines.zip "https://www.dropbox.com/scl/fo/hof2gmftr8iq1744jkwnd/AOE_vgyKxphI63OAA5dCzqM?rlkey=k929x9ipitvuexrf72u7hbth9&st=muryirlr&dl=1"
+wget -O biopipelines.zip "https://www.dropbox.com/scl/fo/9gj9fvm3phlgz8jf27atw/ACM3JSA5IqPnjnEIcLTSx0w?rlkey=jfn2qgequjtdazand89ytoary&st=oysvdj11&dl=1"
 unzip biopipelines.zip -d biopipelines_course
 rm biopipelines.zip
 ```
