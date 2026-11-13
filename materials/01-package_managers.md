@@ -107,7 +107,7 @@ If we wanted to install packages for phylogenetic analysis, we could do:
 mamba create -n phylo
 
 # install some software in that environment
-mamba install -n phylo iqtree=={{< var version.iqtree >}} mafft=={{< var version.mafft >}}
+mamba install -n phylo bioconda::iqtree=={{< var version.iqtree >}} bioconda::mafft=={{< var version.mafft >}}
 ```
 
 If we run the command:
@@ -198,8 +198,8 @@ name: massspec
 channels:
   - conda-forge
   - bioconda
-depedencies:
-  - numpy=1.22.4
+dependencies:
+  - numpy==1.22.4
   - pip:
     - nomspectra
 ```

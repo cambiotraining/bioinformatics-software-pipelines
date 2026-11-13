@@ -25,16 +25,16 @@ nf_core_version=$(get_version nf-core)
 
 # create an environment to cache some packages used in the course
 mamba create -y -n btf \
-  "iqtree==$iqtree_version" \
-  "mafft==$mafft_version" \
-  "treetime==$treetime_version" \
-  "multiqc==$multiqc_version" \
-  "gtdbtk==$gtdbtk_version" \
-  "fastqc==$fastqc_version"
+  "bioconda::iqtree==$iqtree_version" \
+  "bioconda::mafft==$mafft_version" \
+  "bioconda::treetime==$treetime_version" \
+  "bioconda::multiqc==$multiqc_version" \
+  "bioconda::gtdbtk==$gtdbtk_version" \
+  "bioconda::fastqc==$fastqc_version"
 mamba create -y -n scipy \
-  "scipy==$scipy_version" \
-  "numpy==$numpy_version" \
-  "matplotlib==$matplotlib_version"
+  "conda-forge::scipy==$scipy_version" \
+  "conda-forge::numpy==$numpy_version" \
+  "conda-forge::matplotlib==$matplotlib_version"
 
 # create nextflow environment
 mamba create -y -n nextflow \
