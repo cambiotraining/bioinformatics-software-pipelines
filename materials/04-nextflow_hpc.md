@@ -35,10 +35,10 @@ process {
     // Our job scheduling system or executor
     // many executors supported (cloud and HPC): https://www.nextflow.io/docs/latest/executor.html
     executor = 'slurm'
-    
+
     // the queue or partition we want to use
     queue = 'cclake'
-    
+
     // Specify MAX parameters to avoid going over the limits
     // these values should match the resources in the chosen queue/partition
     resourceLimits = [
@@ -66,7 +66,7 @@ singularity {
     // useful if you are unsure about filesystem binding
     autoMounts = true
     // Allow extra time to pull out a container in case the servers are slow
-    pullTimeout = '1 h'  
+    pullTimeout = '1 h'
     // Specify a cache dir to re-use images that have already been downloaded
     cacheDir = 'PATH/TO/nextflow-singularity-cache'
 }
@@ -182,7 +182,7 @@ You'll find your command still running in the background!
 We have a training HPC available with the following characteristics:
 
 - **Job scheduler**: SLURM
-- **Main queue/partition**: `normal`
+- **Main queue/partition**: `cpu`
 - **Billing account**: not used (can be omitted from config)
 - **Queue limits**: 8 CPUs and 20GB of RAM
 - **Job duration**: maximum 24 hours
@@ -251,11 +251,18 @@ Here's what you need to do:
      --fasta "genome/Mus_musculus.GRCm38.dna_sm.chr14.fa.gz"
    ```
 
+5. Activate the Mamba environment and run the script:
+
+    ```bash
+    mamba activate nextflow
+    bash scripts/02-run_nfcore_demo
+    ```
+
 5. Detach the `screen`/`tmux` session using:
    - For `screen`: press <kbd>Ctrl + A</kbd> then <kbd>D</kbd>
    - For `tmux`: press <kbd>Ctrl + B</kbd> then <kbd>D</kbd>
 
-6. Finally, use the squeue command to **verify that Nextflow has started submitting jobs** to the SLURM queue:
+6. Finally, use the squeue command to **verify that Nextflow has started submitting jobs** to the SLURM queue (it might take some time, while it sets things up):
 
    ```bash
    squeue -u participant
@@ -269,14 +276,14 @@ You can check back on the progress of the workflow by re-attaching to your sessi
 :::::
 :::
 
-<!-- 
+<!--
 Eventually create an exercise in the advanced configuration section
 
 :::{.callout-exercise}
 - Add `errorStrategy` to avoid specific error
 - [Optional/Advanced] Add a new label to an existing process using `withName`
 - [Optional/Advanced] Make a process run only `when` a condition is met
-::: 
+:::
 -->
 
 ## Summary
