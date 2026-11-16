@@ -216,7 +216,7 @@ Here's what you need to do:
    ```groovy
    process {
        executor = 'slurm'
-       queue = 'normal'
+       queue = 'cpu'
        resourceLimits = [
          cpus: '8',
          memory: '20.GB',
